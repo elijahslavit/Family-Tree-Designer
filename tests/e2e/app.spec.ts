@@ -90,6 +90,20 @@ test("settings page is organized around tree, account, and danger-zone controls"
   await expect(page.getByRole("heading", { name: "Destructive controls" })).toBeVisible();
 });
 
+test("theme studio previews curated family-tree combinations before saving", async ({ page }) => {
+  await page.goto("/theme");
+
+  await expect(page.getByRole("heading", { name: "Choose how the family tree feels when relatives open it." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "See the archive, not just the palette." })).toBeVisible();
+
+  await page.getByRole("button", { name: /Modern Atlas/ }).click();
+  await page.getByRole("button", { name: "Preview canvas screen" }).click();
+
+  await expect(page.getByRole("heading", { name: "Relationship map" })).toBeVisible();
+  await expect(page.getByText("Map-like and guided")).toBeVisible();
+  await expect(page.getByText("Calm modern atlas")).toBeVisible();
+});
+
 test("creator can parse and confirm a GEDCOM upload", async ({ page }) => {
   await page.goto("/import");
 

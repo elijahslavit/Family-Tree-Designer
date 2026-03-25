@@ -7,6 +7,7 @@ import {
   type ShellNavItem,
 } from "@/components/layouts/shell-nav";
 import type { Tree } from "@/lib/types";
+import { cn } from "@/lib/utils/cn";
 
 type ClassicShellProps = PropsWithChildren<{
   tree: Tree;
@@ -38,7 +39,12 @@ export function ClassicShell({
           </h1>
         </div>
       </div>
-      <div className="hidden min-h-screen gap-4 p-4 lg:grid lg:grid-cols-[260px_1fr_420px]">
+      <div
+        className={cn(
+          "hidden min-h-screen gap-4 p-4 lg:grid",
+          detail ? "lg:grid-cols-[260px_minmax(0,1fr)_420px]" : "lg:grid-cols-[260px_minmax(0,1fr)]",
+        )}
+      >
         <aside className="rounded-[var(--radius-lg)] border border-[var(--border-default)] bg-[var(--bg-surface)] p-4">
           <div className="space-y-4">
             <div>
@@ -55,7 +61,7 @@ export function ClassicShell({
           </div>
         </aside>
         <main className="space-y-4">{children}</main>
-        <section className="space-y-4">{detail}</section>
+        {detail ? <section className="space-y-4">{detail}</section> : null}
       </div>
       <div className="grid gap-4 px-4 py-4 lg:hidden">
         <main className="space-y-4">{children}</main>
