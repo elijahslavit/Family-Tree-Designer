@@ -60,6 +60,15 @@ test("viewer can open the lineage view from the shared archive", async ({ page }
   await expect(page.getByRole("link", { name: /Jonah Brooks/ })).toBeVisible();
 });
 
+test("lineage page can open a highlighted canvas view for the selected path", async ({ page }) => {
+  await page.goto("/t/hart-family-archive/lineages?share=share-hart-2026-demo");
+
+  await page.getByRole("link", { name: "Open highlighted canvas" }).first().click();
+
+  await expect(page).toHaveURL(/\/t\/hart-family-archive\/canvas\?share=share-hart-2026-demo/);
+  await expect(page).toHaveURL(/lineage=l01|lineage=l02/);
+});
+
 test("settings page is organized around tree, account, and danger-zone controls", async ({ page }) => {
   await page.goto("/settings");
 
