@@ -6,6 +6,8 @@ import { pageSize } from "@/lib/utils/constants";
 import { compareNormalizedDates } from "@/lib/utils/dates";
 import { maskPersonForViewer, isViewerSuppressed } from "@/lib/utils/privacy";
 import type {
+  Account,
+  CanvasNodeData,
   DirectoryFilters,
   EventRecord,
   Family,
@@ -15,6 +17,8 @@ import type {
   Person,
   PersonViewModel,
   RelativeGroup,
+  ReviewIssue,
+  ReviewIssueStatus,
   TimelineItem,
   Tree,
   ViewerContext,
@@ -26,6 +30,10 @@ function getBundle() {
 
 function getTree() {
   return getBundle().tree;
+}
+
+function getAccount() {
+  return getBundle().account;
 }
 
 function getPeople() {
@@ -80,6 +88,17 @@ function getLineagesForPerson(personId: string) {
     .map((member) => member.lineageId);
 
   return getLineages().filter((lineage) => lineageIds.includes(lineage.id));
+}
+
+function getRelativeConnections(personId: string, viewer: ViewerContext) {
+  const relatives = getRelatives(personId, viewer);
+
+  return [
+    ...relatives.parents.map((person) => ({ person, relation: "parent" as const })),
+    ...relatives.siblings.map((person) => ({ person, relation: "sibling" as const })),
+    ...relatives.spouses.map((person) => ({ person, relation: "spouse" as const })),
+    ...relatives.children.map((person) => ({ person, relation: "child" as const })),
+  ];
 }
 
 function getRelatives(personId: string, viewer: ViewerContext): RelativeGroup {
@@ -199,6 +218,16 @@ export async function getActiveTreeForCreator(accountId: string) {
   }
 
   return tree;
+}
+
+export async function getAccountForCreator(accountId: string) {
+  const account = getAccount();
+
+  if (account.id !== accountId) {
+    notFound();
+  }
+
+  return account as Account;
 }
 
 export async function getDashboardData(accountId: string) {
@@ -382,66 +411,166 @@ export async function getImportJob({
   return getBundle().importJobs.find((job) => job.id === jobId) ?? null;
 }
 
+export async function getReviewIssuesByTree({
+  treeSlug,
+  viewer,
+  status,
+}: {
+  treeSlug: string;
+  viewer: ViewerContext;
+  status?: ReviewIssueStatus;
+}) {
+  await getTreeBySlug(treeSlug, viewer);
+
+  return getBundle().reviewIssues.filter((issue) =>
+    status ? issue.status === status : true,
+  ) as ReviewIssue[];
+}
+
 export async function getCanvasNeighborhood({
   treeSlug,
   personId,
   viewer,
+  depth = 1,
+  lineageId = null,
 }: {
   treeSlug: string;
   personId: string;
   viewer: ViewerContext;
+  depth?: number;
+  lineageId?: string | null;
 }) {
   const person = await getPersonById({ treeSlug, personId, viewer });
+  const maxDepth = 3;
+  const safeDepth = Math.max(1, Math.min(depth, maxDepth));
+  const visiblePeople = new Map<string, Person>();
+  const nodeDepths = new Map<string, number>();
+  const edgeMap = new Map<string, Edge>();
+  const queue = [{ personId: person.id, level: 0 }];
+  const visited = new Set<string>([person.id]);
 
-  const relatives = [
-    ...person.relatives.parents,
-    ...person.relatives.siblings,
-    ...person.relatives.spouses,
-    ...person.relatives.children,
-  ];
+  visiblePeople.set(person.id, person);
+  nodeDepths.set(person.id, 0);
 
-  const nodes: Node[] = [
-    {
-      id: person.id,
+  while (queue.length) {
+    const current = queue.shift();
+
+    if (!current || current.level >= safeDepth) {
+      continue;
+    }
+
+    getRelativeConnections(current.personId, viewer).forEach(({ person: relative, relation }) => {
+      if (!visiblePeople.has(relative.id)) {
+        visiblePeople.set(relative.id, relative);
+      }
+
+      if (!nodeDepths.has(relative.id)) {
+        nodeDepths.set(relative.id, current.level + 1);
+      }
+
+      const edgeKey = [current.personId, relative.id].sort().join(":");
+
+      if (!edgeMap.has(edgeKey)) {
+        edgeMap.set(edgeKey, {
+          id: `${edgeKey}:${relation}`,
+          source: current.personId,
+          target: relative.id,
+          label: relation,
+        });
+      }
+
+      if (!visited.has(relative.id)) {
+        visited.add(relative.id);
+        queue.push({
+          personId: relative.id,
+          level: current.level + 1,
+        });
+      }
+    });
+  }
+
+  const visibleIds = new Set(visiblePeople.keys());
+  const availableLineages = getLineages().filter((lineage) =>
+    getLineageMembers().some(
+      (member) => member.lineageId === lineage.id && visibleIds.has(member.personId),
+    ),
+  );
+  const highlightedIds = new Set(
+    lineageId
+      ? getLineageMembers()
+          .filter((member) => member.lineageId === lineageId)
+          .map((member) => member.personId)
+      : [],
+  );
+
+  const nodes: Node[] = [...visiblePeople.values()].map((visiblePerson) => {
+    const data: CanvasNodeData = {
+      id: visiblePerson.id,
+      label: visiblePerson.fullName,
+      subtitle: visiblePerson.summary,
+      isLiving: visiblePerson.isLiving,
+      kind: "person",
+      isFocus: visiblePerson.id === person.id,
+      isHighlighted: highlightedIds.has(visiblePerson.id),
+    };
+
+    return {
+      id: visiblePerson.id,
       type: "person",
-      position: { x: 0, y: 0 },
-      ariaLabel: person.fullName,
-      data: {
-        label: person.fullName,
-        subtitle: person.summary,
-        isLiving: person.isLiving,
+      position: {
+        x: (nodeDepths.get(visiblePerson.id) ?? 0) * 240,
+        y: 0,
       },
-    },
-  ];
+      ariaLabel: highlightedIds.has(visiblePerson.id)
+        ? `${visiblePerson.fullName}, highlighted lineage member`
+        : visiblePerson.fullName,
+      data,
+    };
+  });
 
-  const edges: Edge[] = [];
+  const edges = [...edgeMap.values()].map((edge) => {
+    const isHighlighted =
+      highlightedIds.has(edge.source) && highlightedIds.has(edge.target);
 
-  const groups = [
-    { label: "parents", people: person.relatives.parents, y: -180 },
-    { label: "siblings", people: person.relatives.siblings, y: -40 },
-    { label: "spouses", people: person.relatives.spouses, y: 40 },
-    { label: "children", people: person.relatives.children, y: 180 },
-  ];
+    return {
+      ...edge,
+      animated: isHighlighted,
+      style: isHighlighted
+      ? {
+          stroke: "var(--accent-primary)",
+          strokeWidth: 2.5,
+        }
+      : undefined,
+    };
+  });
 
-  groups.forEach((group) => {
-    group.people.forEach((relative, index) => {
-      nodes.push({
-        id: relative.id,
-        type: "person",
-        position: { x: index * 240, y: group.y },
-        ariaLabel: relative.fullName,
-        data: {
-          label: relative.fullName,
-          subtitle: relative.summary,
-          isLiving: relative.isLiving,
-        },
-      });
-      edges.push({
-        id: `${person.id}-${relative.id}-${group.label}`,
-        source: person.id,
-        target: relative.id,
-        label: group.label,
-      });
+  const layeredNodes = new Map<number, Node[]>();
+
+  nodes.forEach((node) => {
+    const level = nodeDepths.get(node.id) ?? 0;
+    const current = layeredNodes.get(level) ?? [];
+    current.push(node);
+    layeredNodes.set(level, current);
+  });
+
+  [...layeredNodes.entries()].forEach(([level, layerNodes]) => {
+    const sortedNodes = [...layerNodes].sort((left, right) => {
+      const leftFocus = left.id === person.id ? -1 : 0;
+      const rightFocus = right.id === person.id ? -1 : 0;
+
+      if (leftFocus !== rightFocus) {
+        return leftFocus - rightFocus;
+      }
+
+      return String(left.data.label).localeCompare(String(right.data.label));
+    });
+    const layerHeight = Math.max((sortedNodes.length - 1) * 148, 0);
+
+    sortedNodes.forEach((node, index) => {
+      node.position = {
+        x: level * 280,
+        y: index * 148 - layerHeight / 2,
+      };
     });
   });
 
@@ -494,7 +623,10 @@ export async function getCanvasNeighborhood({
     focusPerson: person,
     nodes,
     edges,
-    relatedCount: relatives.length,
+    relatedCount: nodes.length - 1,
+    depth: safeDepth,
+    maxDepth,
+    availableLineages,
   };
 }
 

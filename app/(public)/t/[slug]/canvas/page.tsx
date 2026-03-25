@@ -20,12 +20,18 @@ export default async function PublicCanvasPage({
   const shareToken = typeof query.share === "string" ? query.share : null;
   const personId =
     (typeof query.person === "string" ? query.person : null) ?? getDefaultPersonId()!;
+  const rawDepth =
+    typeof query.depth === "string" ? Number.parseInt(query.depth, 10) : 1;
+  const depth = Number.isFinite(rawDepth) ? rawDepth : 1;
+  const lineageId = typeof query.lineage === "string" ? query.lineage : null;
   const viewer = getPublicViewerContext(shareToken);
   const tree = await getTreeBySlug(slug, viewer);
   const canvas = await getCanvasNeighborhood({
     treeSlug: slug,
     personId,
     viewer,
+    depth,
+    lineageId,
   });
 
   return (
@@ -38,12 +44,23 @@ export default async function PublicCanvasPage({
             nodes={canvas.nodes}
             edges={canvas.edges}
             shareToken={tree.shareToken}
+            depth={canvas.depth}
+            selectedLineageId={lineageId}
+            profilePathBase={`/t/${tree.slug}/person`}
           />
         }
         detail={
           <CanvasSidebar
             person={canvas.focusPerson}
             profileHref={publicPersonHref(tree.slug, personId, tree.shareToken)}
+            basePath={`/t/${tree.slug}/canvas`}
+            depth={canvas.depth}
+            maxDepth={canvas.maxDepth}
+            visibleCount={canvas.nodes.length}
+            relatedCount={canvas.relatedCount}
+            lineages={canvas.availableLineages}
+            selectedLineageId={lineageId}
+            shareToken={tree.shareToken}
           />
         }
       />

@@ -36,6 +36,19 @@ test("living people stay masked in the public profile and can still open canvas"
   await expect(page).toHaveURL(/\/t\/hart-family-archive\/canvas\?share=share-hart-2026-demo&person=p14/);
 });
 
+test("canvas explorer can expand outward and preserve lineage highlighting in the URL", async ({ page }) => {
+  await page.goto("/canvas?person=p03");
+
+  await expect(page.getByText("George Vale")).toHaveCount(0);
+
+  await page.getByRole("button", { name: "2 hop" }).click();
+  await expect(page).toHaveURL(/\/canvas\?person=p03&depth=2/);
+  await expect(page.getByText("George Vale")).toBeVisible();
+
+  await page.getByRole("button", { name: "West-Vale Branch" }).click();
+  await expect(page).toHaveURL(/lineage=l02/);
+});
+
 test("viewer can open the lineage view from the shared archive", async ({ page }) => {
   await page.goto("/t/hart-family-archive?share=share-hart-2026-demo");
 
@@ -45,6 +58,14 @@ test("viewer can open the lineage view from the shared archive", async ({ page }
   await expect(page.getByRole("heading", { name: "Follow named descent paths" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Direct Hart Line" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Jonah Brooks/ })).toBeVisible();
+});
+
+test("settings page is organized around tree, account, and danger-zone controls", async ({ page }) => {
+  await page.goto("/settings");
+
+  await expect(page.getByRole("heading", { name: "Public archive link" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Identity and sign-in" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Destructive controls" })).toBeVisible();
 });
 
 test("creator can parse and confirm a GEDCOM upload", async ({ page }) => {
@@ -69,4 +90,14 @@ test("creator can parse and confirm a GEDCOM upload", async ({ page }) => {
 
   await page.getByRole("button", { name: "Confirm import" }).click();
   await expect(page.getByText("Import confirmed.")).toBeVisible();
+});
+
+test("shared archive navigation collapses into a mobile drawer", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/t/hart-family-archive?share=share-hart-2026-demo");
+
+  await page.getByRole("button", { name: "Open navigation" }).click();
+  const drawer = page.getByRole("dialog", { name: "The Hart Family Archive navigation" });
+  await expect(drawer.getByRole("link", { name: "Canvas", exact: true })).toBeVisible();
+  await expect(drawer.getByRole("link", { name: "Lineages", exact: true })).toBeVisible();
 });

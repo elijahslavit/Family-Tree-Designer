@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { requireAccountSession } from "@/lib/auth/session";
-import { getDemoStore } from "@/lib/data/demo-store";
+import { getDemoStore, resetDemoStore } from "@/lib/data/demo-store";
 import { createShareToken, slugify } from "@/lib/utils/slugs";
 
 const personSchema = z.object({
@@ -41,6 +41,11 @@ const treeDetailsSchema = z.object({
   name: z.string().min(2),
   slug: z.string().trim().min(2).nullable().optional(),
   description: z.string().nullable().optional(),
+});
+
+const accountProfileSchema = z.object({
+  displayName: z.string().trim().min(2),
+  email: z.string().trim().email(),
 });
 
 const familySchema = z.object({
@@ -124,15 +129,32 @@ function revalidateTree(slug: string, oldSlug?: string | null) {
   revalidatePath("/dashboard");
   revalidatePath("/directory");
   revalidatePath("/canvas");
+  revalidatePath("/lineages");
+  revalidatePath("/import");
   revalidatePath("/theme");
   revalidatePath("/settings");
   revalidatePath(`/t/${slug}`);
   revalidatePath(`/t/${slug}/canvas`);
+  revalidatePath(`/t/${slug}/lineages`);
 
   if (oldSlug && oldSlug !== slug) {
     revalidatePath(`/t/${oldSlug}`);
     revalidatePath(`/t/${oldSlug}/canvas`);
+    revalidatePath(`/t/${oldSlug}/lineages`);
   }
+}
+
+export async function updateAccountProfile(input: z.input<typeof accountProfileSchema>) {
+  const accountId = await requireAccountSession();
+  const data = accountProfileSchema.parse(input);
+  const store = getEditableTree(accountId);
+
+  store.account.displayName = data.displayName;
+  store.account.email = data.email;
+
+  revalidatePath("/dashboard");
+  revalidatePath("/settings");
+  return store.account;
 }
 
 export async function updateTreeTheme(input: z.input<typeof treeThemeSchema>) {
@@ -533,4 +555,12 @@ export async function confirmGedcomImport(input: z.input<typeof importConfirmSch
   job.payloadJson = null;
   revalidateTree(store.tree.slug);
   return job;
+}
+
+export async function resetDemoArchive() {
+  const accountId = await requireAccountSession();
+  getEditableTree(accountId);
+
+  const store = resetDemoStore();
+  revalidateTree(store.tree.slug);
 }

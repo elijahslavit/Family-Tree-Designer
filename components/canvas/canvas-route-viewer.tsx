@@ -10,6 +10,9 @@ type CanvasRouteViewerProps = {
   edges: Edge[];
   basePath: string;
   shareToken?: string | null;
+  depth: number;
+  selectedLineageId?: string | null;
+  profilePathBase: string;
 };
 
 export function CanvasRouteViewer({
@@ -17,6 +20,9 @@ export function CanvasRouteViewer({
   edges,
   basePath,
   shareToken,
+  depth,
+  selectedLineageId,
+  profilePathBase,
 }: CanvasRouteViewerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,11 +35,27 @@ export function CanvasRouteViewer({
         const params = new URLSearchParams(searchParams.toString());
         params.set("person", nodeId);
 
+        if (depth > 1) {
+          params.set("depth", String(depth));
+        } else {
+          params.delete("depth");
+        }
+
+        if (selectedLineageId) {
+          params.set("lineage", selectedLineageId);
+        } else {
+          params.delete("lineage");
+        }
+
         if (shareToken) {
           params.set("share", shareToken);
         }
 
         router.push(`${basePath}?${params.toString()}`);
+      }}
+      onNodeOpen={(nodeId) => {
+        const share = shareToken ? `?share=${shareToken}` : "";
+        router.push(`${profilePathBase}/${nodeId}${share}`);
       }}
     />
   );

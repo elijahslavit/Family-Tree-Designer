@@ -15,18 +15,45 @@ export default async function CreatorCanvasPage({ searchParams }: CanvasPageProp
   const params = await searchParams;
   const personId =
     (typeof params.person === "string" ? params.person : null) ?? getDefaultPersonId()!;
+  const rawDepth =
+    typeof params.depth === "string" ? Number.parseInt(params.depth, 10) : 1;
+  const depth = Number.isFinite(rawDepth) ? rawDepth : 1;
+  const lineageId = typeof params.lineage === "string" ? params.lineage : null;
   const canvas = await getCanvasNeighborhood({
     treeSlug: tree.slug,
     personId,
     viewer: { mode: "creator", accountId },
+    depth,
+    lineageId,
   });
 
   return (
     <ThemeProvider layout={tree.themeLayout} skin={tree.themeSkin}>
       <CreatorTreeShell
         tree={tree}
-        main={<CanvasRouteViewer basePath="/canvas" nodes={canvas.nodes} edges={canvas.edges} />}
-        detail={<CanvasSidebar person={canvas.focusPerson} profileHref={`/person/${personId}`} />}
+        main={
+          <CanvasRouteViewer
+            basePath="/canvas"
+            nodes={canvas.nodes}
+            edges={canvas.edges}
+            depth={canvas.depth}
+            selectedLineageId={lineageId}
+            profilePathBase="/person"
+          />
+        }
+        detail={
+          <CanvasSidebar
+            person={canvas.focusPerson}
+            profileHref={`/person/${personId}`}
+            basePath="/canvas"
+            depth={canvas.depth}
+            maxDepth={canvas.maxDepth}
+            visibleCount={canvas.nodes.length}
+            relatedCount={canvas.relatedCount}
+            lineages={canvas.availableLineages}
+            selectedLineageId={lineageId}
+          />
+        }
       />
     </ThemeProvider>
   );

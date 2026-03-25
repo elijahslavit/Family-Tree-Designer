@@ -118,6 +118,21 @@ function LineageCard({
   const [description, setDescription] = useState(lineage.description ?? "");
   const [isPending, startSaving] = useTransition();
   const isMember = lineage.members.some((member) => member.id === person.id);
+  const memberIds = lineage.members.map((member) => member.id);
+  const memberIndex = memberIds.indexOf(person.id);
+
+  const moveMember = (direction: -1 | 1) => {
+    const nextIndex = memberIndex + direction;
+
+    if (memberIndex < 0 || nextIndex < 0 || nextIndex >= memberIds.length) {
+      return memberIds;
+    }
+
+    const reordered = [...memberIds];
+    const [current] = reordered.splice(memberIndex, 1);
+    reordered.splice(nextIndex, 0, current);
+    return reordered;
+  };
 
   return (
     <div className="space-y-3 rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-elevated)] p-4">
@@ -136,6 +151,46 @@ function LineageCard({
       <div className="space-y-2 text-sm text-[var(--text-secondary)]">
         <p className="font-semibold text-[var(--text-primary)]">Members</p>
         <p>{lineage.members.map((member) => member.fullName).join(" -> ") || "No members yet."}</p>
+        {isMember ? (
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              loading={isPending}
+              disabled={memberIndex <= 0}
+              onClick={() =>
+                startSaving(async () => {
+                  await updateLineageMembers({
+                    lineageId: lineage.id,
+                    memberIds: moveMember(-1),
+                  });
+                  pushToast("Lineage order updated.", "success");
+                  onRefresh();
+                })
+              }
+            >
+              Move earlier
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              loading={isPending}
+              disabled={memberIndex === -1 || memberIndex >= memberIds.length - 1}
+              onClick={() =>
+                startSaving(async () => {
+                  await updateLineageMembers({
+                    lineageId: lineage.id,
+                    memberIds: moveMember(1),
+                  });
+                  pushToast("Lineage order updated.", "success");
+                  onRefresh();
+                })
+              }
+            >
+              Move later
+            </Button>
+          </div>
+        ) : null}
       </div>
       <div className="flex flex-wrap justify-between gap-3">
         <Button
@@ -164,41 +219,41 @@ function LineageCard({
             type="button"
             variant="secondary"
             loading={isPending}
-            onClick={() =>
-              startSaving(async () => {
-                const updatedMembers = isMember
-                  ? lineage.members
-                      .filter((member) => member.id !== person.id)
-                      .map((member) => member.id)
-                  : [...lineage.members.map((member) => member.id), person.id];
+          onClick={() =>
+            startSaving(async () => {
+              const updatedMembers = isMember
+                ? lineage.members
+                    .filter((member) => member.id !== person.id)
+                    .map((member) => member.id)
+                : [...lineage.members.map((member) => member.id), person.id];
 
-                await updateLineageMembers({
-                  lineageId: lineage.id,
-                  memberIds: updatedMembers,
-                });
-                pushToast(
-                  isMember ? "Person removed from lineage." : "Person added to lineage.",
-                  "success",
-                );
-                onRefresh();
-              })
-            }
+              await updateLineageMembers({
+                lineageId: lineage.id,
+                memberIds: updatedMembers,
+              });
+              pushToast(
+                isMember ? "Person removed from lineage." : "Person added to lineage.",
+                "success",
+              );
+              onRefresh();
+            })
+          }
           >
             {isMember ? "Remove from lineage" : "Add to lineage"}
           </Button>
-        <Button
-          type="button"
-          loading={isPending}
-          onClick={() =>
-            startSaving(async () => {
-              if (!name.trim()) {
-                pushToast("Lineage name is required.", "danger");
-                return;
-              }
+          <Button
+            type="button"
+            loading={isPending}
+            onClick={() =>
+              startSaving(async () => {
+                if (!name.trim()) {
+                  pushToast("Lineage name is required.", "danger");
+                  return;
+                }
 
-              await createOrUpdateLineage({
-                treeId: tree.id,
-                id: lineage.id,
+                await createOrUpdateLineage({
+                  treeId: tree.id,
+                  id: lineage.id,
                   name,
                   description: description || null,
                 });
