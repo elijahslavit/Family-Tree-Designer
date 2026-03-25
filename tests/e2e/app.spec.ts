@@ -86,10 +86,11 @@ test("creator can parse and confirm a GEDCOM upload", async ({ page }) => {
   });
 
   await page.getByRole("button", { name: "Parse file" }).click();
-  await expect(page.getByText("GEDCOM parsed and staged.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Confirm import" })).toBeVisible();
+  await expect(page.getByText("People")).toBeVisible();
 
   await page.getByRole("button", { name: "Confirm import" }).click();
-  await expect(page.getByText("Import confirmed.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Import confirmed" })).toBeVisible();
 });
 
 test("shared archive navigation collapses into a mobile drawer", async ({ page }) => {

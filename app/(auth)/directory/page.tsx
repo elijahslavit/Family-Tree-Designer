@@ -1,9 +1,10 @@
-import Link from "next/link";
-
+import { DirectoryActiveFilters } from "@/components/domain/directory-active-filters";
 import { DirectoryControls } from "@/components/domain/directory-controls";
+import { buildDirectoryHref } from "@/components/domain/directory-controls";
+import { DirectoryOverview } from "@/components/domain/directory-overview";
+import { DirectoryResults } from "@/components/domain/directory-results";
 import { EmptyState } from "@/components/foundation/empty-state";
-import { LineageBadge } from "@/components/domain/lineage-badge";
-import { PersonCard } from "@/components/domain/person-card";
+import { Card } from "@/components/foundation/card";
 import { CreatorTreeShell } from "@/components/layouts/tree-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { requireAccountSession } from "@/lib/auth/session";
@@ -61,33 +62,52 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
         tree={tree}
         main={
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-                  Directory
-                </p>
-                <h2 className="text-3xl font-semibold text-[var(--text-primary)]">
-                  Browse everyone in the tree
-                </h2>
-              </div>
-              <Link
-                href="/person/new"
-                className="rounded-[var(--radius-md)] bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--text-inverse)]"
-              >
-                Add person
-              </Link>
-            </div>
+            <DirectoryOverview
+              eyebrow="Directory"
+              title="Browse everyone in the tree"
+              description="Search by name, narrow by surname or lineage, and move from overview to profile editing without losing your place in the archive."
+              primaryAction={{
+                href: "/person/new",
+                label: "Add person",
+              }}
+              secondaryAction={{
+                href: "/canvas",
+                label: "Open canvas",
+              }}
+              stats={[
+                {
+                  label: "Visible people",
+                  value: directory.total,
+                  detail: "Results in the current filtered view.",
+                },
+                {
+                  label: "Named lineages",
+                  value: lineages.length,
+                  detail: "Branches available for quick filtering.",
+                },
+                {
+                  label: "Page",
+                  value: `${directory.page}/${directory.totalPages}`,
+                  detail: "Paginated in sets of 50 people.",
+                },
+              ]}
+              featuredLineages={lineages}
+            />
+            <DirectoryActiveFilters
+              filters={filters}
+              lineages={directory.lineages}
+              clearHref={buildDirectoryHref({
+                actionPath: "/directory",
+                filters: {},
+              })}
+            />
             {directory.items.length ? (
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {directory.items.map((person) => (
-                  <PersonCard
-                    key={person.id}
-                    person={person}
-                    href={`/person/${person.id}`}
-                    lineages={lineagesByPerson.get(person.id) ?? []}
-                  />
-                ))}
-              </div>
+              <DirectoryResults
+                people={directory.items}
+                layout={tree.themeLayout}
+                buildHref={(personId) => `/person/${personId}`}
+                lineagesByPerson={lineagesByPerson}
+              />
             ) : (
               <EmptyState
                 title="No people match these filters"
@@ -99,7 +119,7 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
           </div>
         }
         detail={
-          <div className="space-y-4">
+          <div className="space-y-4 lg:sticky lg:top-24">
             <DirectoryControls
               actionPath="/directory"
               filters={filters}
@@ -108,18 +128,21 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
               total={directory.total}
               totalPages={directory.totalPages}
             />
-            <div className="rounded-[var(--radius-lg)] border border-[var(--border-default)] bg-[var(--bg-surface)] p-4">
+            <Card className="space-y-3">
               <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-                Active lineages
+                Layout note
               </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {lineages.length ? (
-                  lineages.map((lineage) => <LineageBadge key={lineage.id} lineage={lineage} />)
-                ) : (
-                  <p className="text-sm text-[var(--text-muted)]">No lineages defined yet.</p>
-                )}
-              </div>
-            </div>
+              <h2 className="text-xl font-semibold text-[var(--text-primary)]">
+                {tree.themeLayout === "classic"
+                  ? "Dense list view enabled"
+                  : tree.themeLayout === "explorer"
+                    ? "Card view tuned for discovery"
+                    : "Editorial card view enabled"}
+              </h2>
+              <p className="text-sm leading-6 text-[var(--text-secondary)]">
+                The directory presentation adapts to the active layout so the archive feels denser in Classic and more presentational in Editorial or Explorer.
+              </p>
+            </Card>
           </div>
         }
       />

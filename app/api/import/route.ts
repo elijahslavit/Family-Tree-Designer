@@ -3,16 +3,19 @@ import type { NextRequest } from "next/server";
 import { parseGedcomText } from "@/lib/import/gedcom-parser";
 import { getDemoStore } from "@/lib/data/demo-store";
 import { log } from "@/lib/logger";
+import { isDemoMode } from "@/lib/runtime";
 import { enforceRateLimit } from "@/lib/utils/rate-limit";
 
 export async function POST(request: NextRequest) {
   const forwardedFor = request.headers.get("x-forwarded-for");
   const rateLimitKey = forwardedFor?.split(",")[0]?.trim() || "local";
-  const limiter = enforceRateLimit({
-    key: `import:${rateLimitKey}`,
-    limit: 5,
-    windowMs: 60 * 60 * 1000,
-  });
+  const limiter = isDemoMode()
+    ? { ok: true, retryAfterMs: null }
+    : enforceRateLimit({
+        key: `import:${rateLimitKey}`,
+        limit: 5,
+        windowMs: 60 * 60 * 1000,
+      });
 
   if (!limiter.ok) {
     return Response.json(

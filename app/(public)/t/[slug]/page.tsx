@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import { DirectoryControls } from "@/components/domain/directory-controls";
+import { DirectoryActiveFilters } from "@/components/domain/directory-active-filters";
+import { DirectoryControls, buildDirectoryHref } from "@/components/domain/directory-controls";
+import { DirectoryOverview } from "@/components/domain/directory-overview";
+import { DirectoryResults } from "@/components/domain/directory-results";
 import { Card } from "@/components/foundation/card";
 import { EmptyState } from "@/components/foundation/empty-state";
-import { LineageBadge } from "@/components/domain/lineage-badge";
-import { PersonCard } from "@/components/domain/person-card";
-import { StatCard } from "@/components/domain/stat-card";
 import { PublicTreeShell } from "@/components/layouts/tree-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { getPublicViewerContext } from "@/lib/auth/session";
@@ -56,59 +56,56 @@ export default async function PublicTreePage({
         tree={tree}
         main={
           <div className="space-y-6">
-            <Card className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-                Shared archive
-              </p>
-              <h2 className="display-name text-5xl font-semibold text-[var(--text-primary)]">
-                {tree.name}
-              </h2>
-              <p className="text-lg text-[var(--text-secondary)]">{tree.description}</p>
-              <div className="flex flex-wrap gap-4 text-sm font-semibold text-[var(--accent-text)]">
-                <Link href={publicCanvasHref(tree.slug, tree.shareToken)}>Open canvas</Link>
-                <Link href={publicLineagesHref(tree.slug, tree.shareToken)}>Browse lineages</Link>
-              </div>
-            </Card>
-            <div className="grid gap-4 md:grid-cols-3">
-              <StatCard
-                label="People"
-                value={directory.total}
-                detail="Profiles available in this shared archive."
-              />
-              <StatCard
-                label="Families"
-                value={families.length}
-                detail="Structured unions and parent-child links."
-              />
-              <StatCard
-                label="Lineages"
-                value={lineages.length}
-                detail="Named descent paths chosen by the creator."
-              />
-            </div>
-            {lineages.length ? (
-              <Card className="space-y-3">
-                <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-                  Featured lineages
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {lineages.map((lineage) => (
-                    <LineageBadge key={lineage.id} lineage={lineage} />
-                  ))}
-                </div>
-              </Card>
-            ) : null}
+            <DirectoryOverview
+              eyebrow="Shared archive"
+              title={tree.name}
+              description={
+                tree.description ??
+                "A presentation-first family archive designed for browsing, storytelling, and shared discovery."
+              }
+              primaryAction={{
+                href: publicCanvasHref(tree.slug, tree.shareToken),
+                label: "Open canvas",
+              }}
+              secondaryAction={{
+                href: publicLineagesHref(tree.slug, tree.shareToken),
+                label: "Browse lineages",
+              }}
+              stats={[
+                {
+                  label: "People",
+                  value: directory.total,
+                  detail: "Profiles available in this shared archive.",
+                },
+                {
+                  label: "Families",
+                  value: families.length,
+                  detail: "Structured unions and parent-child links.",
+                },
+                {
+                  label: "Lineages",
+                  value: lineages.length,
+                  detail: "Named descent paths chosen by the creator.",
+                },
+              ]}
+              featuredLineages={lineages}
+            />
+            <DirectoryActiveFilters
+              filters={filters}
+              lineages={directory.lineages}
+              clearHref={buildDirectoryHref({
+                actionPath: `/t/${tree.slug}`,
+                filters: {},
+                shareToken: tree.shareToken,
+              })}
+            />
             {directory.items.length ? (
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {directory.items.map((person) => (
-                  <PersonCard
-                    key={person.id}
-                    person={person}
-                    href={publicPersonHref(tree.slug, person.id, tree.shareToken)}
-                    lineages={lineagesByPerson.get(person.id) ?? []}
-                  />
-                ))}
-              </div>
+              <DirectoryResults
+                people={directory.items}
+                layout={tree.themeLayout}
+                buildHref={(personId) => publicPersonHref(tree.slug, personId, tree.shareToken)}
+                lineagesByPerson={lineagesByPerson}
+              />
             ) : (
               <EmptyState
                 title="No people match this view"
@@ -118,7 +115,7 @@ export default async function PublicTreePage({
           </div>
         }
         detail={
-          <div className="space-y-4">
+          <div className="space-y-4 lg:sticky lg:top-24">
             <DirectoryControls
               actionPath={`/t/${tree.slug}`}
               filters={filters}
@@ -131,7 +128,7 @@ export default async function PublicTreePage({
             <Card className="space-y-3">
               <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">CTA</p>
               <h2 className="text-2xl font-semibold text-[var(--text-primary)]">Create your own tree</h2>
-              <p className="text-sm text-[var(--text-secondary)]">
+              <p className="text-sm leading-6 text-[var(--text-secondary)]">
                 Shared archives are read-only. Creator mode includes import, editing, themes, and sharing.
               </p>
               <Link href="/" className="text-sm font-semibold text-[var(--accent-text)]">
