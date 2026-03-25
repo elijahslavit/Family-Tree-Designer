@@ -83,7 +83,9 @@ test("lineage page can open a highlighted canvas view for the selected path", as
 test("settings page is organized around tree, account, and danger-zone controls", async ({ page }) => {
   await page.goto("/settings");
 
-  await expect(page.getByRole("heading", { name: "Public archive link" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Configure how the archive is named, shared, and protected." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Jump to the right control" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Sharing controls" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Identity and sign-in" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Destructive controls" })).toBeVisible();
 });
