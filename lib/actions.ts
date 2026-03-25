@@ -58,6 +58,11 @@ const childSchema = z.object({
   order: z.number().optional(),
 });
 
+const familyChildRemovalSchema = z.object({
+  familyId: z.string(),
+  childId: z.string(),
+});
+
 const parentsSchema = z.object({
   treeId: z.string(),
   personId: z.string(),
@@ -309,6 +314,17 @@ export async function addChild(input: z.input<typeof childSchema>) {
   revalidateTree(store.tree.slug);
 }
 
+export async function removeChild(input: z.input<typeof familyChildRemovalSchema>) {
+  const accountId = await requireAccountSession();
+  const data = familyChildRemovalSchema.parse(input);
+  const store = getEditableTree(accountId);
+
+  store.familyChildren = store.familyChildren.filter(
+    (item) => !(item.familyId === data.familyId && item.childId === data.childId),
+  );
+  revalidateTree(store.tree.slug);
+}
+
 export async function setParents(input: z.input<typeof parentsSchema>) {
   const accountId = await requireAccountSession();
   const data = parentsSchema.parse(input);
@@ -365,8 +381,10 @@ export async function createOrUpdateEvent(input: z.input<typeof eventSchema>) {
       description: data.description ?? null,
     });
   } else {
+    const eventId = crypto.randomUUID();
+
     store.events.push({
-      id: crypto.randomUUID(),
+      id: eventId,
       treeId: data.treeId,
       personId: data.personId,
       type: data.type,
@@ -375,9 +393,13 @@ export async function createOrUpdateEvent(input: z.input<typeof eventSchema>) {
       place: data.place ?? null,
       description: data.description ?? null,
     });
+
+    revalidateTree(store.tree.slug);
+    return eventId;
   }
 
   revalidateTree(store.tree.slug);
+  return existing.id;
 }
 
 export async function deleteEvent(eventId: string) {
@@ -399,15 +421,21 @@ export async function createOrUpdateLineage(input: z.input<typeof lineageSchema>
     existing.name = data.name;
     existing.description = data.description ?? null;
   } else {
+    const lineageId = crypto.randomUUID();
+
     store.lineages.push({
-      id: crypto.randomUUID(),
+      id: lineageId,
       treeId: data.treeId,
       name: data.name,
       description: data.description ?? null,
     });
+
+    revalidateTree(store.tree.slug);
+    return lineageId;
   }
 
   revalidateTree(store.tree.slug);
+  return existing.id;
 }
 
 export async function updateLineageMembers(input: z.input<typeof lineageMembersSchema>) {
@@ -432,6 +460,24 @@ export async function updateLineageMembers(input: z.input<typeof lineageMembersS
     });
   });
 
+  revalidateTree(store.tree.slug);
+}
+
+export async function deleteLineage(lineageId: string) {
+  const accountId = await requireAccountSession();
+  const store = getEditableTree(accountId);
+
+  store.lineages = store.lineages.filter((lineage) => lineage.id !== lineageId);
+  store.lineageMembers = store.lineageMembers.filter((member) => member.lineageId !== lineageId);
+  revalidateTree(store.tree.slug);
+}
+
+export async function deleteFamily(familyId: string) {
+  const accountId = await requireAccountSession();
+  const store = getEditableTree(accountId);
+
+  store.families = store.families.filter((family) => family.id !== familyId);
+  store.familyChildren = store.familyChildren.filter((child) => child.familyId !== familyId);
   revalidateTree(store.tree.slug);
 }
 

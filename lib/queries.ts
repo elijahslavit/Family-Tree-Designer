@@ -7,7 +7,9 @@ import { compareNormalizedDates } from "@/lib/utils/dates";
 import { maskPersonForViewer, isViewerSuppressed } from "@/lib/utils/privacy";
 import type {
   DirectoryFilters,
+  EventRecord,
   Family,
+  FamilyChild,
   Lineage,
   Person,
   PersonViewModel,
@@ -328,6 +330,33 @@ export async function getLineagesByTree({
   }));
 }
 
+export async function getEventsByPerson({
+  treeSlug,
+  personId,
+  viewer,
+}: {
+  treeSlug: string;
+  personId: string;
+  viewer: ViewerContext;
+}) {
+  await getTreeBySlug(treeSlug, viewer);
+  const person = getPeople().find((candidate) => candidate.id === personId);
+
+  if (!person) {
+    notFound();
+  }
+
+  if (isViewerSuppressed(person, viewer)) {
+    return [] as EventRecord[];
+  }
+
+  return getEvents()
+    .filter((event) => event.personId === personId)
+    .sort((left, right) =>
+      compareNormalizedDates(left.dateNormalized, right.dateNormalized),
+    );
+}
+
 export async function getImportJobsByTree({
   treeSlug,
   viewer,
@@ -395,11 +424,10 @@ export async function getCanvasNeighborhood({
 
   groups.forEach((group) => {
     group.people.forEach((relative, index) => {
-      const x = (index - (group.people.length - 1) / 2) * 240;
       nodes.push({
         id: relative.id,
         type: "person",
-        position: { x, y: group.y },
+        position: { x: index * 240, y: group.y },
         ariaLabel: relative.fullName,
         data: {
           label: relative.fullName,
@@ -415,6 +443,51 @@ export async function getCanvasNeighborhood({
       });
     });
   });
+
+  try {
+    const ELKModule = await import("elkjs/lib/elk.bundled.js");
+    const ELKConstructor = ELKModule.default;
+    const elk = new ELKConstructor();
+    const layout = await elk.layout({
+      id: "family-tree",
+      layoutOptions: {
+        "elk.algorithm": "layered",
+        "elk.direction": "DOWN",
+        "elk.edgeRouting": "ORTHOGONAL",
+        "elk.layered.spacing.nodeNodeBetweenLayers": "120",
+        "elk.spacing.nodeNode": "80",
+      },
+      children: nodes.map((node) => ({
+        id: node.id,
+        width: 220,
+        height: 112,
+      })),
+      edges: edges.map((edge) => ({
+        id: edge.id,
+        sources: [edge.source],
+        targets: [edge.target],
+      })),
+    });
+
+    const layoutByNodeId = new Map(
+      layout.children?.map((node) => [node.id, node]) ?? [],
+    );
+
+    nodes.forEach((node) => {
+      const positionedNode = layoutByNodeId.get(node.id);
+
+      if (!positionedNode) {
+        return;
+      }
+
+      node.position = {
+        x: positionedNode.x ?? node.position.x,
+        y: positionedNode.y ?? node.position.y,
+      };
+    });
+  } catch {
+    // Fall back to the coarse manual grouping when ELK layout is unavailable.
+  }
 
   return {
     focusPerson: person,
@@ -458,4 +531,15 @@ export function getFamilyById(familyId: string): Family | null {
 
 export function getLineageById(lineageId: string): Lineage | null {
   return getLineages().find((lineage) => lineage.id === lineageId) ?? null;
+}
+
+export async function getFamilyChildrenByTree({
+  treeSlug,
+  viewer,
+}: {
+  treeSlug: string;
+  viewer: ViewerContext;
+}) {
+  await getTreeBySlug(treeSlug, viewer);
+  return getFamilyChildren() as FamilyChild[];
 }

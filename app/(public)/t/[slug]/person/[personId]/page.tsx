@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { BiographyRenderer } from "@/components/domain/biography-renderer";
 import { FactTable } from "@/components/domain/fact-table";
 import { PrivacyMask } from "@/components/domain/privacy-mask";
@@ -8,7 +10,7 @@ import { PublicTreeShell } from "@/components/layouts/tree-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { getPublicViewerContext } from "@/lib/auth/session";
 import { getPersonById, getTreeBySlug } from "@/lib/queries";
-import { publicPersonHref } from "@/lib/utils/links";
+import { publicCanvasHref, publicPersonHref } from "@/lib/utils/links";
 
 type PublicPersonPageProps = {
   params: Promise<{ slug: string; personId: string }>;
@@ -41,6 +43,14 @@ export default async function PublicPersonPage({
                 {person.fullName}
               </h2>
               <p className="text-lg text-[var(--text-secondary)]">{person.summary}</p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href={publicCanvasHref(tree.slug, tree.shareToken, person.id)}
+                  className="text-sm font-semibold text-[var(--accent-text)]"
+                >
+                  Explore in canvas
+                </Link>
+              </div>
             </Card>
             {isMasked ? <PrivacyMask /> : <BiographyRenderer markdown={person.biographyMd} />}
             {!isMasked ? <Timeline items={person.timeline} /> : null}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { Button } from "@/components/foundation/button";
@@ -21,8 +22,10 @@ type ImportResult = {
 };
 
 export function ImportUploader({ tree }: { tree: Tree }) {
+  const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<ImportResult | null>(null);
+  const [isConfirmed, setIsConfirmed] = useState(false);
   const [isPending, startSaving] = useTransition();
   const { pushToast } = useToast();
 
@@ -42,12 +45,16 @@ export function ImportUploader({ tree }: { tree: Tree }) {
     });
 
     if (!response.ok) {
-      pushToast("Import failed.", "danger");
+      const payload = (await response.json().catch(() => ({ error: "Import failed." }))) as {
+        error?: string;
+      };
+      pushToast(payload.error ?? "Import failed.", "danger");
       return;
     }
 
     const payload = (await response.json()) as ImportResult;
     setResult(payload);
+    setIsConfirmed(false);
     pushToast("GEDCOM parsed and staged.", "success");
   }
 
@@ -68,14 +75,18 @@ export function ImportUploader({ tree }: { tree: Tree }) {
           {result ? (
             <Button
               variant="secondary"
+              loading={isPending}
+              disabled={isConfirmed}
               onClick={() =>
                 startSaving(async () => {
                   await confirmGedcomImport({ jobId: result.jobId });
+                  setIsConfirmed(true);
                   pushToast("Import confirmed.", "success");
+                  router.refresh();
                 })
               }
             >
-              Confirm import
+              {isConfirmed ? "Import confirmed" : "Confirm import"}
             </Button>
           ) : null}
         </div>

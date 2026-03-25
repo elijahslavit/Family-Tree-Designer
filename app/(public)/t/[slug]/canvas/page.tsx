@@ -1,5 +1,5 @@
 import { CanvasSidebar } from "@/components/canvas/canvas-sidebar";
-import { FamilyCanvas } from "@/components/canvas/family-canvas";
+import { CanvasRouteViewer } from "@/components/canvas/canvas-route-viewer";
 import { PublicTreeShell } from "@/components/layouts/tree-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { getPublicViewerContext } from "@/lib/auth/session";
@@ -32,7 +32,14 @@ export default async function PublicCanvasPage({
     <ThemeProvider layout={tree.themeLayout} skin={tree.themeSkin}>
       <PublicTreeShell
         tree={tree}
-        main={<FamilyCanvas nodes={canvas.nodes} edges={canvas.edges} />}
+        main={
+          <CanvasRouteViewer
+            basePath={`/t/${tree.slug}/canvas`}
+            nodes={canvas.nodes}
+            edges={canvas.edges}
+            shareToken={tree.shareToken}
+          />
+        }
         detail={
           <CanvasSidebar
             person={canvas.focusPerson}

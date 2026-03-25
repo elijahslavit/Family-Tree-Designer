@@ -4,8 +4,13 @@ vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
 }));
 
-import { confirmGedcomImport } from "@/lib/actions";
+import {
+  confirmGedcomImport,
+  regenerateShareToken,
+  setParents,
+} from "@/lib/actions";
 import { getDemoStore, resetDemoStore } from "@/lib/data/demo-store";
+import { getTreeBySlug } from "@/lib/queries";
 
 describe("action layer", () => {
   beforeEach(() => {
@@ -70,5 +75,42 @@ describe("action layer", () => {
     ).toHaveLength(1);
     expect(store.importJobs[0]?.status).toBe("confirmed");
     expect(store.importJobs[0]?.payloadJson).toBeNull();
+  });
+
+  it("creates a parent family and child link for orphan people", async () => {
+    const store = getDemoStore();
+    const orphan = store.people.find((person) => person.id === "p20")!;
+
+    await setParents({
+      treeId: store.tree.id,
+      personId: orphan.id,
+      fatherId: "p01",
+      motherId: "p02",
+    });
+
+    const linkedFamily = store.families.find(
+      (family) => family.spouse1Id === "p01" && family.spouse2Id === "p02",
+    );
+
+    expect(linkedFamily).toBeTruthy();
+    expect(
+      store.familyChildren.some(
+        (item) => item.familyId === linkedFamily?.id && item.childId === orphan.id,
+      ),
+    ).toBe(true);
+  });
+
+  it("invalidates the previous public token after regeneration", async () => {
+    const store = getDemoStore();
+    const previousToken = store.tree.shareToken;
+
+    await regenerateShareToken(store.tree.id);
+
+    await expect(
+      getTreeBySlug(store.tree.slug, {
+        mode: "viewer",
+        shareToken: previousToken,
+      }),
+    ).rejects.toThrow();
   });
 });

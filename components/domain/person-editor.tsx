@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 
-import { createPerson, updatePerson } from "@/lib/actions";
+import { createPerson, deletePerson, updatePerson } from "@/lib/actions";
 import type { Person, Tree } from "@/lib/types";
 import { Input, Select, Textarea } from "@/components/foundation/input";
 import { Button } from "@/components/foundation/button";
@@ -74,8 +74,8 @@ export function PersonEditor({ tree, person }: PersonEditorProps) {
         router.push(`/person/${person.id}`);
       } else {
         const personId = await createPerson(payload);
-        pushToast("Person created.", "success");
-        router.push(`/person/${personId}`);
+        pushToast("Person created. Continue with relationships and events next.", "success");
+        router.push(`/person/${personId}/edit`);
       }
     });
   });
@@ -141,7 +141,32 @@ export function PersonEditor({ tree, person }: PersonEditorProps) {
           <span className="text-sm text-[var(--text-secondary)]">Biography (Markdown)</span>
           <Textarea {...form.register("biographyMd")} className="min-h-52" />
         </label>
-        <div className="md:col-span-2 flex justify-end">
+        <div className="md:col-span-2 flex justify-between gap-3">
+          {person ? (
+            <Button
+              loading={isPending}
+              type="button"
+              variant="danger"
+              onClick={() =>
+                startSaving(async () => {
+                  if (
+                    typeof window !== "undefined" &&
+                    !window.confirm(`Delete ${person.fullName} and all connected records?`)
+                  ) {
+                    return;
+                  }
+
+                  await deletePerson(person.id);
+                  pushToast("Person deleted.", "success");
+                  router.push("/directory");
+                })
+              }
+            >
+              Delete person
+            </Button>
+          ) : (
+            <span />
+          )}
           <Button loading={isPending} type="submit">
             {person ? "Save changes" : "Create person"}
           </Button>

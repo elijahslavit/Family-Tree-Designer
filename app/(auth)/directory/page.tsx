@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { Card } from "@/components/foundation/card";
+import { DirectoryControls } from "@/components/domain/directory-controls";
+import { EmptyState } from "@/components/foundation/empty-state";
 import { PersonCard } from "@/components/domain/person-card";
 import { CreatorTreeShell } from "@/components/layouts/tree-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -15,17 +16,22 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
   const accountId = await requireAccountSession();
   const tree = await getActiveTreeForCreator(accountId);
   const params = await searchParams;
+  const pageValue =
+    typeof params.page === "string" ? Number.parseInt(params.page, 10) : 1;
+  const filters = {
+    search: typeof params.search === "string" ? params.search : undefined,
+    surname: typeof params.surname === "string" ? params.surname : undefined,
+    lineageId: typeof params.lineage === "string" ? params.lineage : undefined,
+    sort: typeof params.sort === "string" ? (params.sort as "name" | "birth" | "death") : "name",
+    page: Number.isFinite(pageValue) ? pageValue : 1,
+  };
   const directory = await getPeopleByTree({
     treeSlug: tree.slug,
     viewer: {
       mode: "creator",
       accountId,
     },
-    filters: {
-      search: typeof params.search === "string" ? params.search : undefined,
-      surname: typeof params.surname === "string" ? params.surname : undefined,
-      sort: typeof params.sort === "string" ? (params.sort as "name" | "birth" | "death") : "name",
-    },
+    filters,
   });
 
   return (
@@ -44,33 +50,41 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
                 </h2>
               </div>
               <Link
-                href={`/person/${directory.items[0]?.id ?? ""}/edit`}
+                href="/person/new"
                 className="rounded-[var(--radius-md)] bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--text-inverse)]"
               >
-                Edit first person
+                Add person
               </Link>
             </div>
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {directory.items.map((person) => (
-                <PersonCard
-                  key={person.id}
-                  person={person}
-                  href={`/person/${person.id}`}
-                />
-              ))}
-            </div>
+            {directory.items.length ? (
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {directory.items.map((person) => (
+                  <PersonCard
+                    key={person.id}
+                    person={person}
+                    href={`/person/${person.id}`}
+                  />
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                title="No people match these filters"
+                description="Change the search, clear the lineage filter, or add a new person record."
+                actionLabel="Add person"
+                actionHref="/person/new"
+              />
+            )}
           </div>
         }
         detail={
-          <Card className="space-y-4">
-            <h2 className="text-xl font-semibold text-[var(--text-primary)]">Filters</h2>
-            <p className="text-sm text-[var(--text-secondary)]">
-              Surnames: {directory.surnames.join(", ")}
-            </p>
-            <p className="text-sm text-[var(--text-secondary)]">
-              Results: {directory.total} across {directory.totalPages} pages
-            </p>
-          </Card>
+          <DirectoryControls
+            actionPath="/directory"
+            filters={filters}
+            surnames={directory.surnames}
+            lineages={directory.lineages}
+            total={directory.total}
+            totalPages={directory.totalPages}
+          />
         }
       />
     </ThemeProvider>

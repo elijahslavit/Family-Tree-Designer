@@ -38,9 +38,14 @@ export default async function CreatorPersonPage({ params }: PersonPageProps) {
                 {person.fullName}
               </h2>
               <p className="text-lg text-[var(--text-secondary)]">{person.summary}</p>
-              <Link href={`/person/${person.id}/edit`} className="text-sm font-semibold text-[var(--accent-text)]">
-                Edit profile
-              </Link>
+              <div className="flex flex-wrap gap-4">
+                <Link href={`/person/${person.id}/edit`} className="text-sm font-semibold text-[var(--accent-text)]">
+                  Edit profile
+                </Link>
+                <Link href={`/canvas?person=${person.id}`} className="text-sm font-semibold text-[var(--accent-text)]">
+                  Explore in canvas
+                </Link>
+              </div>
             </Card>
             <BiographyRenderer markdown={person.biographyMd} />
             <Timeline items={person.timeline} />
