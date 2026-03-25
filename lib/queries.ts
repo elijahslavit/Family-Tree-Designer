@@ -24,6 +24,9 @@ import type {
   ViewerContext,
 } from "@/lib/types";
 
+type RelativeRelation = "parent" | "sibling" | "spouse" | "child";
+type CanvasRelationGroup = NonNullable<CanvasNodeData["relationGroup"]>;
+
 function getBundle() {
   return getDemoStore();
 }
@@ -88,6 +91,104 @@ function getLineagesForPerson(personId: string) {
     .map((member) => member.lineageId);
 
   return getLineages().filter((lineage) => lineageIds.includes(lineage.id));
+}
+
+function getCanvasDateLabel(person: Person) {
+  const birth = person.birthDateText?.trim();
+  const death = person.deathDateText?.trim();
+
+  if (person.isLiving) {
+    return birth ? `Born ${birth}` : "Living";
+  }
+
+  if (birth && death) {
+    return `${birth} - ${death}`;
+  }
+
+  if (birth) {
+    return `Born ${birth}`;
+  }
+
+  if (death) {
+    return `Died ${death}`;
+  }
+
+  return "Dates unknown";
+}
+
+function getCanvasRelationGroup({
+  currentGroup,
+  relation,
+}: {
+  currentGroup: CanvasRelationGroup;
+  relation: RelativeRelation;
+}) {
+  if (currentGroup === "focus") {
+    switch (relation) {
+      case "parent":
+        return "ancestor";
+      case "child":
+        return "descendant";
+      case "sibling":
+        return "sibling";
+      case "spouse":
+        return "spouse";
+      default:
+        return "relative";
+    }
+  }
+
+  if (relation === "spouse") {
+    return "spouse";
+  }
+
+  if (currentGroup === "ancestor" || currentGroup === "sibling") {
+    return "ancestor";
+  }
+
+  if (currentGroup === "descendant") {
+    return "descendant";
+  }
+
+  return currentGroup === "relative" ? "relative" : currentGroup;
+}
+
+function getCanvasEdgeStyle(relation: RelativeRelation, isHighlighted: boolean) {
+  if (isHighlighted) {
+    return {
+      stroke: "var(--accent-primary)",
+      strokeWidth: 2.7,
+    };
+  }
+
+  switch (relation) {
+    case "parent":
+      return {
+        stroke: "var(--rel-parent-border)",
+        strokeWidth: 2.1,
+      };
+    case "sibling":
+      return {
+        stroke: "var(--rel-sibling-border)",
+        strokeWidth: 2,
+      };
+    case "spouse":
+      return {
+        stroke: "var(--rel-spouse-border)",
+        strokeWidth: 1.9,
+        strokeDasharray: "7 5",
+      };
+    case "child":
+      return {
+        stroke: "var(--rel-child-border)",
+        strokeWidth: 2.1,
+      };
+    default:
+      return {
+        stroke: "var(--canvas-edge)",
+        strokeWidth: 1.9,
+      };
+  }
 }
 
 function getRelativeConnections(personId: string, viewer: ViewerContext) {
@@ -446,7 +547,8 @@ export async function getCanvasNeighborhood({
   const visiblePeople = new Map<string, Person>();
   const nodeDepths = new Map<string, number>();
   const edgeMap = new Map<string, Edge>();
-  const queue = [{ personId: person.id, level: 0 }];
+  const relationGroups = new Map<string, CanvasRelationGroup>([[person.id, "focus"]]);
+  const queue = [{ personId: person.id, level: 0, group: "focus" as CanvasRelationGroup }];
   const visited = new Set<string>([person.id]);
 
   visiblePeople.set(person.id, person);
@@ -460,12 +562,21 @@ export async function getCanvasNeighborhood({
     }
 
     getRelativeConnections(current.personId, viewer).forEach(({ person: relative, relation }) => {
+      const relationGroup = getCanvasRelationGroup({
+        currentGroup: current.group,
+        relation,
+      });
+
       if (!visiblePeople.has(relative.id)) {
         visiblePeople.set(relative.id, relative);
       }
 
       if (!nodeDepths.has(relative.id)) {
         nodeDepths.set(relative.id, current.level + 1);
+      }
+
+      if (!relationGroups.has(relative.id)) {
+        relationGroups.set(relative.id, relationGroup);
       }
 
       const edgeKey = [current.personId, relative.id].sort().join(":");
@@ -476,6 +587,7 @@ export async function getCanvasNeighborhood({
           source: current.personId,
           target: relative.id,
           label: relation,
+          type: "smoothstep",
         });
       }
 
@@ -484,6 +596,7 @@ export async function getCanvasNeighborhood({
         queue.push({
           personId: relative.id,
           level: current.level + 1,
+          group: relationGroup,
         });
       }
     });
@@ -504,14 +617,18 @@ export async function getCanvasNeighborhood({
   );
 
   const nodes: Node[] = [...visiblePeople.values()].map((visiblePerson) => {
+    const personLineages = getLineagesForPerson(visiblePerson.id);
     const data: CanvasNodeData = {
       id: visiblePerson.id,
       label: visiblePerson.fullName,
-      subtitle: visiblePerson.summary,
+      subtitle: getCanvasDateLabel(visiblePerson),
+      summary: visiblePerson.summary,
       isLiving: visiblePerson.isLiving,
       kind: "person",
       isFocus: visiblePerson.id === person.id,
       isHighlighted: highlightedIds.has(visiblePerson.id),
+      relationGroup: relationGroups.get(visiblePerson.id) ?? "relative",
+      lineageNames: personLineages.map((lineage) => lineage.name),
     };
 
     return {
@@ -531,16 +648,12 @@ export async function getCanvasNeighborhood({
   const edges = [...edgeMap.values()].map((edge) => {
     const isHighlighted =
       highlightedIds.has(edge.source) && highlightedIds.has(edge.target);
+    const relation = (edge.label as RelativeRelation | undefined) ?? "child";
 
     return {
       ...edge,
       animated: isHighlighted,
-      style: isHighlighted
-      ? {
-          stroke: "var(--accent-primary)",
-          strokeWidth: 2.5,
-        }
-      : undefined,
+      style: getCanvasEdgeStyle(relation, isHighlighted),
     };
   });
 
@@ -564,12 +677,12 @@ export async function getCanvasNeighborhood({
 
       return String(left.data.label).localeCompare(String(right.data.label));
     });
-    const layerHeight = Math.max((sortedNodes.length - 1) * 148, 0);
+    const layerHeight = Math.max((sortedNodes.length - 1) * 190, 0);
 
     sortedNodes.forEach((node, index) => {
       node.position = {
-        x: level * 280,
-        y: index * 148 - layerHeight / 2,
+        x: level * 320,
+        y: index * 190 - layerHeight / 2,
       };
     });
   });
@@ -582,15 +695,16 @@ export async function getCanvasNeighborhood({
       id: "family-tree",
       layoutOptions: {
         "elk.algorithm": "layered",
-        "elk.direction": "DOWN",
+        "elk.direction": "RIGHT",
         "elk.edgeRouting": "ORTHOGONAL",
-        "elk.layered.spacing.nodeNodeBetweenLayers": "120",
-        "elk.spacing.nodeNode": "80",
+        "elk.layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
+        "elk.layered.spacing.nodeNodeBetweenLayers": "170",
+        "elk.spacing.nodeNode": "120",
       },
       children: nodes.map((node) => ({
         id: node.id,
-        width: 220,
-        height: 112,
+        width: 252,
+        height: 150,
       })),
       edges: edges.map((edge) => ({
         id: edge.id,

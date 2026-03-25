@@ -34,6 +34,31 @@ body {
   font-family: var(--font-body);
 }
 
+:root {
+  --canvas-sidebar-bg: color-mix(in oklab, var(--bg-elevated) 86%, transparent);
+  --canvas-tooltip-bg: color-mix(in oklab, var(--bg-elevated) 94%, transparent);
+  --canvas-avatar-bg: color-mix(in oklab, var(--accent-primary) 12%, transparent);
+  --canvas-controls-bg: color-mix(in oklab, var(--bg-elevated) 92%, transparent);
+  --canvas-grid-color: color-mix(in oklab, var(--accent-primary) 10%, transparent);
+  --canvas-node-highlight-bg: color-mix(in oklab, var(--canvas-node-bg) 80%, var(--accent-primary));
+  --shadow-node: var(--shadow-md);
+  --minimap-bg: color-mix(in oklab, var(--bg-elevated) 92%, transparent);
+  --minimap-mask: color-mix(in oklab, var(--bg-primary) 45%, transparent);
+  --minimap-node: color-mix(in oklab, var(--text-muted) 35%, transparent);
+  --rel-focus-border: color-mix(in oklab, var(--accent-primary) 52%, transparent);
+  --rel-focus-text: var(--accent-text);
+  --rel-focus-bg: color-mix(in oklab, var(--accent-primary) 16%, transparent);
+  --rel-ancestor-border: var(--rel-parent-border);
+  --rel-ancestor-text: var(--rel-parent-text);
+  --rel-ancestor-bg: var(--rel-parent-bg);
+  --rel-descendant-border: var(--rel-child-border);
+  --rel-descendant-text: var(--rel-child-text);
+  --rel-descendant-bg: var(--rel-child-bg);
+  --rel-default-border: var(--border-default);
+  --rel-default-text: var(--text-muted);
+  --rel-default-bg: color-mix(in oklab, var(--bg-elevated) 72%, transparent);
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -73,6 +98,61 @@ textarea {
 [data-layout="explorer"] .canvas-detail {
   position: sticky;
   top: 5rem;
+}
+
+.canvas-stage .react-flow__renderer {
+  background: transparent;
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+.react-flow__controls {
+  left: 16px !important;
+  bottom: 16px !important;
+  top: auto !important;
+  border-radius: 1rem !important;
+  overflow: hidden;
+  border: 1px solid var(--border-default) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.react-flow__controls-button {
+  background: var(--canvas-controls-bg) !important;
+  border-bottom: 1px solid var(--border-muted) !important;
+  fill: var(--text-secondary) !important;
+}
+
+.react-flow__controls-button:hover {
+  background: color-mix(in oklab, var(--accent-primary) 12%, var(--canvas-controls-bg)) !important;
+  fill: var(--text-primary) !important;
+}
+
+.react-flow__controls-button svg {
+  max-width: 14px;
+  max-height: 14px;
+}
+
+.react-flow__minimap {
+  right: 16px !important;
+  bottom: 16px !important;
+  top: auto !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.react-flow__minimap-mask {
+  fill: var(--minimap-mask) !important;
+}
+
+.react-flow__panel {
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .react-flow__minimap {
+    display: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

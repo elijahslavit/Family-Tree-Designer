@@ -228,8 +228,17 @@ export interface CanvasNodeData extends Record<string, unknown> {
   id: string;
   label: string;
   subtitle?: string | null;
+  summary?: string | null;
   isLiving: boolean;
   kind: "person" | "family";
   isFocus?: boolean;
   isHighlighted?: boolean;
+  relationGroup?:
+    | "focus"
+    | "ancestor"
+    | "sibling"
+    | "spouse"
+    | "descendant"
+    | "relative";
+  lineageNames?: string[];
 }

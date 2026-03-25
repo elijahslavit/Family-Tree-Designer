@@ -43,7 +43,7 @@ test("canvas explorer can expand outward and preserve lineage highlighting in th
 
   await page.getByRole("button", { name: "2 hop" }).click();
   await expect(page).toHaveURL(/\/canvas\?person=p03&depth=2/);
-  await expect(page.getByText("George Vale")).toBeVisible();
+  await expect(page.getByText("George Vale").first()).toBeVisible();
 
   await page.getByRole("button", { name: "West-Vale Branch" }).click();
   await expect(page).toHaveURL(/lineage=l02/);

@@ -33,6 +33,8 @@ export default async function PublicCanvasPage({
     depth,
     lineageId,
   });
+  const selectedLineage =
+    canvas.availableLineages.find((lineage) => lineage.id === lineageId) ?? null;
 
   return (
     <ThemeProvider layout={tree.themeLayout} skin={tree.themeSkin}>
@@ -46,7 +48,9 @@ export default async function PublicCanvasPage({
             shareToken={tree.shareToken}
             depth={canvas.depth}
             selectedLineageId={lineageId}
+            selectedLineageName={selectedLineage?.name ?? null}
             profilePathBase={`/t/${tree.slug}/person`}
+            focusLabel={canvas.focusPerson.fullName}
           />
         }
         detail={

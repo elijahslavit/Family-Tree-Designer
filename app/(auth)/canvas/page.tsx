@@ -26,6 +26,8 @@ export default async function CreatorCanvasPage({ searchParams }: CanvasPageProp
     depth,
     lineageId,
   });
+  const selectedLineage =
+    canvas.availableLineages.find((lineage) => lineage.id === lineageId) ?? null;
 
   return (
     <ThemeProvider layout={tree.themeLayout} skin={tree.themeSkin}>
@@ -38,7 +40,9 @@ export default async function CreatorCanvasPage({ searchParams }: CanvasPageProp
             edges={canvas.edges}
             depth={canvas.depth}
             selectedLineageId={lineageId}
+            selectedLineageName={selectedLineage?.name ?? null}
             profilePathBase="/person"
+            focusLabel={canvas.focusPerson.fullName}
           />
         }
         detail={

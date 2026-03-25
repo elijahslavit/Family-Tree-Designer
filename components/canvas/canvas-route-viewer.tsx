@@ -12,7 +12,9 @@ type CanvasRouteViewerProps = {
   shareToken?: string | null;
   depth: number;
   selectedLineageId?: string | null;
+  selectedLineageName?: string | null;
   profilePathBase: string;
+  focusLabel: string;
 };
 
 export function CanvasRouteViewer({
@@ -22,7 +24,9 @@ export function CanvasRouteViewer({
   shareToken,
   depth,
   selectedLineageId,
+  selectedLineageName,
   profilePathBase,
+  focusLabel,
 }: CanvasRouteViewerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -31,6 +35,10 @@ export function CanvasRouteViewer({
     <FamilyCanvas
       nodes={nodes}
       edges={edges}
+      depth={depth}
+      focusLabel={focusLabel}
+      selectedLineageName={selectedLineageName}
+      visibleCount={nodes.length}
       onNodeSelect={(nodeId) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set("person", nodeId);
