@@ -1,18 +1,28 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 
 import { Button } from "@/components/foundation/button";
 import { Card } from "@/components/foundation/card";
+import { Input, Textarea } from "@/components/foundation/input";
 import { useToast } from "@/components/foundation/toast";
-import { regenerateShareToken, toggleTreePublic, updateTreeDetails } from "@/lib/actions";
+import {
+  regenerateShareToken,
+  toggleTreePublic,
+  updateTreeDetails,
+} from "@/lib/actions";
 import type { Tree } from "@/lib/types";
 
 export function ShareSettings({ tree }: { tree: Tree }) {
   const [isPending, startSaving] = useTransition();
+  const [name, setName] = useState(tree.name);
+  const [slug, setSlug] = useState(tree.slug);
+  const [description, setDescription] = useState(tree.description ?? "");
+  const [isPublic, setIsPublic] = useState(tree.isPublic);
+  const [shareToken, setShareToken] = useState(tree.shareToken);
   const { pushToast } = useToast();
   const origin = typeof window === "undefined" ? "" : window.location.origin;
-  const shareUrl = `${origin}/t/${tree.slug}?share=${tree.shareToken}`;
+  const shareUrl = `${origin}/t/${slug}?share=${shareToken}`;
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
@@ -24,42 +34,80 @@ export function ShareSettings({ tree }: { tree: Tree }) {
           <h2 className="text-2xl font-semibold text-[var(--text-primary)]">Public archive link</h2>
         </div>
         <p className="text-sm text-[var(--text-secondary)]">
-          The current share URL requires both the tree slug and the active share token.
+          Public access requires the current slug and active share token. Regenerating the token invalidates older links immediately.
         </p>
         <code className="block rounded-[var(--radius-md)] bg-[var(--bg-elevated)] p-3 text-xs text-[var(--text-secondary)]">
-          {shareUrl || `/t/${tree.slug}?share=${tree.shareToken}`}
+          {shareUrl || `/t/${slug}?share=${shareToken}`}
         </code>
         <div className="flex flex-wrap gap-3">
           <Button
             loading={isPending}
-            variant={tree.isPublic ? "secondary" : "primary"}
+            variant={isPublic ? "secondary" : "primary"}
             onClick={() =>
               startSaving(async () => {
-                await toggleTreePublic({
+                const nextValue = !isPublic;
+
+                if (
+                  typeof window !== "undefined" &&
+                  !window.confirm(
+                    nextValue
+                      ? "Enable public sharing for this tree?"
+                      : "Disable the public archive link?",
+                  )
+                ) {
+                  return;
+                }
+
+                const nextState = await toggleTreePublic({
                   treeId: tree.id,
-                  isPublic: !tree.isPublic,
+                  isPublic: nextValue,
                 });
+                setIsPublic(nextState);
                 pushToast(
-                  tree.isPublic ? "Tree set to private." : "Tree is now publicly shareable.",
+                  nextState ? "Tree is now publicly shareable." : "Tree set to private.",
                   "success",
                 );
               })
             }
           >
-            {tree.isPublic ? "Make private" : "Make public"}
+            {isPublic ? "Make private" : "Make public"}
           </Button>
           <Button
             loading={isPending}
             variant="ghost"
             onClick={() =>
               startSaving(async () => {
+                if (
+                  typeof window !== "undefined" &&
+                  !window.confirm("Regenerate the share token and invalidate the current link?")
+                ) {
+                  return;
+                }
+
                 const token = await regenerateShareToken(tree.id);
-                navigator.clipboard.writeText(`/t/${tree.slug}?share=${token}`);
+                setShareToken(token);
+                await navigator.clipboard.writeText(
+                  `${window.location.origin}/t/${slug}?share=${token}`,
+                );
                 pushToast("Share token regenerated and copied.", "success");
               })
             }
           >
             Regenerate token
+          </Button>
+          <Button
+            loading={isPending}
+            variant="secondary"
+            onClick={() =>
+              startSaving(async () => {
+                await navigator.clipboard.writeText(
+                  `${window.location.origin}/t/${slug}?share=${shareToken}`,
+                );
+                pushToast("Share URL copied.", "success");
+              })
+            }
+          >
+            Copy URL
           </Button>
         </div>
       </Card>
@@ -70,22 +118,46 @@ export function ShareSettings({ tree }: { tree: Tree }) {
           </p>
           <h2 className="text-2xl font-semibold text-[var(--text-primary)]">Presentation metadata</h2>
         </div>
-        <Button
-          loading={isPending}
-          variant="secondary"
-          onClick={() =>
+        <form
+          className="space-y-4"
+          onSubmit={(event) => {
+            event.preventDefault();
             startSaving(async () => {
-              await updateTreeDetails({
+              const updated = await updateTreeDetails({
                 treeId: tree.id,
-                name: `${tree.name} Edition`,
-                description: tree.description ?? null,
+                name,
+                slug,
+                description: description || null,
               });
+              setName(updated.name);
+              setSlug(updated.slug);
+              setDescription(updated.description ?? "");
               pushToast("Tree details updated.", "success");
-            })
-          }
+            });
+          }}
         >
-          Generate alternate slug
-        </Button>
+          <label className="space-y-2">
+            <span className="text-sm text-[var(--text-secondary)]">Tree name</span>
+            <Input value={name} onChange={(event) => setName(event.target.value)} />
+          </label>
+          <label className="space-y-2">
+            <span className="text-sm text-[var(--text-secondary)]">Public slug</span>
+            <Input value={slug} onChange={(event) => setSlug(event.target.value)} />
+          </label>
+          <label className="space-y-2">
+            <span className="text-sm text-[var(--text-secondary)]">Description</span>
+            <Textarea
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              className="min-h-24"
+            />
+          </label>
+          <div className="flex justify-end">
+            <Button loading={isPending} type="submit">
+              Save details
+            </Button>
+          </div>
+        </form>
       </Card>
     </div>
   );

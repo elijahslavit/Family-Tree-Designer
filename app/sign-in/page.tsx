@@ -4,6 +4,8 @@ import { Card } from "@/components/foundation/card";
 import { hasConfiguredBackend, isDemoMode } from "@/lib/runtime";
 
 export default function SignInPage() {
+  const demoAccess = isDemoMode() || !hasConfiguredBackend();
+
   return (
     <main className="mx-auto max-w-3xl p-6">
       <Card className="space-y-4">
@@ -12,13 +14,19 @@ export default function SignInPage() {
           Creator authentication
         </h1>
         <p className="text-sm leading-6 text-[var(--text-secondary)]">
-          {isDemoMode() || !hasConfiguredBackend()
-            ? "Demo mode is active, so creator routes are available without a real sign-in flow. Configure Supabase env vars to enable live authentication."
-            : "Supabase auth is configured. Finish wiring your preferred sign-in UI against the provided SSR helpers and callback route."}
+          {demoAccess
+            ? "Demo mode is active, so creator routes are available without a live Supabase session."
+            : "Creator mode is locked behind a valid Supabase session. Access the app through your configured Supabase auth flow before returning here."}
         </p>
-        <Link href="/dashboard" className="text-sm font-semibold text-[var(--accent-text)]">
-          Continue to the creator dashboard
-        </Link>
+        {demoAccess ? (
+          <Link href="/dashboard" className="text-sm font-semibold text-[var(--accent-text)]">
+            Continue to the creator dashboard
+          </Link>
+        ) : (
+          <Link href="/" className="text-sm font-semibold text-[var(--accent-text)]">
+            Return to the marketing home
+          </Link>
+        )}
       </Card>
     </main>
   );

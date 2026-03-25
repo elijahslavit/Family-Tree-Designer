@@ -21,6 +21,7 @@ describe("query layer", () => {
 
     expect(person.summary).toBe("Details private");
     expect(person.birthDateText).toBeNull();
+    expect(person.timeline).toHaveLength(0);
   });
 
   it("filters the directory by search term", async () => {

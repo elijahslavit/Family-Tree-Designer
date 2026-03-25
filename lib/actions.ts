@@ -39,6 +39,7 @@ const treeSharingSchema = z.object({
 const treeDetailsSchema = z.object({
   treeId: z.string(),
   name: z.string().min(2),
+  slug: z.string().trim().min(2).nullable().optional(),
   description: z.string().nullable().optional(),
 });
 
@@ -107,7 +108,13 @@ function getEditableTree(accountId: string) {
   return store;
 }
 
-function revalidateTree(slug: string) {
+function assertTreeId(treeId: string, currentTreeId: string) {
+  if (treeId !== currentTreeId) {
+    throw new Error("Tree not found");
+  }
+}
+
+function revalidateTree(slug: string, oldSlug?: string | null) {
   revalidatePath("/");
   revalidatePath("/dashboard");
   revalidatePath("/directory");
@@ -116,6 +123,11 @@ function revalidateTree(slug: string) {
   revalidatePath("/settings");
   revalidatePath(`/t/${slug}`);
   revalidatePath(`/t/${slug}/canvas`);
+
+  if (oldSlug && oldSlug !== slug) {
+    revalidatePath(`/t/${oldSlug}`);
+    revalidatePath(`/t/${oldSlug}/canvas`);
+  }
 }
 
 export async function updateTreeTheme(input: z.input<typeof treeThemeSchema>) {
@@ -123,9 +135,7 @@ export async function updateTreeTheme(input: z.input<typeof treeThemeSchema>) {
   const data = treeThemeSchema.parse(input);
   const store = getEditableTree(accountId);
 
-  if (store.tree.id !== data.treeId) {
-    throw new Error("Tree not found");
-  }
+  assertTreeId(data.treeId, store.tree.id);
 
   store.tree.themeLayout = data.themeLayout;
   store.tree.themeSkin = data.themeSkin;
@@ -137,16 +147,17 @@ export async function updateTreeDetails(input: z.input<typeof treeDetailsSchema>
   const accountId = await requireAccountSession();
   const data = treeDetailsSchema.parse(input);
   const store = getEditableTree(accountId);
+  const oldSlug = store.tree.slug;
+  const nextSlug = slugify(data.slug?.trim() || data.name);
 
-  if (store.tree.id !== data.treeId) {
-    throw new Error("Tree not found");
-  }
+  assertTreeId(data.treeId, store.tree.id);
 
   store.tree.name = data.name;
   store.tree.description = data.description;
-  store.tree.slug = slugify(data.name);
+  store.tree.slug = nextSlug;
   store.tree.updatedAt = new Date().toISOString();
-  revalidateTree(store.tree.slug);
+  revalidateTree(store.tree.slug, oldSlug);
+  return store.tree;
 }
 
 export async function toggleTreePublic(input: z.input<typeof treeSharingSchema>) {
@@ -154,22 +165,19 @@ export async function toggleTreePublic(input: z.input<typeof treeSharingSchema>)
   const data = treeSharingSchema.parse(input);
   const store = getEditableTree(accountId);
 
-  if (store.tree.id !== data.treeId) {
-    throw new Error("Tree not found");
-  }
+  assertTreeId(data.treeId, store.tree.id);
 
   store.tree.isPublic = data.isPublic;
   store.tree.updatedAt = new Date().toISOString();
   revalidateTree(store.tree.slug);
+  return store.tree.isPublic;
 }
 
 export async function regenerateShareToken(treeId: string) {
   const accountId = await requireAccountSession();
   const store = getEditableTree(accountId);
 
-  if (store.tree.id !== treeId) {
-    throw new Error("Tree not found");
-  }
+  assertTreeId(treeId, store.tree.id);
 
   store.tree.shareToken = createShareToken();
   store.tree.updatedAt = new Date().toISOString();
@@ -181,6 +189,7 @@ export async function createPerson(input: z.input<typeof personSchema>) {
   const accountId = await requireAccountSession();
   const data = personSchema.parse(input);
   const store = getEditableTree(accountId);
+  assertTreeId(data.treeId, store.tree.id);
 
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
@@ -214,6 +223,7 @@ export async function updatePerson(input: z.input<typeof personSchema>) {
   const accountId = await requireAccountSession();
   const data = personSchema.parse(input);
   const store = getEditableTree(accountId);
+  assertTreeId(data.treeId, store.tree.id);
 
   const person = store.people.find((item) => item.id === data.id);
 
@@ -262,6 +272,7 @@ export async function createFamily(input: z.input<typeof familySchema>) {
   const accountId = await requireAccountSession();
   const data = familySchema.parse(input);
   const store = getEditableTree(accountId);
+  assertTreeId(data.treeId, store.tree.id);
   const id = crypto.randomUUID();
 
   store.families.push({
@@ -282,6 +293,11 @@ export async function addChild(input: z.input<typeof childSchema>) {
   const accountId = await requireAccountSession();
   const data = childSchema.parse(input);
   const store = getEditableTree(accountId);
+  const family = store.families.find((item) => item.id === data.familyId);
+
+  if (!family) {
+    throw new Error("Family not found");
+  }
 
   store.familyChildren.push({
     familyId: data.familyId,
@@ -297,6 +313,7 @@ export async function setParents(input: z.input<typeof parentsSchema>) {
   const accountId = await requireAccountSession();
   const data = parentsSchema.parse(input);
   const store = getEditableTree(accountId);
+  assertTreeId(data.treeId, store.tree.id);
 
   const existingFamily = store.families.find(
     (family) =>
@@ -334,6 +351,7 @@ export async function createOrUpdateEvent(input: z.input<typeof eventSchema>) {
   const accountId = await requireAccountSession();
   const data = eventSchema.parse(input);
   const store = getEditableTree(accountId);
+  assertTreeId(data.treeId, store.tree.id);
 
   const existing = store.events.find((event) => event.id === data.id);
 
@@ -373,6 +391,7 @@ export async function createOrUpdateLineage(input: z.input<typeof lineageSchema>
   const accountId = await requireAccountSession();
   const data = lineageSchema.parse(input);
   const store = getEditableTree(accountId);
+  assertTreeId(data.treeId, store.tree.id);
 
   const existing = store.lineages.find((lineage) => lineage.id === data.id);
 
@@ -395,6 +414,11 @@ export async function updateLineageMembers(input: z.input<typeof lineageMembersS
   const accountId = await requireAccountSession();
   const data = lineageMembersSchema.parse(input);
   const store = getEditableTree(accountId);
+  const lineage = store.lineages.find((item) => item.id === data.lineageId);
+
+  if (!lineage) {
+    throw new Error("Lineage not found");
+  }
 
   store.lineageMembers = store.lineageMembers.filter(
     (member) => member.lineageId !== data.lineageId,
@@ -437,6 +461,10 @@ export async function confirmGedcomImport(input: z.input<typeof importConfirmSch
     throw new Error("Import job not found");
   }
 
+  if (job.status === "confirmed") {
+    return job;
+  }
+
   if (job.payloadJson) {
     const payload = JSON.parse(job.payloadJson) as {
       people: typeof store.people;
@@ -456,5 +484,7 @@ export async function confirmGedcomImport(input: z.input<typeof importConfirmSch
   }
 
   job.status = "confirmed";
+  job.payloadJson = null;
   revalidateTree(store.tree.slug);
+  return job;
 }

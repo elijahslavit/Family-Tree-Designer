@@ -121,7 +121,11 @@ function getRelatives(personId: string, viewer: ViewerContext): RelativeGroup {
   };
 }
 
-function getTimeline(person: Person): TimelineItem[] {
+function getTimeline(person: Person, viewer: ViewerContext): TimelineItem[] {
+  if (isViewerSuppressed(person, viewer)) {
+    return [];
+  }
+
   const items: TimelineItem[] = [];
 
   if (person.birthDateText || person.birthDateNormalized) {
@@ -169,7 +173,7 @@ function buildPersonViewModel(person: Person, viewer: ViewerContext): PersonView
     ...safePerson,
     relatives: getRelatives(person.id, viewer),
     lineages: getLineagesForPerson(person.id),
-    timeline: getTimeline(safePerson),
+    timeline: getTimeline(person, viewer),
   };
 }
 
