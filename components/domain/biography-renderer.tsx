@@ -1,3 +1,5 @@
+"use client";
+
 import Markdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";

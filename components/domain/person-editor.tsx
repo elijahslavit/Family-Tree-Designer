@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { createPerson, deletePerson, updatePerson } from "@/lib/actions";
+import { BiographyRenderer } from "@/components/domain/biography-renderer";
 import type { Person, Tree } from "@/lib/types";
 import { Input, Select, Textarea } from "@/components/foundation/input";
 import { Button } from "@/components/foundation/button";
@@ -47,6 +48,10 @@ export function PersonEditor({ tree, person }: PersonEditorProps) {
       isLiving: person?.isLiving ?? false,
     },
   });
+  const biographyPreview = useWatch({
+    control: form.control,
+    name: "biographyMd",
+  });
 
   const onSubmit = form.handleSubmit((values) => {
     startSaving(async () => {
@@ -81,7 +86,8 @@ export function PersonEditor({ tree, person }: PersonEditorProps) {
   });
 
   return (
-    <Card className="space-y-5">
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
+      <Card className="space-y-5">
       <div className="space-y-2">
         <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
           Person editor
@@ -172,6 +178,21 @@ export function PersonEditor({ tree, person }: PersonEditorProps) {
           </Button>
         </div>
       </form>
-    </Card>
+      </Card>
+      <div className="space-y-4">
+        <Card className="space-y-3">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
+            Live preview
+          </p>
+          <h3 className="text-xl font-semibold text-[var(--text-primary)]">
+            Biography rendering
+          </h3>
+          <p className="text-sm text-[var(--text-secondary)]">
+            Markdown is sanitized before rendering. This preview matches the profile surface.
+          </p>
+        </Card>
+        <BiographyRenderer markdown={biographyPreview} />
+      </div>
+    </div>
   );
 }

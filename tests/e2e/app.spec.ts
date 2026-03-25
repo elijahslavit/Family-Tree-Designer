@@ -28,11 +28,23 @@ test("public directory filtering preserves the share token", async ({ page }) =>
 test("living people stay masked in the public profile and can still open canvas", async ({ page }) => {
   await page.goto("/t/hart-family-archive/person/p14?share=share-hart-2026-demo");
 
-  await expect(page.getByRole("heading", { name: "Details private" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Helen Hart Brooks" })).toBeVisible();
+  await expect(page.getByText("This person is marked as living")).toBeVisible();
   await expect(page.getByText("Helen believes the archive should feel like an heirloom book")).toHaveCount(0);
 
   await page.getByRole("link", { name: "Explore in canvas" }).click();
   await expect(page).toHaveURL(/\/t\/hart-family-archive\/canvas\?share=share-hart-2026-demo&person=p14/);
+});
+
+test("viewer can open the lineage view from the shared archive", async ({ page }) => {
+  await page.goto("/t/hart-family-archive?share=share-hart-2026-demo");
+
+  await page.getByRole("link", { name: "Browse lineages" }).click();
+
+  await expect(page).toHaveURL(/\/t\/hart-family-archive\/lineages\?share=share-hart-2026-demo/);
+  await expect(page.getByRole("heading", { name: "Follow named descent paths" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Direct Hart Line" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Jonah Brooks/ })).toBeVisible();
 });
 
 test("creator can parse and confirm a GEDCOM upload", async ({ page }) => {

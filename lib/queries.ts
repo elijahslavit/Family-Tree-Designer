@@ -11,6 +11,7 @@ import type {
   Family,
   FamilyChild,
   Lineage,
+  LineageViewModel,
   Person,
   PersonViewModel,
   RelativeGroup,
@@ -317,7 +318,7 @@ export async function getLineagesByTree({
 }: {
   treeSlug: string;
   viewer: ViewerContext;
-}) {
+}): Promise<LineageViewModel[]> {
   await getTreeBySlug(treeSlug, viewer);
   return getLineages().map((lineage) => ({
     ...lineage,

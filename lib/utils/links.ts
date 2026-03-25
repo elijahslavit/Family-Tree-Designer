@@ -10,3 +10,7 @@ export function publicCanvasHref(slug: string, shareToken: string, personId?: st
   const base = `/t/${slug}/canvas?share=${shareToken}`;
   return personId ? `${base}&person=${personId}` : base;
 }
+
+export function publicLineagesHref(slug: string, shareToken: string) {
+  return `/t/${slug}/lineages?share=${shareToken}`;
+}

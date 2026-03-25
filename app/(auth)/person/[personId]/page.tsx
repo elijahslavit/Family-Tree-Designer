@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { BiographyRenderer } from "@/components/domain/biography-renderer";
 import { FactTable } from "@/components/domain/fact-table";
+import { LineageBadge } from "@/components/domain/lineage-badge";
 import { RelativeGroup } from "@/components/domain/relative-group";
 import { Timeline } from "@/components/domain/timeline";
 import { Card } from "@/components/foundation/card";
@@ -28,6 +29,7 @@ export default async function CreatorPersonPage({ params }: PersonPageProps) {
     <ThemeProvider layout={tree.themeLayout} skin={tree.themeSkin}>
       <CreatorTreeShell
         tree={tree}
+        variant="profile"
         main={
           <div className="space-y-6">
             <Card className="space-y-3">
@@ -38,6 +40,15 @@ export default async function CreatorPersonPage({ params }: PersonPageProps) {
                 {person.fullName}
               </h2>
               <p className="text-lg text-[var(--text-secondary)]">{person.summary}</p>
+              <div className="flex flex-wrap gap-2">
+                {person.lineages.length ? (
+                  person.lineages.map((lineage) => (
+                    <LineageBadge key={lineage.id} lineage={lineage} />
+                  ))
+                ) : (
+                  <span className="text-sm text-[var(--text-muted)]">No lineage assigned</span>
+                )}
+              </div>
               <div className="flex flex-wrap gap-4">
                 <Link href={`/person/${person.id}/edit`} className="text-sm font-semibold text-[var(--accent-text)]">
                   Edit profile

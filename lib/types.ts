@@ -89,6 +89,10 @@ export interface Lineage {
   description?: string | null;
 }
 
+export interface LineageViewModel extends Lineage {
+  members: Person[];
+}
+
 export interface LineageMember {
   lineageId: string;
   personId: string;

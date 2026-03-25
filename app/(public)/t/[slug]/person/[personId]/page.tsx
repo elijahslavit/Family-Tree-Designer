@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { BiographyRenderer } from "@/components/domain/biography-renderer";
 import { FactTable } from "@/components/domain/fact-table";
+import { LineageBadge } from "@/components/domain/lineage-badge";
 import { PrivacyMask } from "@/components/domain/privacy-mask";
 import { RelativeGroup } from "@/components/domain/relative-group";
 import { Timeline } from "@/components/domain/timeline";
@@ -33,6 +34,7 @@ export default async function PublicPersonPage({
     <ThemeProvider layout={tree.themeLayout} skin={tree.themeSkin}>
       <PublicTreeShell
         tree={tree}
+        variant="profile"
         main={
           <div className="space-y-6">
             <Card className="space-y-3">
@@ -43,6 +45,15 @@ export default async function PublicPersonPage({
                 {person.fullName}
               </h2>
               <p className="text-lg text-[var(--text-secondary)]">{person.summary}</p>
+              <div className="flex flex-wrap gap-2">
+                {person.lineages.length ? (
+                  person.lineages.map((lineage) => (
+                    <LineageBadge key={lineage.id} lineage={lineage} />
+                  ))
+                ) : (
+                  <span className="text-sm text-[var(--text-muted)]">No lineage assigned</span>
+                )}
+              </div>
               <div className="flex flex-wrap gap-4">
                 <Link
                   href={publicCanvasHref(tree.slug, tree.shareToken, person.id)}

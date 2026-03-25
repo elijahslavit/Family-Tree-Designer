@@ -2,11 +2,16 @@ import Link from "next/link";
 
 import { DirectoryControls } from "@/components/domain/directory-controls";
 import { EmptyState } from "@/components/foundation/empty-state";
+import { LineageBadge } from "@/components/domain/lineage-badge";
 import { PersonCard } from "@/components/domain/person-card";
 import { CreatorTreeShell } from "@/components/layouts/tree-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { requireAccountSession } from "@/lib/auth/session";
-import { getActiveTreeForCreator, getPeopleByTree } from "@/lib/queries";
+import {
+  getActiveTreeForCreator,
+  getLineagesByTree,
+  getPeopleByTree,
+} from "@/lib/queries";
 
 type DirectoryPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -32,6 +37,22 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
       accountId,
     },
     filters,
+  });
+  const lineages = await getLineagesByTree({
+    treeSlug: tree.slug,
+    viewer: {
+      mode: "creator",
+      accountId,
+    },
+  });
+  const lineagesByPerson = new Map<string, (typeof lineages)[number][]>();
+
+  lineages.forEach((lineage) => {
+    lineage.members.forEach((member) => {
+      const current = lineagesByPerson.get(member.id) ?? [];
+      current.push(lineage);
+      lineagesByPerson.set(member.id, current);
+    });
   });
 
   return (
@@ -63,6 +84,7 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
                     key={person.id}
                     person={person}
                     href={`/person/${person.id}`}
+                    lineages={lineagesByPerson.get(person.id) ?? []}
                   />
                 ))}
               </div>
@@ -77,14 +99,28 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
           </div>
         }
         detail={
-          <DirectoryControls
-            actionPath="/directory"
-            filters={filters}
-            surnames={directory.surnames}
-            lineages={directory.lineages}
-            total={directory.total}
-            totalPages={directory.totalPages}
-          />
+          <div className="space-y-4">
+            <DirectoryControls
+              actionPath="/directory"
+              filters={filters}
+              surnames={directory.surnames}
+              lineages={directory.lineages}
+              total={directory.total}
+              totalPages={directory.totalPages}
+            />
+            <div className="rounded-[var(--radius-lg)] border border-[var(--border-default)] bg-[var(--bg-surface)] p-4">
+              <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
+                Active lineages
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {lineages.length ? (
+                  lineages.map((lineage) => <LineageBadge key={lineage.id} lineage={lineage} />)
+                ) : (
+                  <p className="text-sm text-[var(--text-muted)]">No lineages defined yet.</p>
+                )}
+              </div>
+            </div>
+          </div>
         }
       />
     </ThemeProvider>
