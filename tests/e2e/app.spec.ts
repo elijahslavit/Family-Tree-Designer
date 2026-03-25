@@ -1,5 +1,16 @@
 import { expect, test } from "@playwright/test";
 
+test("dashboard surfaces archive overview and quick actions", async ({ page }) => {
+  await page.goto("/dashboard");
+
+  await expect(page.getByRole("heading", { name: "Steer the archive, not just the records." })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Add person" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Import GEDCOM" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Recently shaped profiles" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Move the archive forward" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Sharing and quality" })).toBeVisible();
+});
+
 test("creator can add a person and continue in the workbench", async ({ page }) => {
   await page.goto("/directory");
   await page.getByRole("link", { name: "Add person" }).click();

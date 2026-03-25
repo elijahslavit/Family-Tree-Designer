@@ -334,20 +334,96 @@ export async function getAccountForCreator(accountId: string) {
 export async function getDashboardData(accountId: string) {
   const tree = await getActiveTreeForCreator(accountId);
   const people = getPeople();
+  const families = getFamilies();
+  const events = getEvents();
   const issues = getBundle().reviewIssues;
+  const importJobs = getBundle().importJobs;
+  const familyChildren = getFamilyChildren();
+  const lineageMembers = getLineageMembers();
+  const lineages = getLineages();
+  const relatedPersonIds = new Set(
+    [
+      ...families.flatMap((family) => [family.spouse1Id, family.spouse2Id]),
+      ...familyChildren.map((item) => item.childId),
+    ].filter(Boolean),
+  );
+  const orphanCount = people.filter((person) => !relatedPersonIds.has(person.id)).length;
+  const livingCount = people.filter((person) => person.isLiving).length;
+  const topSurnames = [...people]
+    .reduce<Map<string, number>>((map, person) => {
+      const surname = person.surname.trim();
+
+      if (!surname) {
+        return map;
+      }
+
+      map.set(surname, (map.get(surname) ?? 0) + 1);
+      return map;
+    }, new Map<string, number>());
+  const topSurnamesList = Array.from(topSurnames.entries())
+    .sort((left, right) => {
+      if (right[1] !== left[1]) {
+        return right[1] - left[1];
+      }
+
+      return left[0].localeCompare(right[0]);
+    })
+    .slice(0, 4)
+    .map(([surname, count]) => ({ surname, count }));
+  const recentPeople = [...people]
+    .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))
+    .slice(0, 6)
+    .map((person) => ({
+      ...person,
+      lineages: getLineagesForPerson(person.id),
+    }));
+  const openIssues = [...issues]
+    .filter((issue) => issue.status === "open")
+    .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
+    .slice(0, 4);
+  const lineageSummaries = lineages
+    .map((lineage) => {
+      const members = lineageMembers
+        .filter((member) => member.lineageId === lineage.id)
+        .sort((left, right) => left.order - right.order);
+      const peopleInLineage = members
+        .map((member) => people.find((person) => person.id === member.personId))
+        .filter((person): person is Person => Boolean(person));
+
+      return {
+        ...lineage,
+        memberCount: members.length,
+        firstPersonId: peopleInLineage[0]?.id ?? null,
+        firstPersonName: peopleInLineage[0]?.fullName ?? null,
+        latestPersonName: peopleInLineage.at(-1)?.fullName ?? null,
+      };
+    })
+    .sort((left, right) => {
+      if (right.memberCount !== left.memberCount) {
+        return right.memberCount - left.memberCount;
+      }
+
+      return left.name.localeCompare(right.name);
+    });
+  const latestImportJob =
+    [...importJobs].sort((left, right) => right.createdAt.localeCompare(left.createdAt))[0] ??
+    null;
 
   return {
     tree,
     stats: {
       people: people.length,
-      families: getFamilies().length,
-      events: getEvents().length,
+      families: families.length,
+      events: events.length,
       issues: issues.length,
+      living: livingCount,
+      orphan: orphanCount,
     },
-    recentPeople: [...people]
-      .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))
-      .slice(0, 5),
-    lineages: getLineages(),
+    topSurnames: topSurnamesList,
+    recentPeople,
+    openIssues,
+    latestImportJob,
+    lineages: lineageSummaries,
   };
 }
 
