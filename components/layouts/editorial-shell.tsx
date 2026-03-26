@@ -2,6 +2,7 @@ import type { PropsWithChildren, ReactNode } from "react";
 
 import { MobileNavDrawer, ShellNavLinks, type ShellNavItem } from "@/components/layouts/shell-nav";
 import type { Tree } from "@/lib/types";
+import { cn } from "@/lib/utils/cn";
 
 type EditorialShellProps = PropsWithChildren<{
   tree: Tree;
@@ -33,8 +34,13 @@ export function EditorialShell({
           </div>
         </div>
       </header>
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <main className="space-y-6">{children}</main>
+      <div
+        className={cn(
+          "mx-auto grid max-w-7xl gap-6 px-4 py-8",
+          aside ? "lg:grid-cols-[minmax(0,1fr)_320px]" : "grid-cols-1",
+        )}
+      >
+        <main className="min-w-0 space-y-6">{children}</main>
         {aside ? <aside className="space-y-6">{aside}</aside> : null}
       </div>
     </div>

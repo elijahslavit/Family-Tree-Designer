@@ -92,6 +92,7 @@ test("settings page is organized around tree, account, and danger-zone controls"
 
 test("theme studio previews curated family-tree combinations before saving", async ({ page }) => {
   await page.goto("/theme");
+  const previewSection = page.locator("#theme-preview");
 
   await expect(page.getByRole("heading", { name: "Choose the archive direction before you choose the colors." })).toBeVisible();
   await expect(page.getByRole("heading", { name: "See the archive, not just the picker." })).toBeVisible();
@@ -101,9 +102,33 @@ test("theme studio previews curated family-tree combinations before saving", asy
   await page.getByRole("button", { name: "Preview canvas screen" }).click();
 
   await expect(page.getByRole("heading", { name: "Relationship map" })).toBeVisible();
-  await expect(page.getByText("Botanical Wall", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("Verdant heirloom poster", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("Conservatory poster", { exact: true }).first()).toBeVisible();
+  await expect(previewSection.getByText("Botanical Wall", { exact: true }).first()).toBeVisible();
+  await expect(previewSection.getByText("Verdant heirloom poster", { exact: true })).toBeVisible();
+  await expect(previewSection.getByText("Conservatory poster", { exact: true }).first()).toBeVisible();
+});
+
+test("theme studio uses the full shell width on desktop", async ({ page }) => {
+  await page.setViewportSize({ width: 1800, height: 1100 });
+  await page.goto("/theme");
+
+  const geometry = await page.evaluate(() => {
+    const shell = document.querySelector("header + div");
+    const preview = document.querySelector("#theme-preview");
+    const topRow = preview?.parentElement;
+    const hero = preview?.previousElementSibling;
+
+    return {
+      shellGridColumns: shell ? getComputedStyle(shell).gridTemplateColumns : "",
+      topRowGridColumns: topRow ? getComputedStyle(topRow).gridTemplateColumns : "",
+      heroWidth: hero ? Math.round(hero.getBoundingClientRect().width) : 0,
+      previewWidth: preview ? Math.round(preview.getBoundingClientRect().width) : 0,
+    };
+  });
+
+  expect(geometry.shellGridColumns).not.toContain("320px");
+  expect(geometry.topRowGridColumns).not.toBe("none");
+  expect(geometry.heroWidth).toBeGreaterThan(520);
+  expect(geometry.previewWidth).toBeGreaterThan(440);
 });
 
 test("creator can parse and confirm a GEDCOM upload", async ({ page }) => {
