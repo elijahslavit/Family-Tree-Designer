@@ -30,7 +30,13 @@ type AccountProfileInput = {
 type TreeThemeInput = {
   treeId: string;
   themeLayout: "classic" | "editorial" | "explorer";
-  themeSkin: "dark-gold" | "parchment" | "modern";
+  themeSkin:
+    | "dark-gold"
+    | "parchment"
+    | "modern"
+    | "botanical"
+    | "inkwash"
+    | "portrait-gallery";
 };
 
 type TreeDetailsInput = {

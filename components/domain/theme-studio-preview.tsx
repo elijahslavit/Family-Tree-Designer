@@ -3,34 +3,15 @@ import type { ReactNode } from "react";
 import { Badge } from "@/components/foundation/badge";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import type { ThemeLayout, ThemeSkin } from "@/lib/types";
+import {
+  labelizeTheme,
+  sceneCopy,
+  type ThemeStudioScene,
+  themeSkinProfiles,
+} from "@/lib/utils/theme-studio";
 import { cn } from "@/lib/utils/cn";
 
-export type ThemeStudioScene = "landing" | "profile" | "canvas";
-
-const sceneCopy: Record<
-  ThemeStudioScene,
-  {
-    eyebrow: string;
-    title: string;
-    description: string;
-  }
-> = {
-  landing: {
-    eyebrow: "Viewer landing",
-    title: "First impression",
-    description: "Tree introduction, family tone, and the invitation to browse.",
-  },
-  profile: {
-    eyebrow: "Person profile",
-    title: "Reading rhythm",
-    description: "Biography, facts, relatives, and lineage markers in context.",
-  },
-  canvas: {
-    eyebrow: "Canvas explorer",
-    title: "Relationship map",
-    description: "The spatial family tree with detail guidance and branch identity.",
-  },
-};
+export type { ThemeStudioScene } from "@/lib/utils/theme-studio";
 
 export function ThemeStudioPreview({
   layout,
@@ -43,10 +24,12 @@ export function ThemeStudioPreview({
   scene: ThemeStudioScene;
   treeName: string;
 }) {
+  const skinProfile = themeSkinProfiles[skin];
+
   return (
     <ThemeProvider layout={layout} skin={skin} className="min-h-0 rounded-[30px]">
       <div className="relative overflow-hidden rounded-[30px] border border-[var(--border-default)] bg-[var(--bg-primary)] p-4 shadow-[var(--shadow-lg)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--accent-primary)_18%,transparent),transparent_38%),radial-gradient(circle_at_bottom_right,color-mix(in_oklab,var(--accent-primary)_10%,transparent),transparent_28%)]" />
+        <PreviewAtmosphere skin={skin} />
 
         <div className="relative space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -62,16 +45,16 @@ export function ThemeStudioPreview({
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge tone="accent">{labelize(layout)} layout</Badge>
-              <Badge tone="default">{labelize(skin)} skin</Badge>
+              <Badge tone="accent">{labelizeTheme(layout)} layout</Badge>
+              <Badge tone="default">{skinProfile.title}</Badge>
             </div>
           </div>
 
           <div className="overflow-hidden rounded-[26px] border border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-surface)_84%,transparent)]">
-            <PreviewChrome treeName={treeName} />
-            {scene === "landing" ? <LandingScene layout={layout} /> : null}
-            {scene === "profile" ? <ProfileScene layout={layout} /> : null}
-            {scene === "canvas" ? <CanvasScene layout={layout} /> : null}
+            <PreviewChrome treeName={treeName} skin={skin} />
+            {scene === "landing" ? <LandingScene layout={layout} skin={skin} /> : null}
+            {scene === "profile" ? <ProfileScene layout={layout} skin={skin} /> : null}
+            {scene === "canvas" ? <CanvasScene layout={layout} skin={skin} /> : null}
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
@@ -95,16 +78,7 @@ export function ThemeStudioPreview({
                     : "Details orbit the graph"
               }
             />
-            <PreviewMeta
-              label="Canvas feel"
-              value={
-                skin === "dark-gold"
-                  ? "Warm heirloom contrast"
-                  : skin === "parchment"
-                    ? "Paper-and-ink archive"
-                    : "Calm modern atlas"
-              }
-            />
+            <PreviewMeta label="Skin signature" value={skinProfile.signature} />
           </div>
         </div>
       </div>
@@ -112,7 +86,13 @@ export function ThemeStudioPreview({
   );
 }
 
-function PreviewChrome({ treeName }: { treeName: string }) {
+function PreviewChrome({
+  treeName,
+  skin,
+}: {
+  treeName: string;
+  skin: ThemeSkin;
+}) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-muted)] px-4 py-3">
       <div>
@@ -122,6 +102,7 @@ function PreviewChrome({ treeName }: { treeName: string }) {
         <p className="text-sm font-semibold text-[var(--text-primary)]">{treeName}</p>
       </div>
       <div className="flex items-center gap-2 text-[11px] text-[var(--text-muted)]">
+        <span>{themeSkinProfiles[skin].mood}</span>
         <span>Directory</span>
         <span>Profile</span>
         <span>Canvas</span>
@@ -130,7 +111,20 @@ function PreviewChrome({ treeName }: { treeName: string }) {
   );
 }
 
-function LandingScene({ layout }: { layout: ThemeLayout }) {
+function LandingScene({
+  layout,
+  skin,
+}: {
+  layout: ThemeLayout;
+  skin: ThemeSkin;
+}) {
+  const archiveTitle =
+    skin === "portrait-gallery"
+      ? "The Hart Family Gallery"
+      : skin === "botanical"
+        ? "The Hart Family Canopy"
+        : "The Hart Family Archive";
+
   if (layout === "classic") {
     return (
       <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_12rem]">
@@ -139,9 +133,7 @@ function LandingScene({ layout }: { layout: ThemeLayout }) {
             <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Family introduction
             </p>
-            <h4 className="text-3xl font-semibold text-[var(--text-primary)]">
-              The Hart Family Archive
-            </h4>
+            <h4 className="text-3xl font-semibold text-[var(--text-primary)]">{archiveTitle}</h4>
             <p className="max-w-xl text-sm leading-6 text-[var(--text-secondary)]">
               A browsable record of migrations, marriages, lineages, and the biographies that
               stitched the family together across three generations.
@@ -180,11 +172,14 @@ function LandingScene({ layout }: { layout: ThemeLayout }) {
             Opening spread
           </p>
           <h4 className="max-w-md text-4xl font-semibold leading-tight text-[var(--text-primary)]">
-            A family tree that reads like a keepsake book.
+            {skin === "inkwash"
+              ? "A family tree that feels authored by hand."
+              : skin === "botanical"
+                ? "A family tree that feels hung in a conservatory."
+                : "A family tree that reads like a keepsake book."}
           </h4>
           <p className="max-w-2xl text-sm leading-7 text-[var(--text-secondary)]">
-            Photographs may come later, but the archive already feels ceremonial through spacing,
-            typography, and the way biography and lineage markers take their time on the page.
+            The selected skin sets the emotional temperature before relatives even choose a branch.
           </p>
           <div className="grid gap-3 sm:grid-cols-3">
             <MetricPill label="People" value="229" />
@@ -198,7 +193,7 @@ function LandingScene({ layout }: { layout: ThemeLayout }) {
               House note
             </p>
             <p className="text-sm leading-6 text-[var(--text-secondary)]">
-              &quot;Archive tone: warm, literary, and dignified.&quot;
+              {themeSkinProfiles[skin].strap}
             </p>
           </SurfaceCard>
           <SurfaceCard className="space-y-2">
@@ -214,14 +209,7 @@ function LandingScene({ layout }: { layout: ThemeLayout }) {
 
   return (
     <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_12rem]">
-      <div className="relative min-h-[18rem] overflow-hidden rounded-[22px] border border-[var(--border-default)] bg-[var(--bg-canvas)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,var(--canvas-grid-color),transparent_48%)] opacity-90" />
-        <CanvasPath />
-        <CanvasNode className="left-[10%] top-[20%]" label="Ada Hart" />
-        <CanvasNode className="left-[42%] top-[18%]" label="Elias Hart" active />
-        <CanvasNode className="left-[70%] top-[20%]" label="Mara Vale" />
-        <CanvasNode className="left-[40%] top-[62%]" label="Jonah Brooks" compact />
-      </div>
+      <CanvasSurface skin={skin} />
       <div className="space-y-3">
         <SurfaceCard className="space-y-3">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
@@ -240,7 +228,13 @@ function LandingScene({ layout }: { layout: ThemeLayout }) {
   );
 }
 
-function ProfileScene({ layout }: { layout: ThemeLayout }) {
+function ProfileScene({
+  layout,
+  skin,
+}: {
+  layout: ThemeLayout;
+  skin: ThemeSkin;
+}) {
   if (layout === "classic") {
     return (
       <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_12rem]">
@@ -251,8 +245,9 @@ function ProfileScene({ layout }: { layout: ThemeLayout }) {
             </p>
             <h4 className="text-3xl font-semibold text-[var(--text-primary)]">Mara Hart Vale</h4>
             <p className="text-sm leading-6 text-[var(--text-secondary)]">
-              Mara kept meticulous letters, organized reunion books, and became the hinge between
-              Hart oral history and the written archive.
+              {skin === "portrait-gallery"
+                ? "Mara becomes the centerpiece of a portrait-led keepsake page."
+                : "Mara kept meticulous letters, organized reunion books, and became the hinge between Hart oral history and the written archive."}
             </p>
           </div>
           <div className="space-y-2">
@@ -291,7 +286,9 @@ function ProfileScene({ layout }: { layout: ThemeLayout }) {
               Biography
             </p>
             <h4 className="max-w-lg text-4xl font-semibold leading-tight text-[var(--text-primary)]">
-              Mara Hart Vale carried the family memory into print.
+              {skin === "inkwash"
+                ? "Mara Hart Vale appears inside an illustrated family manuscript."
+                : "Mara Hart Vale carried the family memory into print."}
             </h4>
           </div>
           <div className="space-y-2">
@@ -323,22 +320,7 @@ function ProfileScene({ layout }: { layout: ThemeLayout }) {
 
   return (
     <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_12rem]">
-      <div className="relative min-h-[18rem] overflow-hidden rounded-[22px] border border-[var(--border-default)] bg-[var(--bg-canvas)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,var(--canvas-grid-color),transparent_48%)] opacity-90" />
-        <CanvasPath vertical />
-        <CanvasNode className="left-[18%] top-[24%]" label="Ada Hart" />
-        <CanvasNode className="left-[42%] top-[22%]" label="Mara Vale" active />
-        <CanvasNode className="left-[65%] top-[56%]" label="Jonah Brooks" compact />
-        <div className="absolute bottom-4 left-4 right-4 rounded-[18px] border border-[var(--border-default)] bg-[var(--canvas-tooltip-bg)] p-4 shadow-[var(--shadow-md)]">
-          <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
-            Profile card
-          </p>
-          <p className="mt-2 text-lg font-semibold text-[var(--text-primary)]">Mara Hart Vale</p>
-          <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-            Biography stays in conversation with graph context rather than leaving it behind.
-          </p>
-        </div>
-      </div>
+      <CanvasSurface skin={skin} />
       <div className="space-y-3">
         <SurfaceCard className="space-y-2">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
@@ -358,11 +340,17 @@ function ProfileScene({ layout }: { layout: ThemeLayout }) {
   );
 }
 
-function CanvasScene({ layout }: { layout: ThemeLayout }) {
+function CanvasScene({
+  layout,
+  skin,
+}: {
+  layout: ThemeLayout;
+  skin: ThemeSkin;
+}) {
   if (layout === "classic") {
     return (
       <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_12rem]">
-        <CanvasSurface />
+        <CanvasSurface skin={skin} />
         <div className="space-y-3">
           <SurfaceCard className="space-y-2">
             <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
@@ -387,15 +375,15 @@ function CanvasScene({ layout }: { layout: ThemeLayout }) {
   if (layout === "editorial") {
     return (
       <div className="space-y-4 p-4">
-        <CanvasSurface />
+        <CanvasSurface skin={skin} />
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_11rem]">
           <SurfaceCard className="space-y-2">
             <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
               Relationship map
             </p>
             <p className="text-sm leading-6 text-[var(--text-secondary)]">
-              The canvas still feels ceremonial, with enough breathing room for labels, lineages,
-              and detail handoff.
+              The canvas inherits the same atmosphere as the reading surfaces, so branch identity
+              and mood stay coherent.
             </p>
           </SurfaceCard>
           <SurfaceCard className="space-y-2">
@@ -409,7 +397,7 @@ function CanvasScene({ layout }: { layout: ThemeLayout }) {
 
   return (
     <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_12rem]">
-      <CanvasSurface expansive />
+      <CanvasSurface skin={skin} expansive />
       <div className="space-y-3">
         <SurfaceCard className="space-y-2">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
@@ -425,7 +413,13 @@ function CanvasScene({ layout }: { layout: ThemeLayout }) {
   );
 }
 
-function CanvasSurface({ expansive = false }: { expansive?: boolean }) {
+function CanvasSurface({
+  expansive = false,
+  skin,
+}: {
+  expansive?: boolean;
+  skin: ThemeSkin;
+}) {
   return (
     <div
       className={cn(
@@ -433,7 +427,7 @@ function CanvasSurface({ expansive = false }: { expansive?: boolean }) {
         expansive ? "min-h-[19rem]" : "min-h-[18rem]",
       )}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,var(--canvas-grid-color),transparent_48%)] opacity-90" />
+      <SkinCanvasOverlay skin={skin} />
       <CanvasPath vertical />
       <CanvasNode className="left-[12%] top-[16%]" label="Ada Hart" />
       <CanvasNode className="left-[40%] top-[14%]" label="Elias Hart" />
@@ -444,6 +438,65 @@ function CanvasSurface({ expansive = false }: { expansive?: boolean }) {
         Canvas
       </div>
     </div>
+  );
+}
+
+function PreviewAtmosphere({ skin }: { skin: ThemeSkin }) {
+  if (skin === "botanical") {
+    return (
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--accent-primary)_16%,transparent),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(184,134,59,0.09),transparent_26%)]" />
+    );
+  }
+
+  if (skin === "inkwash") {
+    return (
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(23,20,19,0.04),transparent_28%),radial-gradient(circle_at_top_left,rgba(23,20,19,0.08),transparent_34%)]" />
+    );
+  }
+
+  if (skin === "portrait-gallery") {
+    return (
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(123,95,143,0.16),transparent_34%),radial-gradient(circle_at_top_right,rgba(195,139,56,0.12),transparent_26%)]" />
+    );
+  }
+
+  return (
+    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--accent-primary)_18%,transparent),transparent_38%),radial-gradient(circle_at_bottom_right,color-mix(in_oklab,var(--accent-primary)_10%,transparent),transparent_28%)]" />
+  );
+}
+
+function SkinCanvasOverlay({ skin }: { skin: ThemeSkin }) {
+  if (skin === "portrait-gallery") {
+    return (
+      <>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,var(--canvas-grid-color),transparent_48%)] opacity-90" />
+        <div className="absolute inset-x-10 top-8 h-[7rem] rounded-t-[999px] border border-[var(--border-default)] border-b-0 opacity-55" />
+      </>
+    );
+  }
+
+  if (skin === "botanical") {
+    return (
+      <>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,var(--canvas-grid-color),transparent_48%)] opacity-90" />
+        <div className="absolute left-1/2 top-6 h-[8rem] w-[2px] -translate-x-1/2 bg-[color-mix(in_oklab,var(--accent-primary)_26%,transparent)]" />
+        <div className="absolute left-[28%] top-[5.5rem] h-[2px] w-[18%] rotate-[-14deg] bg-[color-mix(in_oklab,var(--accent-primary)_26%,transparent)]" />
+        <div className="absolute right-[28%] top-[5.5rem] h-[2px] w-[18%] rotate-[14deg] bg-[color-mix(in_oklab,var(--accent-primary)_26%,transparent)]" />
+      </>
+    );
+  }
+
+  if (skin === "inkwash") {
+    return (
+      <>
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,20,19,0.03),transparent_24%),radial-gradient(circle_at_top_left,var(--canvas-grid-color),transparent_48%)] opacity-95" />
+        <div className="absolute inset-x-4 top-4 border-t border-dashed border-[color-mix(in_oklab,var(--text-primary)_16%,transparent)]" />
+      </>
+    );
+  }
+
+  return (
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,var(--canvas-grid-color),transparent_48%)] opacity-90" />
   );
 }
 
@@ -565,11 +618,4 @@ function CanvasPath({ vertical = false }: { vertical?: boolean }) {
       ) : null}
     </>
   );
-}
-
-function labelize(value: string) {
-  return value
-    .split("-")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
 }

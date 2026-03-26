@@ -51,7 +51,14 @@ const personSchema = z.object({
 const treeThemeSchema = z.object({
   treeId: z.string(),
   themeLayout: z.enum(["classic", "editorial", "explorer"]),
-  themeSkin: z.enum(["dark-gold", "parchment", "modern"]),
+  themeSkin: z.enum([
+    "dark-gold",
+    "parchment",
+    "modern",
+    "botanical",
+    "inkwash",
+    "portrait-gallery",
+  ]),
 });
 
 const treeSharingSchema = z.object({

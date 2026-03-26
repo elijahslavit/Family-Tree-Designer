@@ -1,5 +1,11 @@
 export type ThemeLayout = "classic" | "editorial" | "explorer";
-export type ThemeSkin = "dark-gold" | "parchment" | "modern";
+export type ThemeSkin =
+  | "dark-gold"
+  | "parchment"
+  | "modern"
+  | "botanical"
+  | "inkwash"
+  | "portrait-gallery";
 export type Gender = "male" | "female" | "unknown" | "other";
 export type RelationshipType = "biological";
 export type ReviewIssueType =

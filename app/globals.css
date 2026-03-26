@@ -2,6 +2,9 @@
 @import "../styles/tokens/dark-gold.css";
 @import "../styles/tokens/parchment.css";
 @import "../styles/tokens/modern.css";
+@import "../styles/tokens/botanical.css";
+@import "../styles/tokens/inkwash.css";
+@import "../styles/tokens/portrait-gallery.css";
 
 :root {
   --font-heading: var(--font-body);

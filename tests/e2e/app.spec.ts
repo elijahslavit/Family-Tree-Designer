@@ -93,15 +93,17 @@ test("settings page is organized around tree, account, and danger-zone controls"
 test("theme studio previews curated family-tree combinations before saving", async ({ page }) => {
   await page.goto("/theme");
 
-  await expect(page.getByRole("heading", { name: "Choose how the family tree feels when relatives open it." })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "See the archive, not just the palette." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Choose the archive direction before you choose the colors." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "See the archive, not just the picker." })).toBeVisible();
+  await expect(page.getByText("18 combinations")).toBeVisible();
 
-  await page.getByRole("button", { name: /Modern Atlas/ }).click();
+  await page.getByRole("button", { name: /Conservatory Wall/ }).click();
   await page.getByRole("button", { name: "Preview canvas screen" }).click();
 
   await expect(page.getByRole("heading", { name: "Relationship map" })).toBeVisible();
-  await expect(page.getByText("Map-like and guided")).toBeVisible();
-  await expect(page.getByText("Calm modern atlas")).toBeVisible();
+  await expect(page.getByText("Botanical Wall", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Verdant heirloom poster", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Conservatory poster", { exact: true }).first()).toBeVisible();
 });
 
 test("creator can parse and confirm a GEDCOM upload", async ({ page }) => {

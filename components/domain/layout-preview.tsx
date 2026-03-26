@@ -1,32 +1,8 @@
 import { Badge } from "@/components/foundation/badge";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import type { ThemeLayout, ThemeSkin } from "@/lib/types";
+import { themeLayoutProfiles } from "@/lib/utils/theme-studio";
 import { cn } from "@/lib/utils/cn";
-
-const layoutCopy: Record<
-  ThemeLayout,
-  {
-    title: string;
-    strap: string;
-    description: string;
-  }
-> = {
-  classic: {
-    title: "Classic",
-    strap: "Reference-first structure",
-    description: "Library-like navigation, dense browsing, and a dependable companion detail rail.",
-  },
-  editorial: {
-    title: "Editorial",
-    strap: "Story-led presentation",
-    description: "Large reading surfaces and elegant profile rhythm for heirloom storytelling.",
-  },
-  explorer: {
-    title: "Explorer",
-    strap: "Canvas-led experience",
-    description: "Spatial browsing with immersive graph space and a guided detail workbench.",
-  },
-};
 
 export function LayoutPreview({
   layout,
@@ -37,34 +13,34 @@ export function LayoutPreview({
   skin: ThemeSkin;
   active?: boolean;
 }) {
+  const profile = themeLayoutProfiles[layout];
+
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-[26px] border text-left transition-all duration-[var(--transition-normal)]",
+        "overflow-hidden rounded-[30px] border text-left transition-all duration-[var(--transition-normal)]",
         active
           ? "border-[var(--border-strong)] shadow-[var(--shadow-lg)]"
           : "border-[var(--border-default)] hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-md)]",
       )}
     >
-      <ThemeProvider layout={layout} skin={skin} className="min-h-0 rounded-[24px]">
-        <div className="relative overflow-hidden rounded-[24px] bg-[var(--bg-primary)] p-4">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--accent-primary)_18%,transparent),transparent_40%),linear-gradient(180deg,color-mix(in_oklab,var(--bg-elevated)_70%,transparent),transparent)]" />
+      <ThemeProvider layout={layout} skin={skin} className="min-h-0 rounded-[28px]">
+        <div className="relative overflow-hidden rounded-[28px] bg-[var(--bg-primary)] p-4">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--accent-primary)_18%,transparent),transparent_40%),linear-gradient(180deg,color-mix(in_oklab,var(--bg-elevated)_74%,transparent),transparent)]" />
           <div className="relative space-y-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
+              <div className="space-y-1">
                 <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)]">
-                  {layoutCopy[layout].strap}
+                  {profile.strap}
                 </p>
-                <p className="mt-1 text-lg font-semibold text-[var(--text-primary)]">
-                  {layoutCopy[layout].title}
-                </p>
+                <p className="text-xl font-semibold text-[var(--text-primary)]">{profile.title}</p>
               </div>
               <Badge tone={active ? "accent" : "default"}>
                 {active ? "Selected layout" : "Structure"}
               </Badge>
             </div>
 
-            <div className="overflow-hidden rounded-[20px] border border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-surface)_88%,transparent)]">
+            <div className="overflow-hidden rounded-[22px] border border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-surface)_88%,transparent)]">
               <div className="flex items-center justify-between border-b border-[var(--border-muted)] px-3 py-2">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
@@ -83,8 +59,9 @@ export function LayoutPreview({
               {layout === "explorer" ? <ExplorerMiniLayout /> : null}
             </div>
 
-            <p className="text-sm leading-6 text-[var(--text-secondary)]">
-              {layoutCopy[layout].description}
+            <p className="text-sm leading-6 text-[var(--text-secondary)]">{profile.description}</p>
+            <p className="text-xs uppercase tracking-[0.16em] text-[var(--accent-text)]">
+              {profile.emphasis}
             </p>
           </div>
         </div>
