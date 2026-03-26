@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { ImportReviewItem } from "@/components/domain/import-review-item";
 import { Button } from "@/components/foundation/button";
 import { Card } from "@/components/foundation/card";
-import { ImportReviewItem } from "@/components/domain/import-review-item";
 import { useToast } from "@/components/foundation/toast";
 import { confirmGedcomImport } from "@/lib/actions";
 import type { ReviewIssue, Tree } from "@/lib/types";
@@ -20,6 +20,12 @@ type ImportResult = {
   };
   issues: ReviewIssue[];
 };
+
+const importMethods = [
+  { title: "GEDCOM", detail: "Available now. Parse and stage a family tree export." },
+  { title: "JSON / XML", detail: "Planned as a structured import format." },
+  { title: "Manual Entry", detail: "Use the editor pages when records need to be entered by hand." },
+];
 
 export function ImportUploader({ tree }: { tree: Tree }) {
   const router = useRouter();
@@ -60,15 +66,53 @@ export function ImportUploader({ tree }: { tree: Tree }) {
 
   return (
     <div className="space-y-6">
+      <Card className="space-y-5">
+        <div className="space-y-2">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+            Family Upload
+          </p>
+          <h2 className="text-3xl font-semibold text-[var(--creator-text)]">
+            Information
+          </h2>
+          <p className="max-w-3xl text-sm leading-6 text-[var(--creator-text-muted)]">
+            Start with the cleanest file you have. Review the counts and any detected
+            issues before you confirm the import into the working archive.
+          </p>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-3">
+          {importMethods.map((method) => (
+            <div
+              key={method.title}
+              className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface-muted)] p-4"
+            >
+              <p className="text-base font-semibold text-[var(--creator-text)]">
+                {method.title}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-[var(--creator-text-muted)]">
+                {method.detail}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Card>
+
       <Card className="space-y-4">
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-            GEDCOM import
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+            GEDCOM
           </p>
-          <h2 className="text-2xl font-semibold text-[var(--text-primary)]">Upload and review</h2>
+          <h3 className="text-2xl font-semibold text-[var(--creator-text)]">
+            Upload file
+          </h3>
         </div>
-        <input type="file" accept=".ged,.GED,text/plain" onChange={(event) => setFile(event.target.files?.[0] ?? null)} />
-        <div className="flex gap-3">
+        <input
+          type="file"
+          accept=".ged,.GED,text/plain"
+          onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+          className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface)] px-3 py-3 text-sm text-[var(--creator-text)]"
+        />
+        <div className="flex flex-wrap gap-3">
           <Button loading={isPending} onClick={() => startSaving(upload)}>
             Parse file
           </Button>
@@ -91,8 +135,17 @@ export function ImportUploader({ tree }: { tree: Tree }) {
           ) : null}
         </div>
       </Card>
+
       {result ? (
         <Card className="space-y-4">
+          <div className="space-y-2">
+            <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+              Import review
+            </p>
+            <h3 className="text-2xl font-semibold text-[var(--creator-text)]">
+              Staged counts
+            </h3>
+          </div>
           <div className="grid gap-3 md:grid-cols-4">
             <Metric label="People" value={result.counts.people} />
             <Metric label="Families" value={result.counts.families} />
@@ -103,7 +156,9 @@ export function ImportUploader({ tree }: { tree: Tree }) {
             {result.issues.length ? (
               result.issues.map((issue) => <ImportReviewItem key={issue.id} issue={issue} />)
             ) : (
-              <p className="text-sm text-[var(--text-muted)]">No issues detected.</p>
+              <div className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface-muted)] p-4 text-sm text-[var(--creator-text-muted)]">
+                No issues detected.
+              </div>
             )}
           </div>
         </Card>
@@ -114,9 +169,11 @@ export function ImportUploader({ tree }: { tree: Tree }) {
 
 function Metric({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-elevated)] p-4">
-      <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-[var(--text-primary)]">{value}</p>
+    <div className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface)] p-4">
+      <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+        {label}
+      </p>
+      <p className="mt-2 text-2xl font-semibold text-[var(--creator-text)]">{value}</p>
     </div>
   );
 }

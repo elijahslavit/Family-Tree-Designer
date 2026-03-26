@@ -1,9 +1,11 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { ClassicShell } from "@/components/layouts/classic-shell";
 import { EditorialShell } from "@/components/layouts/editorial-shell";
 import { ExplorerShell } from "@/components/layouts/explorer-shell";
 import type { Tree } from "@/lib/types";
+import { cn } from "@/lib/utils/cn";
 
 type ShellProps = {
   tree: Tree;
@@ -11,64 +13,62 @@ type ShellProps = {
   detail?: ReactNode;
   sidebar?: ReactNode;
   variant?: "default" | "profile";
+  activePath?: string;
 };
+
+const creatorNavItems = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/theme", label: "Theme" },
+  { href: "/import", label: "Family Upload" },
+  { href: "/canvas", label: "Canvas" },
+];
 
 export function CreatorTreeShell({
   tree,
   main,
   detail,
-  sidebar,
-  variant = "default",
+  activePath,
 }: ShellProps) {
-  const navItems = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/directory", label: "Directory" },
-    { href: "/lineages", label: "Lineages" },
-    { href: "/canvas", label: "Canvas" },
-    { href: "/import", label: "Import" },
-    { href: "/theme", label: "Theme" },
-    { href: "/settings", label: "Settings" },
-  ];
-
-  if (tree.themeLayout === "classic") {
-    return (
-      <ClassicShell
-        tree={tree}
-        sidebar={sidebar}
-        detail={detail}
-        navItems={navItems}
-        eyebrow="Creator mode"
-      >
-        {main}
-      </ClassicShell>
-    );
-  }
-
-  if (tree.themeLayout === "explorer" && variant === "profile") {
-    return (
-      <EditorialShell tree={tree} aside={detail} navItems={navItems} eyebrow="Creator mode">
-        {main}
-      </EditorialShell>
-    );
-  }
-
-  if (tree.themeLayout === "explorer") {
-    return (
-      <ExplorerShell
-        tree={tree}
-        drawer={detail}
-        navItems={navItems}
-        eyebrow="Creator mode"
-      >
-        {main}
-      </ExplorerShell>
-    );
-  }
-
   return (
-    <EditorialShell tree={tree} aside={detail} navItems={navItems} eyebrow="Creator mode">
-      {main}
-    </EditorialShell>
+    <div className="min-h-screen bg-[var(--creator-bg)]">
+      <header className="border-b border-[var(--creator-border)] bg-[var(--creator-surface)]">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-5 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-1">
+            <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+              Family Tree Designer
+            </p>
+            <h1 className="text-2xl font-semibold text-[var(--creator-text)]">{tree.name}</h1>
+          </div>
+          <nav className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+            {creatorNavItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={activePath === item.href ? "page" : undefined}
+                className={cn(
+                  "rounded-[var(--radius-sm)] border px-3 py-2 text-center text-sm transition-colors",
+                  activePath === item.href
+                    ? "border-[var(--creator-border-strong)] bg-[var(--creator-surface-muted)] font-medium text-[var(--creator-text)]"
+                    : "border-[var(--creator-border)] bg-[var(--creator-surface)] text-[var(--creator-text)] hover:bg-[var(--creator-surface-muted)]",
+                )}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </header>
+
+      <div
+        className={cn(
+          "mx-auto grid max-w-6xl gap-6 px-4 py-6",
+          detail ? "lg:grid-cols-[minmax(0,1fr)_320px]" : "grid-cols-1",
+        )}
+      >
+        <main className="space-y-6">{main}</main>
+        {detail ? <aside className="space-y-6">{detail}</aside> : null}
+      </div>
+    </div>
   );
 }
 

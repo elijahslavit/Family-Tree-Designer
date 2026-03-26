@@ -3,12 +3,11 @@ import { expect, test } from "@playwright/test";
 test("dashboard surfaces archive overview and quick actions", async ({ page }) => {
   await page.goto("/dashboard");
 
-  await expect(page.getByRole("heading", { name: "Steer the archive, not just the records." })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Add person" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Import GEDCOM" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Recently shaped profiles" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Move the archive forward" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Sharing and quality" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Welcome" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Select Theme" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Enter Family" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Archive summary" })).toBeVisible();
+  await expect(page.getByText("Quick access")).toBeVisible();
 });
 
 test("creator can add a person and continue in the workbench", async ({ page }) => {
@@ -39,7 +38,7 @@ test("public directory filtering preserves the share token", async ({ page }) =>
 test("living people stay masked in the public profile and can still open canvas", async ({ page }) => {
   await page.goto("/t/hart-family-archive/person/p14?share=share-hart-2026-demo");
 
-  await expect(page.getByRole("heading", { name: "Helen Hart Brooks" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Details private" })).toBeVisible();
   await expect(page.getByText("This person is marked as living")).toBeVisible();
   await expect(page.getByText("Helen believes the archive should feel like an heirloom book")).toHaveCount(0);
 
@@ -93,21 +92,22 @@ test("settings page is organized around tree, account, and danger-zone controls"
 test("theme studio previews curated family-tree combinations before saving", async ({ page }) => {
   await page.goto("/theme");
 
-  await expect(page.getByRole("heading", { name: "Choose the archive direction before you choose the colors." })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "See the archive, not just the picker." })).toBeVisible();
-  await expect(page.getByText("18 combinations")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Presentation preset" })).toBeVisible();
+  await expect(page.getByLabel("Background / preset")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Canvas changes based on selection" })).toBeVisible();
 
-  await page.getByRole("button", { name: /Conservatory Wall/ }).click();
-  await page.getByRole("button", { name: "Preview canvas screen" }).click();
+  await page.getByLabel("Background / preset").selectOption("tree");
 
-  await expect(page.getByRole("heading", { name: "Relationship map" })).toBeVisible();
-  await expect(page.getByText("Botanical Wall", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("Verdant heirloom poster", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("Conservatory poster", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Canvas changes based on selection" })).toBeVisible();
+  await expect(page.getByText("Botanical canvas with branch-like structure.").first()).toBeVisible();
+  await expect(page.getByText("Preview canvas").first()).toBeVisible();
 });
 
 test("creator can parse and confirm a GEDCOM upload", async ({ page }) => {
   await page.goto("/import");
+
+  await expect(page.getByRole("heading", { name: "Information" })).toBeVisible();
+  await expect(page.getByText("JSON / XML")).toBeVisible();
 
   await page.locator('input[type="file"]').setInputFiles({
     name: "playwright.ged",

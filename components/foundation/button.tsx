@@ -13,10 +13,10 @@ type ButtonProps = PropsWithChildren<
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--accent-primary)] text-[var(--text-inverse)] hover:bg-[var(--accent-hover)]",
+    "border border-[var(--creator-border-strong)] bg-[var(--creator-text)] text-white hover:bg-[#3a342c]",
   secondary:
-    "border border-[var(--border-strong)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:bg-[var(--accent-muted)]",
-  ghost: "bg-transparent text-[var(--text-secondary)] hover:bg-[var(--accent-muted)]",
+    "border border-[var(--creator-border)] bg-[var(--creator-surface)] text-[var(--creator-text)] hover:bg-[var(--creator-surface-muted)]",
+  ghost: "border border-[var(--creator-border)] bg-transparent text-[var(--creator-text-muted)] hover:bg-[var(--creator-surface-muted)] hover:text-[var(--creator-text)]",
   danger: "bg-[var(--color-danger)] text-white hover:opacity-90",
 };
 
@@ -31,7 +31,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] px-4 py-2 text-sm font-semibold transition-all duration-[var(--transition-fast)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)] disabled:cursor-not-allowed disabled:opacity-50",
+        "inline-flex items-center justify-center gap-2 rounded-[var(--radius-sm)] px-4 py-2 text-sm font-medium transition-colors duration-[var(--transition-fast)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--creator-accent)] disabled:cursor-not-allowed disabled:opacity-50",
         variantClasses[variant],
         className,
       )}

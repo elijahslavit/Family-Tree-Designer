@@ -7,16 +7,25 @@
 @import "../styles/tokens/portrait-gallery.css";
 
 :root {
-  --font-heading: var(--font-body);
-  --font-body: system-ui, sans-serif;
+  --font-heading: Georgia, "Times New Roman", serif;
+  --font-body: "Segoe UI", system-ui, sans-serif;
   --font-mono: "SFMono-Regular", ui-monospace, monospace;
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
   --border-width: 1px;
   --transition-fast: 140ms;
   --transition-normal: 220ms;
   --transition-slow: 320ms;
+  --creator-bg: #f4f1ea;
+  --creator-surface: #fffdf8;
+  --creator-surface-muted: #f7f3eb;
+  --creator-border: rgba(55, 45, 35, 0.16);
+  --creator-border-strong: rgba(55, 45, 35, 0.26);
+  --creator-text: #241f18;
+  --creator-text-muted: #675f55;
+  --creator-accent: #4f5d4a;
+  --creator-accent-soft: rgba(79, 93, 74, 0.12);
 }
 
 * {
@@ -24,16 +33,14 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, color-mix(in oklab, var(--accent-primary) 14%, transparent), transparent 32%),
-    linear-gradient(180deg, var(--bg-primary), color-mix(in oklab, var(--bg-primary) 86%, black));
-  color: var(--text-secondary);
+  background: var(--creator-bg);
+  color: var(--creator-text);
   font-family: var(--font-body);
 }
 
@@ -90,8 +97,8 @@ textarea {
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--accent-primary) 30%, transparent);
-  color: var(--text-primary);
+  background: rgba(79, 93, 74, 0.24);
+  color: var(--creator-text);
 }
 
 [data-layout="editorial"] .display-name {
@@ -115,21 +122,21 @@ textarea {
   left: 16px !important;
   bottom: 16px !important;
   top: auto !important;
-  border-radius: 1rem !important;
+  border-radius: 10px !important;
   overflow: hidden;
-  border: 1px solid var(--border-default) !important;
-  box-shadow: var(--shadow-sm) !important;
+  border: 1px solid var(--creator-border) !important;
+  box-shadow: none !important;
 }
 
 .react-flow__controls-button {
-  background: var(--canvas-controls-bg) !important;
-  border-bottom: 1px solid var(--border-muted) !important;
-  fill: var(--text-secondary) !important;
+  background: var(--creator-surface) !important;
+  border-bottom: 1px solid var(--creator-border) !important;
+  fill: var(--creator-text-muted) !important;
 }
 
 .react-flow__controls-button:hover {
-  background: color-mix(in oklab, var(--accent-primary) 12%, var(--canvas-controls-bg)) !important;
-  fill: var(--text-primary) !important;
+  background: var(--creator-surface-muted) !important;
+  fill: var(--creator-text) !important;
 }
 
 .react-flow__controls-button svg {
@@ -141,11 +148,11 @@ textarea {
   right: 16px !important;
   bottom: 16px !important;
   top: auto !important;
-  box-shadow: var(--shadow-sm) !important;
+  box-shadow: none !important;
 }
 
 .react-flow__minimap-mask {
-  fill: var(--minimap-mask) !important;
+  fill: rgba(90, 82, 74, 0.1) !important;
 }
 
 .react-flow__panel {

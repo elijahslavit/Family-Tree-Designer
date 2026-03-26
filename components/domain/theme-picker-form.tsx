@@ -1,468 +1,319 @@
 "use client";
 
-import Link from "next/link";
-import { Check, Compass, Eye, Palette, Sparkles, Wand2 } from "lucide-react";
-import type { ReactNode } from "react";
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
-import { Badge } from "@/components/foundation/badge";
 import { Button } from "@/components/foundation/button";
 import { Card } from "@/components/foundation/card";
 import { useToast } from "@/components/foundation/toast";
-import { LayoutPreview } from "@/components/domain/layout-preview";
-import { SkinPreview } from "@/components/domain/skin-preview";
-import {
-  type ThemeStudioScene,
-  ThemeStudioPreview,
-} from "@/components/domain/theme-studio-preview";
 import { updateTreeTheme } from "@/lib/actions";
 import type { ThemeLayout, ThemeSkin, Tree } from "@/lib/types";
-import { themeLayouts, themeSkins } from "@/lib/utils/constants";
-import {
-  labelizeTheme,
-  themeLayoutProfiles,
-  themeSceneOptions,
-  themeSkinProfiles,
-  themeStudioPresets,
-} from "@/lib/utils/theme-studio";
-import { cn } from "@/lib/utils/cn";
 
-export function ThemePickerForm({
-  tree,
-  publicHref,
-}: {
-  tree: Tree;
-  publicHref: string;
-}) {
-  const [layout, setLayout] = useState<ThemeLayout>(tree.themeLayout);
-  const [skin, setSkin] = useState<ThemeSkin>(tree.themeSkin);
-  const [scene, setScene] = useState<ThemeStudioScene>("landing");
+type ThemePreset = {
+  id: string;
+  label: string;
+  notes: string;
+  background: string;
+  layout: ThemeLayout;
+  skin: ThemeSkin;
+};
+
+const presets: ThemePreset[] = [
+  {
+    id: "castle",
+    label: "Castle",
+    notes: "Formal presentation with a framed, heritage feel.",
+    background: "Stone paper with a restrained border treatment.",
+    layout: "classic",
+    skin: "dark-gold",
+  },
+  {
+    id: "tree",
+    label: "Tree",
+    notes: "Natural branch presentation for family relationships.",
+    background: "Botanical canvas with branch-like structure.",
+    layout: "explorer",
+    skin: "botanical",
+  },
+  {
+    id: "shield",
+    label: "Shield / Emblem",
+    notes: "A stately layout for lineage-centered presentation.",
+    background: "Parchment paper with heraldic accents.",
+    layout: "classic",
+    skin: "parchment",
+  },
+  {
+    id: "newspaper",
+    label: "Newspaper",
+    notes: "Editorial storytelling for biographies and archive notes.",
+    background: "Printed-page treatment with quiet contrast.",
+    layout: "editorial",
+    skin: "inkwash",
+  },
+  {
+    id: "fan-chart",
+    label: "Fan Chart",
+    notes: "Best when the canvas is the main presentation surface.",
+    background: "Clean modern paper with graph-first emphasis.",
+    layout: "explorer",
+    skin: "modern",
+  },
+  {
+    id: "custom",
+    label: "Custom",
+    notes: "Photo-led family keepsake with a softer display tone.",
+    background: "Gallery paper with room for portraits and notes.",
+    layout: "editorial",
+    skin: "portrait-gallery",
+  },
+];
+
+export function ThemePickerForm({ tree }: { tree: Tree }) {
+  const initialPresetId =
+    presets.find(
+      (preset) =>
+        preset.layout === tree.themeLayout && preset.skin === tree.themeSkin,
+    )?.id ?? presets[0].id;
+  const [selectedPresetId, setSelectedPresetId] = useState(initialPresetId);
+  const [savedPresetId, setSavedPresetId] = useState(initialPresetId);
   const [isPending, startSaving] = useTransition();
   const { pushToast } = useToast();
+  const router = useRouter();
 
-  const hasChanges = layout !== tree.themeLayout || skin !== tree.themeSkin;
-  const selectedSkin = themeSkinProfiles[skin];
-  const selectedLayout = themeLayoutProfiles[layout];
-  const matchingPreset = themeStudioPresets.find(
-    (preset) => preset.layout === layout && preset.skin === skin,
-  );
+  const selectedPreset =
+    presets.find((preset) => preset.id === selectedPresetId) ?? presets[0];
+  const hasChanges = selectedPresetId !== savedPresetId;
 
   function saveTheme() {
     startSaving(async () => {
       await updateTreeTheme({
         treeId: tree.id,
-        themeLayout: layout,
-        themeSkin: skin,
+        themeLayout: selectedPreset.layout,
+        themeSkin: selectedPreset.skin,
       });
-      pushToast("Theme updated.", "success");
+      setSavedPresetId(selectedPreset.id);
+      router.refresh();
+      pushToast("Presentation preset updated.", "success");
     });
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)]">
-      <div className="space-y-6">
-        <Card className="relative overflow-hidden border-[color-mix(in_oklab,var(--border-strong)_75%,var(--border-default))]">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--accent-primary)_18%,transparent),transparent_42%),linear-gradient(180deg,color-mix(in_oklab,var(--bg-elevated)_68%,transparent),transparent)]" />
-          <div className="relative space-y-6">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge tone="accent">Theme studio</Badge>
-              <Badge tone="default">18 combinations</Badge>
-              <Badge tone="default">6 archive skins</Badge>
-              <Badge tone={hasChanges ? "warning" : "success"}>
-                {hasChanges ? "Draft not saved" : "Saved to archive"}
-              </Badge>
-            </div>
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+      <Card className="space-y-5">
+        <div className="space-y-2">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+            Theme Builder
+          </p>
+          <h2 className="text-3xl font-semibold text-[var(--creator-text)]">
+            Presentation preset
+          </h2>
+          <p className="text-sm leading-6 text-[var(--creator-text-muted)]">
+            Choose one preset, review the background direction, and save it to the
+            archive. This page should stay quiet and direct.
+          </p>
+        </div>
 
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-              <div className="space-y-4">
-                <div className="space-y-3">
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--text-muted)]">
-                    Theme
-                  </p>
-                  <h2 className="display-name text-4xl font-semibold leading-tight text-[var(--text-primary)] md:text-5xl">
-                    Choose the archive direction before you choose the colors.
-                  </h2>
-                  <p className="max-w-3xl text-base leading-7 text-[var(--text-secondary)] md:text-lg">
-                    Each skin is modeled as a real family-tree presentation style: heirloom book,
-                    botanical wall chart, hand-inked manuscript, portrait salon, and more. Pick
-                    the atmosphere first, then decide which layout gives that mood the right rhythm.
-                  </p>
-                </div>
+        <div className="space-y-2">
+          <label
+            htmlFor="theme-preset"
+            className="text-sm font-medium text-[var(--creator-text)]"
+          >
+            Background / preset
+          </label>
+          <select
+            id="theme-preset"
+            value={selectedPresetId}
+            onChange={(event) => setSelectedPresetId(event.target.value)}
+            className="w-full rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface)] px-3 py-2 text-sm text-[var(--creator-text)]"
+          >
+            {presets.map((preset) => (
+              <option key={preset.id} value={preset.id}>
+                {preset.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
-                <div className="grid gap-3 md:grid-cols-3">
-                  <StudioMeta
-                    icon={<Palette className="h-4 w-4" />}
-                    label="Selected skin"
-                    value={selectedSkin.title}
-                    detail={selectedSkin.strap}
-                  />
-                  <StudioMeta
-                    icon={<Compass className="h-4 w-4" />}
-                    label="Selected layout"
-                    value={selectedLayout.title}
-                    detail={selectedLayout.emphasis}
-                  />
-                  <StudioMeta
-                    icon={<Sparkles className="h-4 w-4" />}
-                    label="Current pairing"
-                    value={matchingPreset?.title ?? `${selectedSkin.mood} + ${selectedLayout.title}`}
-                    detail={
-                      matchingPreset?.description ??
-                      "A custom pairing shaped from the selected structure and skin."
-                    }
-                  />
-                </div>
-              </div>
+        <div className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface-muted)] p-4">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+            Selected
+          </p>
+          <p className="mt-2 text-xl font-semibold text-[var(--creator-text)]">
+            {selectedPreset.label}
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[var(--creator-text-muted)]">
+            {selectedPreset.notes}
+          </p>
+          <p className="mt-3 text-sm text-[var(--creator-text)]">
+            {selectedPreset.background}
+          </p>
+        </div>
 
-              <div className="rounded-[28px] border border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-surface)_84%,transparent)] p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">
-                  Picker guidance
-                </p>
-                <div className="mt-4 space-y-4">
-                  <ChooserStep
-                    title="1. Pick a skin"
-                    copy="Choose the artistry first so the archive has a distinct emotional temperature."
-                  />
-                  <ChooserStep
-                    title="2. Shape the layout"
-                    copy="Switch between browsing, storytelling, or graph-first structure without losing the skin."
-                  />
-                  <ChooserStep
-                    title="3. Inspect real screens"
-                    copy="Use the live preview to check landing, profile, and canvas before saving."
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="space-y-5">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-                Theme houses
+        <div className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface)] p-4">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+            Available presets
+          </p>
+          <div className="mt-3 grid gap-2 text-sm text-[var(--creator-text)]">
+            {presets.map((preset) => (
+              <p key={preset.id}>
+                {preset.label}: {preset.background}
               </p>
-              <h3 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-                Pick the visual artistry relatives will remember.
-              </h3>
-            </div>
-            <p className="max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
-              The new skins are based on the kinds of family-tree treatments people actually share
-              and admire: historical manuscripts, tree-wall posters, ancestry fan charts, and
-              photo-led keepsakes.
-            </p>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-            {themeSkins.map((item) => (
-              <button
-                key={item}
-                type="button"
-                aria-pressed={skin === item}
-                onClick={() => setSkin(item)}
-                className="rounded-[30px] text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)]"
-              >
-                <SkinPreview skin={item} layout={layout} active={skin === item} />
-              </button>
             ))}
           </div>
+        </div>
 
-          <SelectedSkinPanel
-            skin={skin}
-            layout={layout}
-            onPickLayout={(nextLayout) => setLayout(nextLayout)}
-          />
-        </Card>
+        <div className="flex flex-wrap gap-3">
+          <Button loading={isPending} onClick={saveTheme}>
+            Save preset
+          </Button>
+          <Button
+            variant="secondary"
+            disabled={!hasChanges || isPending}
+            onClick={() => setSelectedPresetId(savedPresetId)}
+          >
+            Reset
+          </Button>
+        </div>
+      </Card>
 
-        <Card className="space-y-5">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-                Curated pairings
-              </p>
-              <h3 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-                Start from a fully formed archive direction.
-              </h3>
-            </div>
-            <p className="max-w-xl text-sm leading-6 text-[var(--text-secondary)]">
-              These are the strongest theme pairings in the studio right now, tuned for actual
-              family-tree presentation styles rather than generic website presets.
-            </p>
-          </div>
+      <Card className="space-y-4">
+        <div className="space-y-2">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+            Preview
+          </p>
+          <h3 className="text-2xl font-semibold text-[var(--creator-text)]">
+            Canvas changes based on selection
+          </h3>
+        </div>
+        <ThemePresetPreview preset={selectedPreset} treeName={tree.name} />
+      </Card>
+    </div>
+  );
+}
 
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {themeStudioPresets.map((preset) => {
-              const selected = layout === preset.layout && skin === preset.skin;
-
-              return (
-                <button
-                  key={preset.title}
-                  type="button"
-                  aria-pressed={selected}
-                  onClick={() => {
-                    setLayout(preset.layout);
-                    setSkin(preset.skin);
-                  }}
-                  className={cn(
-                    "rounded-[24px] border p-4 text-left transition-all duration-[var(--transition-normal)]",
-                    selected
-                      ? "border-[var(--border-strong)] bg-[color-mix(in_oklab,var(--accent-primary)_12%,var(--bg-surface))] shadow-[var(--shadow-md)]"
-                      : "border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-surface)_90%,transparent)] hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-sm)]",
-                  )}
-                >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge tone={selected ? "accent" : "default"}>{preset.title}</Badge>
-                    <Badge tone="default">
-                      {labelizeTheme(preset.layout)} + {themeSkinProfiles[preset.skin].title}
-                    </Badge>
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-[var(--text-secondary)]">
-                    {preset.description}
-                  </p>
-                </button>
-              );
-            })}
-          </div>
-        </Card>
-
-        <Card className="space-y-5">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-                Layout rhythm
-              </p>
-              <h3 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-                Decide where attention goes first.
-              </h3>
-            </div>
-            <p className="max-w-xl text-sm leading-6 text-[var(--text-secondary)]">
-              Layout controls the archive cadence while the skin keeps the atmosphere intact.
-            </p>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            {themeLayouts.map((item) => (
-              <button
-                key={item}
-                type="button"
-                aria-pressed={layout === item}
-                onClick={() => setLayout(item)}
-                className="rounded-[30px] text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)]"
-              >
-                <LayoutPreview layout={item} skin={skin} active={layout === item} />
-              </button>
-            ))}
-          </div>
-        </Card>
+function ThemePresetPreview({
+  preset,
+  treeName,
+}: {
+  preset: ThemePreset;
+  treeName: string;
+}) {
+  return (
+    <div className="space-y-4 rounded-[var(--radius-md)] border border-[var(--creator-border)] bg-[var(--creator-surface-muted)] p-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+            Preview canvas
+          </p>
+          <p className="mt-1 text-lg font-semibold text-[var(--creator-text)]">
+            {treeName}
+          </p>
+        </div>
+        <div className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface)] px-3 py-2 text-sm text-[var(--creator-text)]">
+          {preset.label}
+        </div>
       </div>
 
-      <div className="space-y-6 self-start xl:sticky xl:top-6">
-        <Card className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-                Live preview
-              </p>
-              <h3 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-                See the archive, not just the picker.
-              </h3>
+      <div className="rounded-[var(--radius-md)] border border-[var(--creator-border)] bg-[var(--creator-surface)] p-4">
+        <div className="flex flex-wrap items-center gap-2 border-b border-[var(--creator-border)] pb-3 text-sm text-[var(--creator-text-muted)]">
+          <span className="font-medium text-[var(--creator-text)]">Canvas</span>
+          <span>|</span>
+          <span>{preset.background}</span>
+        </div>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_14rem]">
+          <div className={`relative min-h-[20rem] overflow-hidden rounded-[var(--radius-md)] border border-[var(--creator-border)] ${previewSurfaceClass[preset.id]}`}>
+            <div className="absolute inset-0 opacity-70">
+              {preset.id === "tree" ? (
+                <>
+                  <div className="absolute left-1/2 top-8 h-28 w-px -translate-x-1/2 bg-[rgba(79,93,74,0.35)]" />
+                  <div className="absolute left-[29%] top-[7.5rem] h-px w-[22%] rotate-[-18deg] bg-[rgba(79,93,74,0.35)]" />
+                  <div className="absolute right-[29%] top-[7.5rem] h-px w-[22%] rotate-[18deg] bg-[rgba(79,93,74,0.35)]" />
+                </>
+              ) : null}
+              {preset.id === "shield" ? (
+                <div className="absolute inset-x-[28%] top-8 h-24 rounded-t-[999px] border border-[rgba(84,70,53,0.25)] border-b-0" />
+              ) : null}
+              {preset.id === "newspaper" ? (
+                <>
+                  <div className="absolute inset-x-6 top-8 h-px bg-[rgba(38,34,30,0.18)]" />
+                  <div className="absolute inset-x-6 top-14 h-px bg-[rgba(38,34,30,0.12)]" />
+                </>
+              ) : null}
+              {preset.id === "castle" ? (
+                <>
+                  <div className="absolute inset-y-8 left-8 w-px bg-[rgba(122,94,46,0.25)]" />
+                  <div className="absolute inset-y-8 right-8 w-px bg-[rgba(122,94,46,0.25)]" />
+                </>
+              ) : null}
+              {preset.id === "custom" ? (
+                <div className="absolute left-8 top-8 h-20 w-20 rounded-full border border-[rgba(120,92,110,0.18)] bg-[rgba(255,255,255,0.4)]" />
+              ) : null}
             </div>
-            <Badge tone="default">
-              {selectedSkin.title} + {selectedLayout.title}
-            </Badge>
+
+            <div className="absolute left-6 top-12 rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[rgba(255,253,248,0.94)] px-3 py-2 text-sm text-[var(--creator-text)]">
+              Preview canvas
+            </div>
+
+            <PreviewNode className="left-[10%] top-[40%]" label="Focus" sublabel="Eleanor Hart West" />
+            <PreviewNode className="right-[12%] top-[16%]" label="Ancestor" sublabel="June Mercer Hart" />
+            <PreviewNode className="right-[8%] top-[41%]" label="Relative" sublabel="Margaret West Vale" />
+            <PreviewNode className="right-[14%] bottom-[14%]" label="Relative" sublabel="Samuel West" />
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {themeSceneOptions.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                aria-pressed={scene === option.value}
-                aria-label={`Preview ${option.label.toLowerCase()} screen`}
-                onClick={() => setScene(option.value)}
-                className={cn(
-                  "rounded-full border px-3 py-2 text-sm font-semibold transition-colors",
-                  scene === option.value
-                    ? "border-[var(--border-strong)] bg-[var(--accent-primary)] text-[var(--text-inverse)]"
-                    : "border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-surface)_88%,transparent)] text-[var(--text-secondary)] hover:bg-[var(--accent-muted)] hover:text-[var(--text-primary)]",
-                )}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-
-          <ThemeStudioPreview layout={layout} skin={skin} scene={scene} treeName={tree.name} />
-        </Card>
-
-        <Card className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Eye className="h-4 w-4 text-[var(--accent-text)]" />
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-              Selection brief
-            </p>
-          </div>
-          <DecisionRow label="Mood" value={selectedSkin.mood} />
-          <DecisionRow label="Material cues" value={selectedSkin.material} />
-          <DecisionRow label="Best use" value={selectedSkin.bestFor} />
-          <DecisionRow label="Layout promise" value={selectedLayout.emphasis} />
-          <div className="flex flex-wrap gap-2">
-            {selectedSkin.cueWords.map((word) => (
-              <span
-                key={word}
-                className="rounded-full border border-[var(--border-default)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]"
-              >
-                {word}
-              </span>
-            ))}
-          </div>
-        </Card>
-
-        <Card className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Wand2 className="h-4 w-4 text-[var(--accent-text)]" />
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-              Publish this direction
-            </p>
-          </div>
           <div className="space-y-3">
-            <Button loading={isPending} onClick={saveTheme}>
-              <Check className="h-4 w-4" />
-              Save theme
-            </Button>
-            <Button
-              variant="secondary"
-              disabled={!hasChanges || isPending}
-              onClick={() => {
-                setLayout(tree.themeLayout);
-                setSkin(tree.themeSkin);
-                pushToast("Draft reset to the saved theme.");
-              }}
-            >
-              Reset draft
-            </Button>
-            <Link
-              href={publicHref}
-              className="inline-flex items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-default)] px-4 py-2 text-sm font-semibold text-[var(--text-secondary)] transition-colors hover:bg-[var(--accent-muted)] hover:text-[var(--text-primary)]"
-            >
-              Open public archive
-            </Link>
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-function StudioMeta({
-  icon,
-  label,
-  value,
-  detail,
-}: {
-  icon: ReactNode;
-  label: string;
-  value: string;
-  detail: string;
-}) {
-  return (
-    <div className="rounded-[22px] border border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-surface)_88%,transparent)] p-4">
-      <div className="flex items-center gap-2 text-[var(--text-muted)]">
-        {icon}
-        <p className="text-xs uppercase tracking-[0.16em]">{label}</p>
-      </div>
-      <p className="mt-3 text-lg font-semibold text-[var(--text-primary)]">{value}</p>
-      <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">{detail}</p>
-    </div>
-  );
-}
-
-function ChooserStep({
-  title,
-  copy,
-}: {
-  title: string;
-  copy: string;
-}) {
-  return (
-    <div className="rounded-[20px] border border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-elevated)_78%,transparent)] p-4">
-      <p className="text-sm font-semibold text-[var(--text-primary)]">{title}</p>
-      <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">{copy}</p>
-    </div>
-  );
-}
-
-function SelectedSkinPanel({
-  skin,
-  layout,
-  onPickLayout,
-}: {
-  skin: ThemeSkin;
-  layout: ThemeLayout;
-  onPickLayout: (layout: ThemeLayout) => void;
-}) {
-  const selectedSkin = themeSkinProfiles[skin];
-
-  return (
-    <div className="rounded-[28px] border border-[var(--border-strong)] bg-[color-mix(in_oklab,var(--accent-primary)_8%,var(--bg-surface))] p-5">
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge tone="accent">Selected skin</Badge>
-        <Badge tone="default">{selectedSkin.title}</Badge>
-      </div>
-
-      <div className="mt-4 grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <div className="space-y-3">
-          <h4 className="text-2xl font-semibold text-[var(--text-primary)]">
-            {selectedSkin.mood} with {selectedSkin.signature.toLowerCase()}.
-          </h4>
-          <p className="text-sm leading-7 text-[var(--text-secondary)]">
-            {selectedSkin.bestFor}
-          </p>
-          <div className="grid gap-3 md:grid-cols-2">
-            <DecisionRow label="Material" value={selectedSkin.material} />
-            <DecisionRow label="Signature" value={selectedSkin.signature} />
+            <PreviewMeta label="Background" value={preset.background} />
+            <PreviewMeta label="Purpose" value={preset.notes} />
+            <PreviewMeta label="Page flow" value={previewLayoutLabel[preset.layout]} />
           </div>
         </div>
-
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-            Recommended layouts
-          </p>
-          {selectedSkin.recommendedLayouts.map((item) => (
-            <button
-              key={item}
-              type="button"
-              aria-pressed={layout === item}
-              onClick={() => onPickLayout(item)}
-              className={cn(
-                "w-full rounded-[18px] border px-4 py-3 text-left transition-colors",
-                layout === item
-                  ? "border-[var(--border-strong)] bg-[var(--accent-muted)] text-[var(--text-primary)]"
-                  : "border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-elevated)_78%,transparent)] text-[var(--text-secondary)] hover:bg-[var(--accent-muted)] hover:text-[var(--text-primary)]",
-              )}
-            >
-              <p className="text-sm font-semibold">{themeLayoutProfiles[item].title}</p>
-              <p className="mt-1 text-sm leading-6">{themeLayoutProfiles[item].emphasis}</p>
-            </button>
-          ))}
-        </div>
       </div>
     </div>
   );
 }
 
-function DecisionRow({
+function PreviewNode({
+  className,
   label,
-  value,
+  sublabel,
 }: {
+  className?: string;
   label: string;
-  value: string;
+  sublabel: string;
 }) {
   return (
-    <div className="rounded-[18px] border border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-surface)_90%,transparent)] px-4 py-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">{label}</p>
-      <p className="mt-2 text-sm font-semibold leading-6 text-[var(--text-primary)]">{value}</p>
+    <div className={`absolute w-40 rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[rgba(255,253,248,0.96)] p-3 ${className ?? ""}`}>
+      <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+        {label}
+      </p>
+      <p className="mt-2 text-sm font-medium text-[var(--creator-text)]">{sublabel}</p>
     </div>
   );
 }
+
+function PreviewMeta({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface)] p-3">
+      <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+        {label}
+      </p>
+      <p className="mt-2 text-sm leading-6 text-[var(--creator-text)]">{value}</p>
+    </div>
+  );
+}
+
+const previewLayoutLabel: Record<ThemeLayout, string> = {
+  classic: "Boxed records with a formal archive frame.",
+  editorial: "Reading-first presentation with more narrative space.",
+  explorer: "Canvas-led presentation with graph structure up front.",
+};
+
+const previewSurfaceClass: Record<ThemePreset["id"], string> = {
+  castle: "bg-[linear-gradient(180deg,#f7f0df,#efe3c3)]",
+  tree: "bg-[linear-gradient(180deg,#eef5e8,#e1ecd8)]",
+  shield: "bg-[linear-gradient(180deg,#f8f2e6,#efe6d5)]",
+  newspaper: "bg-[linear-gradient(180deg,#f3f0ea,#ebe7df)]",
+  "fan-chart": "bg-[linear-gradient(180deg,#eef2f5,#e2e8ee)]",
+  custom: "bg-[linear-gradient(180deg,#f3ecef,#ece4e9)]",
+};

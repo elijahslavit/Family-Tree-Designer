@@ -41,6 +41,7 @@ export default async function CreatorCanvasPage({ searchParams }: CanvasPageProp
     <ThemeProvider layout={tree.themeLayout} skin={tree.themeSkin}>
       <CreatorTreeShell
         tree={tree}
+        activePath="/canvas"
         main={
           <CanvasRouteViewer
             basePath="/canvas"

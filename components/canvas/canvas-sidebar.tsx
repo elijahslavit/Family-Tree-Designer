@@ -1,11 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Aperture, ArrowUpRight, Orbit, Sparkles, Users } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { ReactNode } from "react";
 
-import { Badge } from "@/components/foundation/badge";
 import { Button } from "@/components/foundation/button";
 import { Card } from "@/components/foundation/card";
 import type { Lineage, PersonViewModel } from "@/lib/types";
@@ -22,15 +19,6 @@ type CanvasSidebarProps = {
   selectedLineageId?: string | null;
   shareToken?: string | null;
 };
-
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
-}
 
 export function CanvasSidebar({
   person,
@@ -68,61 +56,47 @@ export function CanvasSidebar({
 
   return (
     <div className="space-y-4">
-      <Card className="overflow-hidden border-[color-mix(in_oklab,var(--accent-primary)_28%,var(--border-default))] bg-[linear-gradient(180deg,color-mix(in_oklab,var(--accent-primary)_10%,var(--bg-surface)),var(--bg-surface))]">
-        <div className="flex items-start gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[color-mix(in_oklab,var(--accent-primary)_30%,transparent)] bg-[color-mix(in_oklab,var(--accent-primary)_16%,transparent)] text-sm font-semibold tracking-[0.16em] text-[var(--text-primary)]">
-            {initials(person.fullName)}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-              Focus person
-            </p>
-            <h2 className="mt-1 text-[1.9rem] font-semibold leading-none text-[var(--text-primary)]">
-              {person.fullName}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-[var(--text-secondary)]">
-              {person.summary || "Use the canvas to follow branches outward, then open the full profile for the long-form archive view."}
-            </p>
-          </div>
+      <Card className="space-y-4">
+        <div className="space-y-2">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+            Presentation
+          </p>
+          <h2 className="text-2xl font-semibold text-[var(--creator-text)]">
+            Focus person
+          </h2>
         </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Badge tone="accent">Centered branch</Badge>
-          {person.isLiving ? <Badge tone="warning">Living</Badge> : null}
-          {person.lineages.slice(0, 2).map((lineage) => (
-            <Badge key={lineage.id} tone="default">
-              {lineage.name}
-            </Badge>
-          ))}
-        </div>
-
-        <div className="mt-5 grid grid-cols-3 gap-2">
-          <CanvasStat label="Visible" value={visibleCount} icon={<Aperture className="h-3.5 w-3.5" />} />
-          <CanvasStat label="Linked" value={relatedCount} icon={<Orbit className="h-3.5 w-3.5" />} />
-          <CanvasStat
-            label="Relatives"
-            value={
-              person.relatives.parents.length +
-              person.relatives.siblings.length +
-              person.relatives.spouses.length +
-              person.relatives.children.length
-            }
-            icon={<Users className="h-3.5 w-3.5" />}
-          />
+        <div className="space-y-3 rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface-muted)] p-4">
+          <p className="text-sm font-semibold text-[var(--creator-text)]">{person.fullName}</p>
+          <p className="text-sm leading-6 text-[var(--creator-text-muted)]">
+            {person.summary ||
+              "Center this branch, adjust the visible depth, and open the full profile when you need more detail."}
+          </p>
+          <div className="grid grid-cols-3 gap-2 text-sm">
+            <CanvasStat label="Visible" value={visibleCount} />
+            <CanvasStat label="Linked" value={relatedCount} />
+            <CanvasStat
+              label="Relatives"
+              value={
+                person.relatives.parents.length +
+                person.relatives.siblings.length +
+                person.relatives.spouses.length +
+                person.relatives.children.length
+              }
+            />
+          </div>
         </div>
       </Card>
 
-      <Card className="space-y-4 bg-[color-mix(in_oklab,var(--bg-elevated)_72%,var(--bg-surface))]">
-        <div className="flex items-center justify-between gap-3">
+      <Card className="space-y-4">
+        <div className="space-y-2">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+            View depth
+          </p>
           <div>
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-              Explorer depth
-            </p>
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Widen the branch without leaving the focused line.
+            <p className="text-sm text-[var(--creator-text-muted)]">
+              Widen the branch without leaving the selected person.
             </p>
           </div>
-          <Badge tone="default">{visibleCount} visible</Badge>
         </div>
 
         <div className="grid grid-cols-3 gap-2">
@@ -162,23 +136,22 @@ export function CanvasSidebar({
           </Button>
         ) : null}
 
-        <p className="text-sm leading-6 text-[var(--text-secondary)]">
+        <p className="text-sm leading-6 text-[var(--creator-text-muted)]">
           Single-click a node to recenter the graph. Double-click a node to jump into its
           full profile.
         </p>
       </Card>
 
       <Card className="space-y-4">
-        <div className="flex items-center justify-between gap-3">
+        <div className="space-y-2">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+            Presentation filter
+          </p>
           <div>
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
-              Lineage highlighting
-            </p>
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Compare the complete neighborhood against a single named descent path.
+            <p className="text-sm text-[var(--creator-text-muted)]">
+              Limit the preview to one named branch when needed.
             </p>
           </div>
-          <Badge tone="default">{relatedCount} links</Badge>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -212,51 +185,35 @@ export function CanvasSidebar({
         </div>
 
         {selectedLineage ? (
-          <div className="rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[color-mix(in_oklab,var(--accent-primary)_8%,var(--bg-elevated))] p-4">
-            <div className="flex items-start gap-3">
-              <div className="rounded-full bg-[color-mix(in_oklab,var(--accent-primary)_18%,transparent)] p-2 text-[var(--accent-primary)]">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-[var(--text-primary)]">
-                  {selectedLineage.name}
-                </p>
-                <p className="mt-1 text-sm leading-6 text-[var(--text-secondary)]">
-                  {selectedLineage.description || "The highlighted route now isolates one named descent path inside the wider archive."}
-                </p>
-              </div>
-            </div>
+          <div className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface-muted)] p-4">
+            <p className="text-sm font-semibold text-[var(--creator-text)]">
+              {selectedLineage.name}
+            </p>
+            <p className="mt-1 text-sm leading-6 text-[var(--creator-text-muted)]">
+              {selectedLineage.description ||
+                "The preview is now limited to one named descent path within the larger branch."}
+            </p>
           </div>
         ) : null}
       </Card>
 
-      <Card className="bg-[color-mix(in_oklab,var(--bg-elevated)_65%,var(--bg-surface))]">
+      <Card>
         <Link
           href={profileHref}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-3 text-sm font-semibold text-[var(--text-primary)] transition-colors hover:bg-[var(--accent-muted)]"
+          className="inline-flex w-full items-center justify-center rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface)] px-4 py-3 text-sm font-medium text-[var(--creator-text)] transition-colors hover:bg-[var(--creator-surface-muted)]"
         >
           Open full profile
-          <ArrowUpRight className="h-4 w-4" />
         </Link>
       </Card>
     </div>
   );
 }
 
-function CanvasStat({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: number;
-  icon: ReactNode;
-}) {
+function CanvasStat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[color-mix(in_oklab,var(--bg-elevated)_68%,var(--bg-surface))] px-3 py-3">
-      <div className="flex items-center gap-2 text-[var(--text-muted)]">{icon}</div>
-      <p className="mt-2 text-lg font-semibold text-[var(--text-primary)]">{value}</p>
-      <p className="text-[0.68rem] uppercase tracking-[0.16em] text-[var(--text-muted)]">
+    <div className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface)] px-3 py-3">
+      <p className="text-lg font-semibold text-[var(--creator-text)]">{value}</p>
+      <p className="text-[0.68rem] uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
         {label}
       </p>
     </div>
