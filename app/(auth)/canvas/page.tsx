@@ -3,7 +3,11 @@ import { CanvasRouteViewer } from "@/components/canvas/canvas-route-viewer";
 import { CreatorTreeShell } from "@/components/layouts/tree-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { requireAccountSession } from "@/lib/auth/session";
-import { getActiveTreeForCreator, getCanvasNeighborhood, getDefaultPersonId } from "@/lib/queries";
+import {
+  getActiveTreeForCreator,
+  getCanvasNeighborhood,
+  getDefaultPersonIdForTree,
+} from "@/lib/queries";
 
 type CanvasPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -13,8 +17,12 @@ export default async function CreatorCanvasPage({ searchParams }: CanvasPageProp
   const accountId = await requireAccountSession();
   const tree = await getActiveTreeForCreator(accountId);
   const params = await searchParams;
+  const fallbackPersonId = await getDefaultPersonIdForTree({
+    treeSlug: tree.slug,
+    viewer: { mode: "creator", accountId },
+  });
   const personId =
-    (typeof params.person === "string" ? params.person : null) ?? getDefaultPersonId()!;
+    (typeof params.person === "string" ? params.person : null) ?? fallbackPersonId!;
   const rawDepth =
     typeof params.depth === "string" ? Number.parseInt(params.depth, 10) : 1;
   const depth = Number.isFinite(rawDepth) ? rawDepth : 1;

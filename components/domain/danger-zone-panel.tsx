@@ -24,8 +24,9 @@ export function DangerZonePanel({ demoMode }: { demoMode: boolean }) {
         </p>
         <h2 className="text-3xl font-semibold text-[var(--text-primary)]">Destructive controls</h2>
         <p className="max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">
-          High-impact actions stay isolated here and require deliberate intent. In the current
-          runtime, deletion remains gated while the persisted backend path is still secondary.
+          High-impact actions stay isolated here and require deliberate intent. Tree and account
+          deletion stay gated until the app can safely recover after destructive operations in both
+          demo and persisted runtimes.
         </p>
       </div>
 
@@ -41,13 +42,13 @@ export function DangerZonePanel({ demoMode }: { demoMode: boolean }) {
         <div className="grid gap-4 md:grid-cols-2">
           <DangerCard
             title="Delete tree"
-            body="Removing the tree would delete all people, families, events, and lineages inside it. This stays disabled until the live persisted path becomes primary."
+            body="Removing the tree would delete all people, families, events, and lineages inside it. This stays disabled until the app can recover cleanly when an owner has no remaining tree."
             buttonLabel="Delete tree"
             icon={<Trash2 className="h-4 w-4" />}
           />
           <DangerCard
             title="Delete account"
-            body="Account deletion will eventually cascade across every owned tree. The control remains gated until live auth and persistence become the default runtime."
+            body="Account deletion will eventually cascade across every owned tree and revoke the creator login. The control remains gated until the runtime can also remove the upstream auth identity."
             buttonLabel="Delete account"
             icon={<ShieldOff className="h-4 w-4" />}
           />

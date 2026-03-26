@@ -1,6 +1,7 @@
 "use client";
 
 import { Mail, ShieldCheck, UserCircle2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { Badge } from "@/components/foundation/badge";
@@ -9,6 +10,7 @@ import { Card } from "@/components/foundation/card";
 import { Input } from "@/components/foundation/input";
 import { useToast } from "@/components/foundation/toast";
 import { updateAccountProfile } from "@/lib/actions";
+import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import type { Account } from "@/lib/types";
 
 export function AccountSettingsPanel({
@@ -20,6 +22,7 @@ export function AccountSettingsPanel({
   demoMode: boolean;
   authConfigured: boolean;
 }) {
+  const router = useRouter();
   const [displayName, setDisplayName] = useState(account.displayName);
   const [email, setEmail] = useState(account.email);
   const [isPending, startSaving] = useTransition();
@@ -33,7 +36,7 @@ export function AccountSettingsPanel({
         </p>
         <h2 className="text-3xl font-semibold text-[var(--text-primary)]">Identity and sign-in</h2>
         <p className="max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">
-          Keep the creator identity current so the archive’s management layer stays clear and
+          Keep the creator identity current so the archive management layer stays clear and
           traceable.
         </p>
       </div>
@@ -131,6 +134,36 @@ export function AccountSettingsPanel({
                   ? "Live auth configured"
                   : "Backend auth needed"}
             </Badge>
+            {authConfigured && !demoMode ? (
+              <Button
+                type="button"
+                variant="secondary"
+                loading={isPending}
+                onClick={() =>
+                  startSaving(async () => {
+                    const supabase = createSupabaseBrowserClient();
+
+                    if (!supabase) {
+                      pushToast("Supabase auth is not configured in the browser.", "danger");
+                      return;
+                    }
+
+                    const { error } = await supabase.auth.signOut();
+
+                    if (error) {
+                      pushToast(error.message, "danger");
+                      return;
+                    }
+
+                    pushToast("Signed out.", "success");
+                    router.push("/sign-in");
+                    router.refresh();
+                  })
+                }
+              >
+                Sign out
+              </Button>
+            ) : null}
           </Card>
         </div>
       </div>

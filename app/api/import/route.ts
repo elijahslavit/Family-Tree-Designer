@@ -1,9 +1,14 @@
 import type { NextRequest } from "next/server";
+import { and, eq } from "drizzle-orm";
 
+import { getDb } from "@/db/client";
+import { importJobs, trees } from "@/db/schema";
+import { getSessionAccountId } from "@/lib/auth/session";
 import { parseGedcomText } from "@/lib/import/gedcom-parser";
 import { getDemoStore } from "@/lib/data/demo-store";
 import { log } from "@/lib/logger";
 import { isDemoMode } from "@/lib/runtime";
+import { usesDatabaseRuntime } from "@/lib/data/runtime-store";
 import { enforceRateLimit } from "@/lib/utils/rate-limit";
 
 export async function POST(request: NextRequest) {
@@ -46,8 +51,69 @@ export async function POST(request: NextRequest) {
     treeId,
     content: text,
   });
-  const store = getDemoStore();
   const jobId = crypto.randomUUID();
+
+  if (usesDatabaseRuntime()) {
+    const accountId = await getSessionAccountId();
+    const db = getDb();
+
+    if (!accountId || !db) {
+      return Response.json({ error: "You must be signed in to import GEDCOM data." }, { status: 401 });
+    }
+
+    const tree = await db.query.trees.findFirst({
+      where: and(eq(trees.id, treeId), eq(trees.accountId, accountId)),
+    });
+
+    if (!tree) {
+      return Response.json({ error: "Tree not found." }, { status: 404 });
+    }
+
+    await db.insert(importJobs).values({
+      id: jobId,
+      treeId,
+      accountId,
+      status: "parsed",
+      fileName: file.name,
+      storagePath: null,
+      payloadJson: parsed,
+      counts: {
+        people: parsed.people.length,
+        families: parsed.families.length,
+        events: parsed.events.length,
+        issues: parsed.issues.length,
+      },
+      issues: parsed.issues,
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    });
+
+    log("info", "GEDCOM import staged", {
+      jobId,
+      treeId,
+      fileName: file.name,
+      counts: {
+        people: parsed.people.length,
+        families: parsed.families.length,
+        events: parsed.events.length,
+        issues: parsed.issues.length,
+      },
+      runtime: "database",
+    });
+
+    return Response.json({
+      jobId,
+      counts: {
+        people: parsed.people.length,
+        families: parsed.families.length,
+        events: parsed.events.length,
+        issues: parsed.issues.length,
+      },
+      issues: parsed.issues,
+    });
+  }
+
+  const store = getDemoStore();
 
   store.importJobs.unshift({
     id: jobId,
@@ -78,6 +144,7 @@ export async function POST(request: NextRequest) {
       events: parsed.events.length,
       issues: parsed.issues.length,
     },
+    runtime: "demo",
   });
 
   return Response.json({

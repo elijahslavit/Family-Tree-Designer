@@ -1,4 +1,7 @@
+"use client";
+
 import type { PropsWithChildren } from "react";
+import { useEffect } from "react";
 
 import type { ThemeLayout, ThemeSkin } from "@/lib/types";
 import { cn } from "@/lib/utils/cn";
@@ -15,6 +18,17 @@ export function ThemeProvider({
   skin,
   className,
 }: ThemeProviderProps) {
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        "family-tree:last-theme",
+        JSON.stringify({ layout, skin }),
+      );
+    } catch {
+      // Ignore storage access failures in private browsing or locked-down environments.
+    }
+  }, [layout, skin]);
+
   return (
     <div
       data-layout={layout}

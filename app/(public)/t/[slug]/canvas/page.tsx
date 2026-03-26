@@ -3,7 +3,11 @@ import { CanvasRouteViewer } from "@/components/canvas/canvas-route-viewer";
 import { PublicTreeShell } from "@/components/layouts/tree-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { getPublicViewerContext } from "@/lib/auth/session";
-import { getCanvasNeighborhood, getDefaultPersonId, getTreeBySlug } from "@/lib/queries";
+import {
+  getCanvasNeighborhood,
+  getDefaultPersonIdForTree,
+  getTreeBySlug,
+} from "@/lib/queries";
 import { publicPersonHref } from "@/lib/utils/links";
 
 type PublicCanvasPageProps = {
@@ -18,13 +22,17 @@ export default async function PublicCanvasPage({
   const { slug } = await params;
   const query = await searchParams;
   const shareToken = typeof query.share === "string" ? query.share : null;
+  const viewer = getPublicViewerContext(shareToken);
+  const fallbackPersonId = await getDefaultPersonIdForTree({
+    treeSlug: slug,
+    viewer,
+  });
   const personId =
-    (typeof query.person === "string" ? query.person : null) ?? getDefaultPersonId()!;
+    (typeof query.person === "string" ? query.person : null) ?? fallbackPersonId!;
   const rawDepth =
     typeof query.depth === "string" ? Number.parseInt(query.depth, 10) : 1;
   const depth = Number.isFinite(rawDepth) ? rawDepth : 1;
   const lineageId = typeof query.lineage === "string" ? query.lineage : null;
-  const viewer = getPublicViewerContext(shareToken);
   const tree = await getTreeBySlug(slug, viewer);
   const canvas = await getCanvasNeighborhood({
     treeSlug: slug,
