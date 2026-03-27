@@ -18,12 +18,11 @@ export default async function HomePage() {
               Family Tree Designer
             </p>
             <div className="space-y-4">
-              <h1 className="display-name text-5xl font-semibold leading-tight text-[var(--text-primary)]">
-                Build a family archive that feels like it belongs on a bookshelf.
+              <h1 className="display-name text-4xl font-semibold leading-tight text-[var(--text-primary)]">
+                A family archive that belongs on a bookshelf.
               </h1>
-              <p className="max-w-2xl text-lg leading-8 text-[var(--text-secondary)]">
-                Import your tree, shape it with editorial, classic, or explorer layouts, and
-                share a polished archive link that relatives can browse without signing in.
+              <p className="max-w-2xl text-base leading-7 text-[var(--text-secondary)]">
+                Import, shape, and share a polished tree that relatives can browse without signing in.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -62,16 +61,16 @@ export default async function HomePage() {
         <section className="grid gap-4 md:grid-cols-3">
           {[
             {
-              title: "Three distinct layouts",
-              body: "Classic, Editorial, and Explorer all use the same data model but change how the archive feels.",
+              title: "Three layouts",
+              body: "Classic, Editorial, and Explorer — same data, different feel.",
             },
             {
-              title: "Query-layer privacy",
-              body: "Living people stay visible in the tree without leaking dates, places, or biography in shared mode.",
+              title: "Privacy built in",
+              body: "Living people stay visible without leaking details in shared mode.",
             },
             {
-              title: "Import-first workflow",
-              body: "GEDCOM parsing, issue review, and confirmation are built into the creator surface instead of bolted on.",
+              title: "Import-first",
+              body: "GEDCOM parsing and review built into the creator surface.",
             },
           ].map((item) => (
             <Card key={item.title} className="space-y-3">

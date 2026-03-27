@@ -150,19 +150,6 @@ export function ThemePickerForm({ tree }: { tree: Tree }) {
           </p>
         </div>
 
-        <div className="rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[var(--creator-surface)] p-4">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
-            Available presets
-          </p>
-          <div className="mt-3 grid gap-2 text-sm text-[var(--creator-text)]">
-            {presets.map((preset) => (
-              <p key={preset.id}>
-                {preset.label}: {preset.background}
-              </p>
-            ))}
-          </div>
-        </div>
-
         <div className="flex flex-wrap gap-3">
           <Button loading={isPending} onClick={saveTheme}>
             Save preset
@@ -224,38 +211,6 @@ function ThemePresetPreview({
 
         <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_14rem]">
           <div className={`relative min-h-[20rem] overflow-hidden rounded-[var(--radius-md)] border border-[var(--creator-border)] ${previewSurfaceClass[preset.id]}`}>
-            <div className="absolute inset-0 opacity-70">
-              {preset.id === "tree" ? (
-                <>
-                  <div className="absolute left-1/2 top-8 h-28 w-px -translate-x-1/2 bg-[rgba(79,93,74,0.35)]" />
-                  <div className="absolute left-[29%] top-[7.5rem] h-px w-[22%] rotate-[-18deg] bg-[rgba(79,93,74,0.35)]" />
-                  <div className="absolute right-[29%] top-[7.5rem] h-px w-[22%] rotate-[18deg] bg-[rgba(79,93,74,0.35)]" />
-                </>
-              ) : null}
-              {preset.id === "shield" ? (
-                <div className="absolute inset-x-[28%] top-8 h-24 rounded-t-[999px] border border-[rgba(84,70,53,0.25)] border-b-0" />
-              ) : null}
-              {preset.id === "newspaper" ? (
-                <>
-                  <div className="absolute inset-x-6 top-8 h-px bg-[rgba(38,34,30,0.18)]" />
-                  <div className="absolute inset-x-6 top-14 h-px bg-[rgba(38,34,30,0.12)]" />
-                </>
-              ) : null}
-              {preset.id === "castle" ? (
-                <>
-                  <div className="absolute inset-y-8 left-8 w-px bg-[rgba(122,94,46,0.25)]" />
-                  <div className="absolute inset-y-8 right-8 w-px bg-[rgba(122,94,46,0.25)]" />
-                </>
-              ) : null}
-              {preset.id === "custom" ? (
-                <div className="absolute left-8 top-8 h-20 w-20 rounded-full border border-[rgba(120,92,110,0.18)] bg-[rgba(255,255,255,0.4)]" />
-              ) : null}
-            </div>
-
-            <div className="absolute left-6 top-12 rounded-[var(--radius-sm)] border border-[var(--creator-border)] bg-[rgba(255,253,248,0.94)] px-3 py-2 text-sm text-[var(--creator-text)]">
-              Preview canvas
-            </div>
-
             <PreviewNode className="left-[10%] top-[40%]" label="Focus" sublabel="Eleanor Hart West" />
             <PreviewNode className="right-[12%] top-[16%]" label="Ancestor" sublabel="June Mercer Hart" />
             <PreviewNode className="right-[8%] top-[41%]" label="Relative" sublabel="Margaret West Vale" />
@@ -265,7 +220,6 @@ function ThemePresetPreview({
           <div className="space-y-3">
             <PreviewMeta label="Background" value={preset.background} />
             <PreviewMeta label="Purpose" value={preset.notes} />
-            <PreviewMeta label="Page flow" value={previewLayoutLabel[preset.layout]} />
           </div>
         </div>
       </div>
@@ -302,12 +256,6 @@ function PreviewMeta({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-
-const previewLayoutLabel: Record<ThemeLayout, string> = {
-  classic: "Boxed records with a formal archive frame.",
-  editorial: "Reading-first presentation with more narrative space.",
-  explorer: "Canvas-led presentation with graph structure up front.",
-};
 
 const previewSurfaceClass: Record<ThemePreset["id"], string> = {
   castle: "bg-[linear-gradient(180deg,#f7f0df,#efe3c3)]",

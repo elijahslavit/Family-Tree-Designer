@@ -32,24 +32,24 @@ export function CreatorTreeShell({
   return (
     <div className="min-h-screen bg-[var(--creator-bg)]">
       <header className="border-b border-[var(--creator-border)] bg-[var(--creator-surface)]">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-5 md:flex-row md:items-end md:justify-between">
-          <div className="space-y-1">
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--creator-text-muted)]">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+          <div className="space-y-0.5">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--creator-text-muted)]">
               Family Tree Designer
             </p>
-            <h1 className="text-2xl font-semibold text-[var(--creator-text)]">{tree.name}</h1>
+            <h1 className="text-lg font-semibold text-[var(--creator-text)]">{tree.name}</h1>
           </div>
-          <nav className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+          <nav className="flex items-center gap-5">
             {creatorNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 aria-current={activePath === item.href ? "page" : undefined}
                 className={cn(
-                  "rounded-[var(--radius-sm)] border px-3 py-2 text-center text-sm transition-colors",
+                  "text-sm transition-colors",
                   activePath === item.href
-                    ? "border-[var(--creator-border-strong)] bg-[var(--creator-surface-muted)] font-medium text-[var(--creator-text)]"
-                    : "border-[var(--creator-border)] bg-[var(--creator-surface)] text-[var(--creator-text)] hover:bg-[var(--creator-surface-muted)]",
+                    ? "font-medium text-[var(--creator-text)]"
+                    : "text-[var(--creator-text-muted)] hover:text-[var(--creator-text)]",
                 )}
               >
                 {item.label}

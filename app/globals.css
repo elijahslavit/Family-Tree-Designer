@@ -20,8 +20,8 @@
   --creator-bg: #f4f1ea;
   --creator-surface: #fffdf8;
   --creator-surface-muted: #f7f3eb;
-  --creator-border: rgba(55, 45, 35, 0.16);
-  --creator-border-strong: rgba(55, 45, 35, 0.26);
+  --creator-border: rgba(55, 45, 35, 0.10);
+  --creator-border-strong: rgba(55, 45, 35, 0.18);
   --creator-text: #241f18;
   --creator-text-muted: #675f55;
   --creator-accent: #4f5d4a;
