@@ -152,7 +152,7 @@ textarea {
 }
 
 .react-flow__minimap-mask {
-  fill: rgba(90, 82, 74, 0.1) !important;
+  fill: var(--minimap-mask) !important;
 }
 
 .react-flow__panel {

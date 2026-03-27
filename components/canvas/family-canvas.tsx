@@ -38,7 +38,7 @@ export function FamilyCanvas({
 }: FamilyCanvasProps) {
   return (
     <div className="canvas-stage relative h-[28rem] overflow-hidden rounded-[var(--radius-md)] border border-[var(--creator-border)] bg-[var(--creator-surface)] sm:h-[34rem] lg:h-[78vh] lg:max-h-[56rem]">
-      <div className="absolute inset-x-0 top-0 z-10 flex flex-wrap items-center gap-2 border-b border-[var(--creator-border)] bg-[rgba(255,253,248,0.96)] px-4 py-3 text-sm text-[var(--creator-text)]">
+      <div className="absolute inset-x-0 top-0 z-10 flex flex-wrap items-center gap-2 border-b border-[var(--creator-border)] bg-[var(--creator-surface)] px-4 py-3 text-sm text-[var(--creator-text)]">
         <span className="font-medium">Canvas</span>
         <span className="text-[var(--creator-text-muted)]">{focusLabel}</span>
         <span className="text-[var(--creator-text-muted)]">|</span>
@@ -80,7 +80,6 @@ export function FamilyCanvas({
         <Controls showInteractive={false} />
         <Background
           variant={BackgroundVariant.Dots}
-          color="rgba(79, 93, 74, 0.18)"
           gap={28}
           size={1.2}
         />

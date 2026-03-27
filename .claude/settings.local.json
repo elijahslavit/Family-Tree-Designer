@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/TRUENAS/documents/Business Application Files/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -62,4 +62,13 @@
   --minimap-bg: rgba(18, 14, 10, 0.95);
   --minimap-mask: rgba(10, 8, 6, 0.72);
   --minimap-node: rgba(243, 234, 216, 0.3);
+  --creator-bg: #0f0d0a;
+  --creator-surface: #1c1813;
+  --creator-surface-muted: #211b14;
+  --creator-border: rgba(243, 234, 216, 0.1);
+  --creator-border-strong: rgba(229, 170, 69, 0.22);
+  --creator-text: #f3ead8;
+  --creator-text-muted: #9b8f7a;
+  --creator-accent: #e5aa45;
+  --creator-accent-soft: rgba(229, 170, 69, 0.14);
 }

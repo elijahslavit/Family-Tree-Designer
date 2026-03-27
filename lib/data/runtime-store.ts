@@ -1,13 +1,16 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 import { getDb } from "@/db/client";
 import {
   accounts,
+  citations,
   claims,
   events,
   externalIds,
   families,
+  familyChildren,
   importJobs,
+  lineageMembers,
   lineages,
   people,
   reviewIssues,
@@ -198,7 +201,7 @@ async function loadTreeBundle(
   }
 
   const treeId = tree.id;
-  const [treePeople, treeFamilies, treeFamilyChildren, treeEvents, treeLineages, treeLineageMembers, treeSources, treeClaims, treeReviewIssues, treeExternalIds, treeImportJobs] =
+  const [treePeople, treeFamilies, treeEvents, treeLineages, treeSources, treeClaims, treeReviewIssues, treeExternalIds, treeImportJobs] =
     await Promise.all([
       db.query.people.findMany({
         where: eq(people.treeId, treeId),
@@ -206,14 +209,12 @@ async function loadTreeBundle(
       db.query.families.findMany({
         where: eq(families.treeId, treeId),
       }),
-      db.query.familyChildren.findMany(),
       db.query.events.findMany({
         where: eq(events.treeId, treeId),
       }),
       db.query.lineages.findMany({
         where: eq(lineages.treeId, treeId),
       }),
-      db.query.lineageMembers.findMany(),
       db.query.sources.findMany({
         where: eq(sources.treeId, treeId),
       }),
@@ -231,35 +232,42 @@ async function loadTreeBundle(
       }),
     ]);
 
-  const familyIds = new Set(treeFamilies.map((family) => family.id));
-  const lineageIds = new Set(treeLineages.map((lineage) => lineage.id));
-  const claimIds = new Set(treeClaims.map((claim) => claim.id));
-  const sourceIds = new Set(treeSources.map((source) => source.id));
+  const familyIds = treeFamilies.map((family) => family.id);
+  const lineageIds = treeLineages.map((lineage) => lineage.id);
+  const claimIds = treeClaims.map((claim) => claim.id);
+  const sourceIds = treeSources.map((source) => source.id);
 
-  const [treeCitations] = await Promise.all([
-    db.query.citations.findMany(),
-  ]);
+  const [treeFamilyChildren, treeLineageMembers, treeCitations] =
+    await Promise.all([
+      familyIds.length
+        ? db.query.familyChildren.findMany({
+            where: inArray(familyChildren.familyId, familyIds),
+          })
+        : Promise.resolve([]),
+      lineageIds.length
+        ? db.query.lineageMembers.findMany({
+            where: inArray(lineageMembers.lineageId, lineageIds),
+          })
+        : Promise.resolve([]),
+      claimIds.length || sourceIds.length
+        ? db.query.citations.findMany({
+            where: inArray(citations.claimId, claimIds),
+          })
+        : Promise.resolve([]),
+    ]);
 
   return {
     account: normalizeAccount(account),
     tree: normalizeTree(tree),
     people: treePeople.map(normalizePerson),
     families: treeFamilies.map(normalizeFamily),
-    familyChildren: treeFamilyChildren
-      .filter((item) => familyIds.has(item.familyId))
-      .map(normalizeFamilyChild),
+    familyChildren: treeFamilyChildren.map(normalizeFamilyChild),
     events: treeEvents.map(normalizeEvent),
     lineages: treeLineages.map(normalizeLineage),
-    lineageMembers: treeLineageMembers
-      .filter((item) => lineageIds.has(item.lineageId))
-      .map(normalizeLineageMember),
+    lineageMembers: treeLineageMembers.map(normalizeLineageMember),
     sources: treeSources.map(normalizeSource),
     claims: treeClaims.map(normalizeClaim),
-    citations: treeCitations
-      .filter(
-      (citation) => claimIds.has(citation.claimId) || sourceIds.has(citation.sourceId),
-    )
-      .map(normalizeCitation),
+    citations: treeCitations.map(normalizeCitation),
     reviewIssues: treeReviewIssues.map(normalizeReviewIssue),
     externalIds: treeExternalIds.map(normalizeExternalId),
     importJobs: treeImportJobs.map(normalizeImportJob),
