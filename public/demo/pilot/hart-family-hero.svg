@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Synthetic Hart family archival collage</title>
+  <desc id="desc">A fictional warm editorial collage of six abstract family portraits, paper records, botanical branches, and a winding family line.</desc>
+  <metadata>Clearly synthetic demo artwork. No real people, photographs, documents, signatures, or historical records are represented.</metadata>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F8F2E4"/>
+      <stop offset="1" stop-color="#E8D9BE"/>
+    </linearGradient>
+    <linearGradient id="wash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#20352F"/>
+      <stop offset="1" stop-color="#405240"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#17251F" flood-opacity=".2"/>
+    </filter>
+    <clipPath id="ovalA"><ellipse cx="0" cy="0" rx="105" ry="128"/></clipPath>
+    <clipPath id="ovalB"><ellipse cx="0" cy="0" rx="83" ry="101"/></clipPath>
+    <pattern id="grain" width="17" height="17" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="4" r=".8" fill="#7A6A55" opacity=".12"/>
+      <circle cx="13" cy="12" r=".65" fill="#7A6A55" opacity=".1"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#paper)"/>
+  <rect width="1600" height="900" fill="url(#grain)"/>
+  <path d="M0 680C254 617 381 720 579 673s320-214 538-176 248 153 483 91v312H0Z" fill="#D6C7A8" opacity=".5"/>
+  <circle cx="1375" cy="134" r="260" fill="#D9A97B" opacity=".16"/>
+  <circle cx="110" cy="80" r="190" fill="#71816D" opacity=".13"/>
+
+  <g opacity=".68" fill="none" stroke="#6E7B64" stroke-linecap="round">
+    <path d="M133 780c98-128 82-265 158-402 53-95 104-139 166-214" stroke-width="5"/>
+    <path d="M276 408c-50-38-91-45-137-30M307 351c12-56 5-100-17-138M356 279c-22-55-17-97 4-139M222 517c-56-12-94-1-133 27" stroke-width="3"/>
+    <g fill="#71816D" stroke="none">
+      <ellipse cx="151" cy="379" rx="35" ry="14" transform="rotate(11 151 379)"/>
+      <ellipse cx="290" cy="219" rx="33" ry="13" transform="rotate(68 290 219)"/>
+      <ellipse cx="363" cy="146" rx="32" ry="13" transform="rotate(-72 363 146)"/>
+      <ellipse cx="97" cy="542" rx="35" ry="14" transform="rotate(-18 97 542)"/>
+      <ellipse cx="406" cy="224" rx="36" ry="14" transform="rotate(-42 406 224)"/>
+    </g>
+  </g>
+
+  <g transform="translate(1045 85) rotate(4)" filter="url(#shadow)">
+    <rect width="390" height="250" rx="5" fill="#F9F3E6" stroke="#C7B797" stroke-width="2"/>
+    <text x="34" y="51" fill="#8A674E" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" letter-spacing="3">THE HART FAMILY</text>
+    <text x="34" y="90" fill="#26372F" font-family="Georgia, 'Times New Roman', serif" font-size="31">Summer circular</text>
+    <path d="M34 112h320M34 131h250M34 148h296M34 165h219M34 196h320M34 213h275" stroke="#A69B85" stroke-width="4" opacity=".58"/>
+    <circle cx="329" cy="70" r="27" fill="none" stroke="#B56E4E" stroke-width="3"/>
+    <path d="M315 70l9 9 19-21" fill="none" stroke="#B56E4E" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(1252 654) rotate(-7)" filter="url(#shadow)">
+    <rect width="262" height="145" rx="4" fill="#EEE3CD" stroke="#B7A588" stroke-width="2"/>
+    <path d="M26 34h208M26 56h165M26 78h190M26 100h139" stroke="#857866" stroke-width="3" opacity=".52"/>
+    <path d="M168 112c28-21 51-18 70 2" fill="none" stroke="#9E5A43" stroke-width="3"/>
+    <text x="26" y="126" fill="#6C6254" font-family="Georgia, 'Times New Roman', serif" font-size="14" font-style="italic">Meridian Street, 1958</text>
+  </g>
+
+  <path d="M435 700C590 647 568 466 728 447c160-20 183 187 340 164 105-16 143-109 225-116" fill="none" stroke="#B26C4E" stroke-width="4" stroke-dasharray="3 13" stroke-linecap="round" opacity=".72"/>
+  <g fill="#B26C4E">
+    <circle cx="435" cy="700" r="8"/><circle cx="728" cy="447" r="8"/><circle cx="1068" cy="611" r="8"/><circle cx="1293" cy="495" r="8"/>
+  </g>
+
+  <g transform="translate(426 124) rotate(-5)" filter="url(#shadow)">
+    <rect x="-126" y="-153" width="252" height="306" rx="4" fill="#F9F2DF" stroke="#FFFFFF" stroke-width="12"/>
+    <g clip-path="url(#ovalA)">
+      <rect x="-105" y="-128" width="210" height="256" fill="#B8A581"/>
+      <circle cx="0" cy="-30" r="55" fill="#DDB88F"/>
+      <path d="M-58-40c5-58 111-70 119 5-26-26-82-29-119-5Z" fill="#47443D"/>
+      <path d="M-94 128c3-77 43-118 94-118s91 41 94 118" fill="#33483F"/>
+      <path d="M-27 15l27 25 27-25 12 113h-78Z" fill="#E7D8BE"/>
+      <path d="M-64 93h128" stroke="#BE8C4F" stroke-width="4"/>
+    </g>
+    <text x="0" y="137" text-anchor="middle" fill="#635948" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="2">WALTER · 1946</text>
+  </g>
+
+  <g transform="translate(790 206) rotate(3)" filter="url(#shadow)">
+    <rect x="-106" y="-129" width="212" height="258" rx="4" fill="#F9F2DF" stroke="#FFFFFF" stroke-width="10"/>
+    <g clip-path="url(#ovalB)">
+      <rect x="-83" y="-101" width="166" height="202" fill="#87927E"/>
+      <circle cx="0" cy="-22" r="44" fill="#E0B995"/>
+      <path d="M-48-32c8-54 89-58 98 4-18-10-26-28-30-38-15 24-36 35-68 34Z" fill="#614B3F"/>
+      <path d="M-78 101c4-58 34-88 78-88s74 30 78 88" fill="#A75F49"/>
+      <path d="M-19 16l19 20 19-20 13 85h-64Z" fill="#F0DFC4"/>
+    </g>
+    <text x="0" y="115" text-anchor="middle" fill="#635948" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="2">JUNE · 1952</text>
+  </g>
+
+  <g transform="translate(573 566) rotate(4)" filter="url(#shadow)">
+    <rect x="-100" y="-122" width="200" height="244" rx="4" fill="#F9F2DF" stroke="#FFFFFF" stroke-width="10"/>
+    <g clip-path="url(#ovalB)">
+      <rect x="-83" y="-101" width="166" height="202" fill="#C7A077"/>
+      <circle cx="0" cy="-21" r="43" fill="#DBAE87"/>
+      <path d="M-47-28c4-48 87-56 96 0-31-22-65-24-96 0Z" fill="#353A36"/>
+      <path d="M-76 101c2-59 36-88 76-88s74 29 76 88" fill="#4C665E"/>
+      <path d="M-23 14 0 34l23-20 13 87h-72Z" fill="#D6C8A7"/>
+      <circle cx="0" cy="35" r="4" fill="#B26C4E"/>
+    </g>
+    <text x="0" y="108" text-anchor="middle" fill="#635948" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="2">ELEANOR · 1961</text>
+  </g>
+
+  <g transform="translate(970 600) rotate(-3)" filter="url(#shadow)">
+    <rect x="-98" y="-118" width="196" height="236" rx="4" fill="#F9F2DF" stroke="#FFFFFF" stroke-width="10"/>
+    <g clip-path="url(#ovalB)">
+      <rect x="-83" y="-101" width="166" height="202" fill="#927E68"/>
+      <circle cx="0" cy="-23" r="43" fill="#C9956F"/>
+      <path d="M-50-37c9-43 85-48 101 3-33-13-67-16-101-3Z" fill="#4B342B"/>
+      <path d="M-76 101c3-59 34-89 76-89s73 30 76 89" fill="#273A35"/>
+      <path d="M-20 14 0 33l20-19 9 87h-58Z" fill="#8C9A86"/>
+    </g>
+    <text x="0" y="104" text-anchor="middle" fill="#635948" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="2">ROBERT · 1964</text>
+  </g>
+
+  <g transform="translate(735 785) rotate(-2)">
+    <path d="M-35 0h70" stroke="#26372F" stroke-width="2"/>
+    <circle cx="0" r="8" fill="#C99C51"/>
+    <path d="M0-8v-35" stroke="#26372F" stroke-width="2"/>
+  </g>
+  <g transform="translate(735 836)" fill="#26372F" text-anchor="middle">
+    <text font-family="Georgia, 'Times New Roman', serif" font-size="31" letter-spacing="2">THE HART FAMILY</text>
+    <text y="31" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="5">FOUR GENERATIONS · ONE UNFOLDING STORY</text>
+  </g>
+</svg>

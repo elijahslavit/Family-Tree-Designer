@@ -1,9 +1,12 @@
 import { test, expect } from "@playwright/test";
 
-test("marketing page renders archive links", async ({ page }) => {
+test("marketing page presents the professional pilot", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByText("Family Tree Designer")).toBeVisible();
-  await expect(page.getByText("Open creator mode")).toBeVisible();
-  await expect(page.getByText("Browse the shared archive")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /Your research deserves a reveal/ }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open synthetic studio" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Preview the client experience" })).toBeVisible();
+  await expect(page.getByText("synthetic data only")).toBeVisible();
 });

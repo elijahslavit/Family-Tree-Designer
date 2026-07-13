@@ -7,8 +7,12 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { ViewerContext } from "@/lib/types";
 
 export async function getSessionAccountId() {
-  if (!hasConfiguredBackend() || isDemoMode()) {
+  if (isDemoMode()) {
     return getDemoStore().account.id;
+  }
+
+  if (!hasConfiguredBackend()) {
+    return null;
   }
 
   const supabase = await createSupabaseServerClient();

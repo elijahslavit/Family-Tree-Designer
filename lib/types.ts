@@ -7,7 +7,13 @@ export type ThemeSkin =
   | "inkwash"
   | "portrait-gallery";
 export type Gender = "male" | "female" | "unknown" | "other";
-export type RelationshipType = "biological";
+export type RelationshipType =
+  | "biological"
+  | "adoptive"
+  | "step"
+  | "foster"
+  | "guardian"
+  | "unknown";
 export type ReviewIssueType =
   | "duplicate"
   | "conflict"

@@ -1,0 +1,3 @@
+"use client";
+
+export default function PrivateShowcaseError({ reset }: { reset: () => void }) { return <main className="grid min-h-screen place-items-center bg-[#e9e3d7] px-4"><section className="max-w-lg rounded-3xl border border-black/10 bg-[#fbf9f4] p-8 text-center"><h1 className="font-serif text-3xl font-semibold">The private archive could not be opened.</h1><p className="mt-3 text-sm leading-6 text-[#665e52]">No family content was exposed. Retry the authorized request or ask the archive owner to reissue access.</p><button type="button" onClick={reset} className="mt-5 rounded-full bg-[#293a31] px-5 py-3 text-sm font-semibold text-white">Retry securely</button></section></main>; }

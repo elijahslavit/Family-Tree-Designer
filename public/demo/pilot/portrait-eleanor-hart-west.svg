@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-labelledby="title desc">
+  <title id="title">Synthetic portrait of fictional Eleanor Hart West</title>
+  <desc id="desc">A paper-cut style fictional portrait of an archivist in a teal cardigan, framed by labeled photograph corners.</desc>
+  <metadata>Clearly synthetic demo portrait. Eleanor Hart West is fictional and this image does not depict a real person.</metadata>
+  <defs>
+    <linearGradient id="bg-eleanor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#D2B183"/><stop offset="1" stop-color="#9D7C5F"/></linearGradient>
+    <clipPath id="frame-eleanor"><rect x="30" y="28" width="340" height="444" rx="20"/></clipPath>
+  </defs>
+  <rect width="400" height="500" rx="24" fill="#F5EDDF"/>
+  <g clip-path="url(#frame-eleanor)">
+    <rect x="30" y="28" width="340" height="444" fill="url(#bg-eleanor)"/>
+    <g fill="#F5EDDF" opacity=".64"><path d="M48 49h71v8H56v63h-8ZM352 49v71h-8V57h-63v-8ZM48 451v-71h8v63h63v8ZM352 451h-71v-8h63v-63h8Z"/></g>
+    <g transform="translate(66 96) rotate(-6)"><rect width="90" height="72" rx="3" fill="#EBDCC3" opacity=".6"/><path d="M11 18h68M11 33h55M11 48h62" stroke="#766C5E" stroke-width="3" opacity=".5"/></g>
+    <path d="M37 472c17-135 72-205 163-205s146 70 163 205" fill="#476962"/>
+    <path d="M102 472c7-117 38-181 98-205 60 24 91 88 98 205" fill="#587C74"/>
+    <path d="M156 274l44 55 44-55 22 198H134Z" fill="#E8D9BC"/>
+    <path d="M198 330v142M174 356h52" stroke="#BC714F" stroke-width="4"/>
+    <circle cx="200" cy="368" r="5" fill="#BC714F"/><circle cx="200" cy="394" r="5" fill="#BC714F"/>
+    <rect x="172" y="222" width="56" height="69" rx="23" fill="#CD9975"/>
+    <ellipse cx="200" cy="184" rx="74" ry="91" fill="#D9A681"/>
+    <path d="M127 184c-8-86 32-122 75-122 55 0 86 51 71 126-8-55-37-84-73-84-35 0-64 28-73 80Z" fill="#333D39"/>
+    <path d="M128 154c11-58 37-91 74-91 39 0 65 34 71 90-27-10-50-29-66-53-17 27-43 45-79 54Z" fill="#424B46"/>
+    <path d="M151 187h27M222 187h27" stroke="#65483D" stroke-width="4" stroke-linecap="round"/>
+    <path d="M178 186h44" stroke="#465550" stroke-width="3"/>
+    <path d="M147 181c0 15 9 26 20 26s20-11 20-26M213 181c0 15 9 26 20 26s20-11 20-26" fill="none" stroke="#465550" stroke-width="3"/>
+    <path d="M199 194l-8 27h17" fill="none" stroke="#A56E55" stroke-width="3" stroke-linecap="round"/>
+    <path d="M177 239c15 10 31 10 46 0" fill="none" stroke="#8D5147" stroke-width="4" stroke-linecap="round"/>
+    <g transform="translate(287 319)"><rect x="-33" y="-25" width="66" height="50" rx="3" fill="#E8D9BC"/><circle cy="-3" r="12" fill="#C29B69"/><path d="M-24 18c4-19 14-27 24-27s20 8 24 27" fill="#7C8C79"/></g>
+  </g>
+  <rect x="30" y="28" width="340" height="444" rx="20" fill="none" stroke="#FFFFFF" stroke-width="12"/>
+  <rect x="74" y="432" width="252" height="26" rx="13" fill="#263A34" opacity=".9"/>
+  <text x="200" y="450" fill="#FFF8EA" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="2.2">ELEANOR HART WEST · SYNTHETIC</text>
+</svg>

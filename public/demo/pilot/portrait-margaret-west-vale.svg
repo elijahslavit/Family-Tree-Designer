@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-labelledby="title desc">
+  <title id="title">Synthetic portrait of fictional Margaret West Vale</title>
+  <desc id="desc">A contemporary paper-cut style fictional portrait of a school librarian in plum and ochre, with abstract book spines.</desc>
+  <metadata>Clearly synthetic demo portrait. Margaret West Vale is fictional and this image does not depict a real person.</metadata>
+  <defs>
+    <linearGradient id="bg-margaret" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#E4C997"/><stop offset="1" stop-color="#C28C63"/></linearGradient>
+    <clipPath id="frame-margaret"><path d="M30 72c0-26 21-47 47-47h246c26 0 47 21 47 47v356c0 26-21 47-47 47H77c-26 0-47-21-47-47Z"/></clipPath>
+  </defs>
+  <rect width="400" height="500" rx="24" fill="#F6EEDF"/>
+  <g clip-path="url(#frame-margaret)">
+    <rect x="25" y="20" width="350" height="460" fill="url(#bg-margaret)"/>
+    <g opacity=".32"><rect x="48" y="54" width="22" height="142" fill="#4E6257"/><rect x="75" y="73" width="31" height="123" fill="#763E55"/><rect x="111" y="45" width="17" height="151" fill="#F0E0BD"/><rect x="133" y="82" width="27" height="114" fill="#A75D47"/><rect x="165" y="60" width="20" height="136" fill="#394A43"/><rect x="190" y="88" width="33" height="108" fill="#7C4D5F"/></g>
+    <path d="M35 469c15-138 74-207 165-207s150 69 165 207" fill="#6D4058"/>
+    <path d="M107 469c7-112 38-177 93-207 55 30 86 95 93 207" fill="#814D68"/>
+    <path d="M154 275l46 54 46-54 22 194H132Z" fill="#F1DFC0"/>
+    <path d="M174 303l26 26 26-26 13 166h-78Z" fill="#D5A854"/>
+    <rect x="171" y="220" width="58" height="69" rx="23" fill="#C88C6D"/>
+    <ellipse cx="200" cy="183" rx="76" ry="92" fill="#D9A17D"/>
+    <path d="M126 193c-19-81 19-128 75-128s93 47 74 128c-14-61-38-93-74-93-37 0-61 32-75 93Z" fill="#352D2B"/>
+    <path d="M130 152c13-59 38-88 71-88 35 0 61 31 72 91-34-9-57-29-72-56-17 29-39 46-71 53Z" fill="#453A36"/>
+    <path d="M148 187h30M222 187h30" stroke="#64423A" stroke-width="4" stroke-linecap="round"/>
+    <path d="M178 186h44" stroke="#4B5752" stroke-width="3"/>
+    <path d="M144 181c0 15 10 27 22 27s22-12 22-27M212 181c0 15 10 27 22 27s22-12 22-27" fill="none" stroke="#4B5752" stroke-width="3"/>
+    <path d="M199 194l-8 27h17" fill="none" stroke="#A56A53" stroke-width="3" stroke-linecap="round"/>
+    <path d="M176 239c16 12 33 12 49 0" fill="none" stroke="#854A46" stroke-width="4" stroke-linecap="round"/>
+    <path d="M124 181c-13 29-13 67 11 94M276 181c13 29 13 67-11 94" fill="none" stroke="#453A36" stroke-width="15" stroke-linecap="round"/>
+    <g transform="translate(292 357) rotate(5)"><rect x="-37" y="-29" width="74" height="58" rx="4" fill="#F0DFC0"/><path d="M0-22v44M-29-17c14-4 23-1 29 5 6-6 15-9 29-5v35c-14-4-23-1-29 5-6-6-15-9-29-5Z" fill="none" stroke="#59695E" stroke-width="3"/></g>
+  </g>
+  <path d="M30 72c0-26 21-47 47-47h246c26 0 47 21 47 47v356c0 26-21 47-47 47H77c-26 0-47-21-47-47Z" fill="none" stroke="#FFFFFF" stroke-width="12"/>
+  <rect x="75" y="432" width="250" height="27" rx="13.5" fill="#263A34" opacity=".92"/>
+  <text x="200" y="451" fill="#FFF8EA" font-family="Arial, Helvetica, sans-serif" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="1.8">MARGARET WEST VALE · SYNTHETIC</text>
+</svg>

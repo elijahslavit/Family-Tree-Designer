@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Copy, Globe, KeyRound, Lock, Save, Sparkles } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useState, useSyncExternalStore, useTransition } from "react";
 
 import { Badge } from "@/components/foundation/badge";
 import { Button } from "@/components/foundation/button";
@@ -17,6 +17,10 @@ import {
 import type { Tree } from "@/lib/types";
 import { publicTreeHref } from "@/lib/utils/links";
 
+const subscribeToOrigin = () => () => {};
+const getOriginSnapshot = () => window.location.origin;
+const getOriginServerSnapshot = () => "";
+
 export function ShareSettings({ tree }: { tree: Tree }) {
   const [isPending, startSaving] = useTransition();
   const [name, setName] = useState(tree.name);
@@ -24,8 +28,12 @@ export function ShareSettings({ tree }: { tree: Tree }) {
   const [description, setDescription] = useState(tree.description ?? "");
   const [isPublic, setIsPublic] = useState(tree.isPublic);
   const [shareToken, setShareToken] = useState(tree.shareToken);
+  const origin = useSyncExternalStore(
+    subscribeToOrigin,
+    getOriginSnapshot,
+    getOriginServerSnapshot,
+  );
   const { pushToast } = useToast();
-  const origin = typeof window === "undefined" ? "" : window.location.origin;
   const sharePath = publicTreeHref(slug, shareToken);
   const shareUrl = `${origin}${sharePath}`;
 

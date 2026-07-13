@@ -11,7 +11,15 @@ const requiredPublicSupabaseEnv = [
 ] as const;
 
 export function isDemoMode() {
-  return process.env.DEMO_MODE !== "false";
+  if (process.env.DEMO_MODE === "true") {
+    return true;
+  }
+
+  if (process.env.DEMO_MODE === "false") {
+    return false;
+  }
+
+  return process.env.NODE_ENV !== "production";
 }
 
 export function hasConfiguredBackend() {

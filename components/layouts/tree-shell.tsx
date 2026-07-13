@@ -17,6 +17,7 @@ type ShellProps = {
 };
 
 const creatorNavItems = [
+  { href: "/projects", label: "Projects" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/theme", label: "Theme" },
   { href: "/import", label: "Family Upload" },

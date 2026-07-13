@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" role="img" aria-labelledby="title desc">
+  <title id="title">Synthetic Walter Hart railway letter record preview</title>
+  <desc id="desc">A fictional 1946 railway company letter on cream stationery, with route lines, a typed message, and visible demo-record label.</desc>
+  <metadata>Clearly synthetic demo record. The railway company, letter, dates, marks, signature, addresses, and all content are fictional.</metadata>
+  <defs>
+    <linearGradient id="paper-letter" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FAF3E4"/><stop offset="1" stop-color="#E9D9BB"/></linearGradient>
+    <filter id="shadow-letter" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#1F302B" flood-opacity=".25"/></filter>
+  </defs>
+  <rect width="1000" height="700" fill="#6F7C69"/>
+  <circle cx="93" cy="92" r="146" fill="#D5B476" opacity=".2"/>
+  <circle cx="913" cy="615" r="220" fill="#33483F" opacity=".34"/>
+  <g transform="translate(118 44) rotate(1 382 306)" filter="url(#shadow-letter)">
+    <rect width="764" height="612" rx="5" fill="url(#paper-letter)"/>
+    <g transform="translate(61 48)">
+      <circle cx="45" cy="38" r="37" fill="#263A34"/>
+      <path d="M20 39h50M27 27h36M29 51h32" stroke="#D5AA59" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="45" cy="38" r="24" fill="none" stroke="#F5EBD7" stroke-width="3"/>
+      <text x="105" y="27" fill="#263A34" font-family="Georgia, 'Times New Roman', serif" font-size="28" letter-spacing="1">MERIDIAN &amp; VALLEY RAILWAY</text>
+      <text x="107" y="54" fill="#8D624D" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="3">OPERATING DEPARTMENT · FICTIONAL COMPANY</text>
+    </g>
+    <path d="M60 143h644" stroke="#B36A4D" stroke-width="3"/>
+    <g transform="translate(61 168)" fill="#3F3A33" font-family="'Courier New', monospace" font-size="16">
+      <text x="0" y="0">17 October 1946</text>
+      <text x="0" y="46">Mr. Walter Hart</text>
+      <text x="0" y="71">Cincinnati Division</text>
+      <text x="0" y="115">Dear Mr. Hart:</text>
+      <text x="0" y="154">Your revised timetable notes have been added to the winter book.</text>
+      <text x="0" y="180">The clarity of your milepost annotations will be especially useful</text>
+      <text x="0" y="206">to the crews beginning the river route next month.</text>
+      <text x="0" y="246">Please retain the enclosed duplicate for your records and convey</text>
+      <text x="0" y="272">our thanks to the evening team.</text>
+      <text x="0" y="316">Respectfully,</text>
+      <text x="0" y="360" fill="#835443" font-family="Georgia, serif" font-size="27" font-style="italic">Arthur P. Bell</text>
+      <text x="0" y="386" font-size="14">Division superintendent</text>
+    </g>
+    <g transform="translate(558 451) rotate(-7)">
+      <circle r="70" fill="none" stroke="#A85D48" stroke-width="4" opacity=".68"/>
+      <circle r="54" fill="none" stroke="#A85D48" stroke-width="2" opacity=".68"/>
+      <text y="-8" text-anchor="middle" fill="#A85D48" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2">FILE COPY</text>
+      <text y="15" text-anchor="middle" fill="#A85D48" font-family="Arial, sans-serif" font-size="11" letter-spacing="1">OCT 1946</text>
+      <path d="M-38 29h76" stroke="#A85D48" stroke-width="3"/>
+    </g>
+    <path d="M61 566h642" stroke="#A99980" stroke-width="1"/>
+    <text x="382" y="590" text-anchor="middle" fill="#6D6252" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="2.6">SYNTHETIC DEMO RECORD · NOT HISTORICAL EVIDENCE</text>
+  </g>
+</svg>

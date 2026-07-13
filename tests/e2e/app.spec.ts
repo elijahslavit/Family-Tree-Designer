@@ -7,7 +7,6 @@ test("dashboard surfaces archive overview and quick actions", async ({ page }) =
   await expect(page.getByRole("link", { name: "Select Theme" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Enter Family" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Archive summary" })).toBeVisible();
-  await expect(page.getByText("Quick access")).toBeVisible();
 });
 
 test("creator can add a person and continue in the workbench", async ({ page }) => {

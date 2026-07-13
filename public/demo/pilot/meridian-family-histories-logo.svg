@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 160" role="img" aria-labelledby="title desc">
+  <title id="title">Synthetic Meridian Family Histories logo</title>
+  <desc id="desc">A fictional genealogist logo with a branching M monogram and warm editorial typography.</desc>
+  <metadata>Clearly synthetic demo artwork. Meridian Family Histories is a fictional organization created for the Family Tree Designer pilot.</metadata>
+  <rect width="560" height="160" rx="22" fill="#F6F0E2"/>
+  <g transform="translate(28 24)">
+    <rect width="112" height="112" rx="56" fill="#23362F"/>
+    <path d="M27 78V40l29 31 29-31v38" fill="none" stroke="#F6F0E2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M56 70V28M56 37L39 24M56 46l19-16" fill="none" stroke="#CBA15B" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="38" cy="23" r="5" fill="#CBA15B"/>
+    <circle cx="76" cy="29" r="5" fill="#CBA15B"/>
+    <circle cx="56" cy="27" r="5" fill="#CBA15B"/>
+  </g>
+  <g fill="#23362F">
+    <text x="166" y="70" font-family="Georgia, 'Times New Roman', serif" font-size="38" letter-spacing="1">Meridian</text>
+    <text x="168" y="105" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="4">FAMILY HISTORIES</text>
+  </g>
+  <path d="M168 119h304" stroke="#B36B4D" stroke-width="2"/>
+  <text x="168" y="139" fill="#657067" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="2">RESEARCH · STORIES · LEGACY</text>
+</svg>

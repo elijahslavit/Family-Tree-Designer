@@ -3,7 +3,17 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { hasConfiguredBackend, requireEnv, isDemoMode } from "@/lib/runtime";
 
-const protectedPrefixes = ["/dashboard", "/directory", "/person", "/canvas", "/import", "/theme", "/settings"];
+const protectedPrefixes = [
+  "/archive",
+  "/dashboard",
+  "/directory",
+  "/person",
+  "/canvas",
+  "/import",
+  "/projects",
+  "/theme",
+  "/settings",
+];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
@@ -11,6 +21,16 @@ export async function updateSession(request: NextRequest) {
   });
 
   if (!hasConfiguredBackend()) {
+    if (
+      !isDemoMode() &&
+      protectedPrefixes.some((prefix) => request.nextUrl.pathname.startsWith(prefix))
+    ) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/sign-in";
+      redirectUrl.searchParams.set("reason", "backend-not-configured");
+      return NextResponse.redirect(redirectUrl);
+    }
+
     return response;
   }
 
