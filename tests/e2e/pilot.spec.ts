@@ -11,7 +11,9 @@ test("creator portfolio and professional preview are complete", async ({ page })
 
   await page.goto("/projects/pilot-hart-001/preview");
   await expect(page.getByRole("heading", { name: "The Hart Family" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Explore your family" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Discover an ancestor/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Browse a family branch/ })).toBeVisible();
+  await expect(page.getByText(/Prepared for The Hart Family by Meridian Family Histories/)).toBeVisible();
   await expect(page.getByText("Synthetic demonstration media")).toBeVisible();
 });
 
@@ -36,13 +38,14 @@ test("review invitation creates an authorized private showcase session", async (
 
   await page.goto("/s/hart-family-legacy");
   await expect(page.getByRole("heading", { name: "The Hart Family" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Explore your family" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Discover an ancestor/ })).toBeVisible();
   await expect(page.getByText("Living minor")).toHaveCount(0);
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('summary[aria-label="Open navigation"]').click();
-  await expect(page.getByRole("link", { name: "Family tree", exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Stories", exact: true })).toBeVisible();
+  const mobileNav = page.getByRole("group");
+  await expect(mobileNav.getByRole("link", { name: "Family tree", exact: true })).toBeVisible();
+  await expect(mobileNav.getByRole("link", { name: "Stories", exact: true })).toBeVisible();
 });
 
 test("verified owner can accept handoff and reach archive controls", async ({ page }) => {

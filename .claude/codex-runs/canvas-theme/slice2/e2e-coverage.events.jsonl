@@ -1,0 +1,1018 @@
+{"type":"thread.started","thread_id":"019f65ad-f96b-73d3-91be-97d8a844ac2a"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll add the single requested Playwright spec, first checking the repo’s existing test style and the relevant Next.js guidance as required."}}
+{"type":"item.started","item":{"id":"item_1","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command \"Get-Content node_modules\\\\next\\\\dist\\\\docs\\\\*.md -ErrorAction SilentlyContinue | Select-String -Pattern 'Playwright|testing' -Context 0,2 | Select-Object -First 40; Get-Content tests\\\\e2e\\\\home.spec.ts; Get-Content playwright.config.ts\"","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command \"Get-Content node_modules\\\\next\\\\dist\\\\docs\\\\*.md -ErrorAction SilentlyContinue | Select-String -Pattern 'Playwright|testing' -Context 0,2 | Select-Object -First 40; Get-Content tests\\\\e2e\\\\home.spec.ts; Get-Content playwright.config.ts\"","aggregated_output":"import { test, expect } from \"@playwright/test\";\r\n\r\ntest(\"marketing page presents the professional pilot\", async ({ page }) => {\r\n  await page.goto(\"/\");\r\n\r\n  await expect(\r\n    page.getByRole(\"heading\", { name: /Your research deserves a reveal/ }),\r\n  ).toBeVisible();\r\n  await expect(page.getByRole(\"link\", { name: \"Open synthetic studio\" })).toBeVisible();\r\n  await expect(page.getByRole(\"link\", { name: \"Preview the client experience\" })).toBeVisible();\r\n  await expect(page.getByText(\"synthetic data only\")).toBeVisible();\r\n});\r\nimport { defineConfig, devices } from \"@playwright/test\";\r\n\r\nexport default defineConfig({\r\n  testDir: \"./tests/e2e\",\r\n  workers: 1,\r\n  use: {\r\n    baseURL: \"http://127.0.0.1:3100\",\r\n    trace: \"on-first-retry\",\r\n  },\r\n  webServer: {\r\n    command: \"npm.cmd run dev -- --port 3100\",\r\n    url: \"http://127.0.0.1:3100\",\r\n    reuseExistingServer: false,\r\n  },\r\n  projects: [\r\n    {\r\n      name: \"chromium\",\r\n      use: { ...devices[\"Desktop Chrome\"] },\r\n    },\r\n  ],\r\n});\r\n","exit_code":0,"status":"completed"}}
+{"type":"item.started","item":{"id":"item_2","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command \"rg --files node_modules\\\\next\\\\dist\\\\docs | rg -i \\\"test|playwright\\\" | Select-Object -First 20; Get-ChildItem node_modules\\\\next\\\\dist\\\\docs -Force | Select-Object -First 20 Name\"","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_2","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command \"rg --files node_modules\\\\next\\\\dist\\\\docs | rg -i \\\"test|playwright\\\" | Select-Object -First 20; Get-ChildItem node_modules\\\\next\\\\dist\\\\docs -Force | Select-Object -First 20 Name\"","aggregated_output":"node_modules\\next\\dist\\docs\\02-pages\\02-guides\\testing\\vitest.md\r\nnode_modules\\next\\dist\\docs\\02-pages\\02-guides\\testing\\playwright.md\r\nnode_modules\\next\\dist\\docs\\02-pages\\02-guides\\testing\\jest.md\r\nnode_modules\\next\\dist\\docs\\02-pages\\02-guides\\testing\\index.md\r\nnode_modules\\next\\dist\\docs\\02-pages\\02-guides\\testing\\cypress.md\r\nnode_modules\\next\\dist\\docs\\01-app\\02-guides\\testing\\vitest.md\r\nnode_modules\\next\\dist\\docs\\01-app\\02-guides\\testing\\playwright.md\r\nnode_modules\\next\\dist\\docs\\01-app\\02-guides\\testing\\jest.md\r\nnode_modules\\next\\dist\\docs\\01-app\\02-guides\\testing\\index.md\r\nnode_modules\\next\\dist\\docs\\01-app\\02-guides\\testing\\cypress.md\r\n\r\nName           \r\n----           \r\n01-app         \r\n02-pages       \r\n03-architecture\r\n04-community   \r\nindex.md       \r\n\r\n\r\n","exit_code":0,"status":"completed"}}
+{"type":"item.started","item":{"id":"item_3","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command \"Get-Content node_modules\\\\next\\\\dist\\\\docs\\\\01-app\\\\02-guides\\\\testing\\\\playwright.md; rg -n \\\"canvas-theme|themed-person-node|Center tree on|Tree canvas controls|Filter visible people|data-focus-person\\\" components lib app tests -g \\\"*.tsx\\\" -g \\\"*.ts\\\"\"","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_3","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command \"Get-Content node_modules\\\\next\\\\dist\\\\docs\\\\01-app\\\\02-guides\\\\testing\\\\playwright.md; rg -n \\\"canvas-theme|themed-person-node|Center tree on|Tree canvas controls|Filter visible people|data-focus-person\\\" components lib app tests -g \\\"*.tsx\\\" -g \\\"*.ts\\\"\"","aggregated_output":"---\r\ntitle: How to set up Playwright with Next.js\r\nnav_title: Playwright\r\ndescription: Learn how to set up Playwright with Next.js for End-to-End (E2E) Testing.\r\n---\r\n\r\nPlaywright is a testing framework that lets you automate Chromium, Firefox, and WebKit with a single API. You can use it to write **End-to-End (E2E)** testing. This guide will show you how to set up Playwright with Next.js and write your first tests.\r\n\r\n## Quickstart\r\n\r\nThe fastest way to get started is to use `create-next-app` with the [with-playwright example](https://github.com/vercel/next.js/tree/canary/examples/with-playwright). This will create a Next.js project complete with Playwright configured.\r\n\r\n```bash package=\"pnpm\"\r\npnpm create next-app --example with-playwright with-playwright-app\r\n```\r\n\r\n```bash package=\"npm\"\r\nnpx create-next-app@latest --example with-playwright with-playwright-app\r\n```\r\n\r\n```bash package=\"yarn\"\r\nyarn create next-app --example with-playwright with-playwright-app\r\n```\r\n\r\n```bash package=\"bun\"\r\nbun create next-app --example with-playwright with-playwright-app\r\n```\r\n\r\n## Manual setup\r\n\r\nTo install Playwright, run the following command:\r\n\r\n```bash package=\"pnpm\"\r\npnpm create playwright\r\n```\r\n\r\n```bash package=\"npm\"\r\nnpm init playwright\r\n```\r\n\r\n```bash package=\"yarn\"\r\nyarn create playwright\r\n```\r\n\r\n```bash package=\"bun\"\r\nbun create playwright\r\n```\r\n\r\nThis will take you through a series of prompts to setup and configure Playwright for your project, including adding a `playwright.config.ts` file. Please refer to the [Playwright installation guide](https://playwright.dev/docs/intro#installation) for the step-by-step guide.\r\n\r\n## Creating your first Playwright E2E test\r\n\r\nCreate two new Next.js pages:\r\n\r\n<AppOnly>\r\n\r\n```tsx filename=\"app/page.tsx\"\r\nimport Link from 'next/link'\r\n\r\nexport default function Page() {\r\n  return (\r\n    <div>\r\n      <h1>Home</h1>\r\n      <Link href=\"/about\">About</Link>\r\n    </div>\r\n  )\r\n}\r\n```\r\n\r\n```tsx filename=\"app/about/page.tsx\"\r\nimport Link from 'next/link'\r\n\r\nexport default function Page() {\r\n  return (\r\n    <div>\r\n      <h1>About</h1>\r\n      <Link href=\"/\">Home</Link>\r\n    </div>\r\n  )\r\n}\r\n```\r\n\r\n</AppOnly>\r\n\r\n<PagesOnly>\r\n\r\n```tsx filename=\"pages/index.ts\"\r\nimport Link from 'next/link'\r\n\r\nexport default function Home() {\r\n  return (\r\n    <div>\r\n      <h1>Home</h1>\r\n      <Link href=\"/about\">About</Link>\r\n    </div>\r\n  )\r\n}\r\n```\r\n\r\n```tsx filename=\"pages/about.ts\"\r\nimport Link from 'next/link'\r\n\r\nexport default function About() {\r\n  return (\r\n    <div>\r\n      <h1>About</h1>\r\n      <Link href=\"/\">Home</Link>\r\n    </div>\r\n  )\r\n}\r\n```\r\n\r\n</PagesOnly>\r\n\r\nThen, add a test to verify that your navigation is working correctly:\r\n\r\n```ts filename=\"tests/example.spec.ts\"\r\nimport { test, expect } from '@playwright/test'\r\n\r\ntest('should navigate to the about page', async ({ page }) => {\r\n  // Start from the index page (the baseURL is set via the webServer in the playwright.config.ts)\r\n  await page.goto('http://localhost:3000/')\r\n  // Find an element with the text 'About' and click on it\r\n  await page.click('text=About')\r\n  // The new URL should be \"/about\" (baseURL is used there)\r\n  await expect(page).toHaveURL('http://localhost:3000/about')\r\n  // The new page should contain an h1 with \"About\"\r\n  await expect(page.locator('h1')).toContainText('About')\r\n})\r\n```\r\n\r\n> **Good to know**: You can use `page.goto(\"/\")` instead of `page.goto(\"http://localhost:3000/\")`, if you add [`\"baseURL\": \"http://localhost:3000\"`](https://playwright.dev/docs/api/class-testoptions#test-options-base-url) to the `playwright.config.ts` [configuration file](https://playwright.dev/docs/test-configuration).\r\n\r\n### Running your Playwright tests\r\n\r\nPlaywright will simulate a user navigating your application using three browsers: Chromium, Firefox and Webkit, this requires your Next.js server to be running. We recommend running your tests against your production code to more closely resemble how your application will behave.\r\n\r\nRun `npm run build` and `npm run start`, then run `npx playwright test` in another terminal window to run the Playwright tests.\r\n\r\n> **Good to know**: Alternatively, you can use the [`webServer`](https://playwright.dev/docs/test-webserver/) feature to let Playwright start the development server and wait until it's fully available.\r\n\r\n### Running Playwright on Continuous Integration (CI)\r\n\r\nPlaywright will by default run your tests in the [headless mode](https://playwright.dev/docs/ci#running-headed). To install all the Playwright dependencies, run `npx playwright install-deps`.\r\n\r\nYou can learn more about Playwright and Continuous Integration from these resources:\r\n\r\n- [Next.js with Playwright example](https://github.com/vercel/next.js/tree/canary/examples/with-playwright)\r\n- [Playwright on your CI provider](https://playwright.dev/docs/ci)\r\n- [Playwright Discord](https://discord.com/invite/playwright-807756831384403968)\r\ncomponents\\canvas-themed\\themed-tree-canvas.tsx:6:import { FloatingControls } from \"@/components/canvas-themed/floating-controls\";\ncomponents\\canvas-themed\\themed-tree-canvas.tsx:7:import { ThemedPersonNode } from \"@/components/canvas-themed/themed-person-node\";\ncomponents\\canvas-themed\\themed-tree-canvas.tsx:69:    const focusNode = canvasRef.current?.querySelector<HTMLElement>(\"[data-focus-person='true']\");\ncomponents\\canvas-themed\\themed-tree-canvas.tsx:113:      data-canvas-theme={theme.cssScope}\ncomponents\\canvas-themed\\themed-tree-canvas.tsx:226:          aria-label=\"Filter visible people by name\"\ncomponents\\canvas-themed\\floating-controls.tsx:53:    <nav className=\"themed-floating-controls\" aria-label=\"Tree canvas controls\">\ncomponents\\canvas-themed\\themed-person-node.tsx:3:import { PersonSilhouette } from \"@/components/canvas-themed/person-silhouette\";\ncomponents\\canvas-themed\\themed-person-node.tsx:25:        className=\"themed-person-node themed-person-node--record-sought\"\ncomponents\\canvas-themed\\themed-person-node.tsx:47:      className={`themed-person-node${slot.isFocus ? \" themed-person-node--focus\" : \"\"}${\ncomponents\\canvas-themed\\themed-person-node.tsx:48:        person.isLiving ? \" themed-person-node--living\" : \"\"\ncomponents\\canvas-themed\\themed-person-node.tsx:50:      data-focus-person={slot.isFocus ? \"true\" : undefined}\ncomponents\\canvas-themed\\themed-person-node.tsx:54:        className=\"themed-person-node__main\"\ncomponents\\canvas-themed\\themed-person-node.tsx:57:        aria-label={`Center tree on ${person.fullName}`}\napp\\(client)\\s\\[slug]\\tree\\page.tsx:1:import { ThemedTreeCanvas } from \"@/components/canvas-themed/themed-tree-canvas\";\napp\\(auth)\\projects\\[projectId]\\preview\\tree\\page.tsx:1:import { ThemedTreeCanvas } from \"@/components/canvas-themed/themed-tree-canvas\";\n","exit_code":0,"status":"completed"}}
+2026-07-15T12:09:04.715286Z ERROR codex_models_manager::manager: failed to renew cache TTL: EOF while parsing a value at line 1 column 0
+{"type":"item.started","item":{"id":"item_4","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command \"Get-Content components\\\\canvas-themed\\\\themed-tree-canvas.tsx; Get-Content components\\\\canvas-themed\\\\floating-controls.tsx; Get-Content components\\\\canvas-themed\\\\themed-person-node.tsx; Get-NetTCPConnection -LocalPort 3100 -State Listen -ErrorAction SilentlyContinue | Format-Table -AutoSize\"","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+2026-07-15T12:09:10.413898Z ERROR codex_core::tools::router: error=Exit code: 1
+Wall time: 2.4 seconds
+Output:
+"use client";
+
+import { Fragment, useMemo, useRef, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+import { FloatingControls } from "@/components/canvas-themed/floating-controls";
+import { ThemedPersonNode } from "@/components/canvas-themed/themed-person-node";
+import type { GenerationalLayout, GenerationalPersonSlot } from "@/lib/canvas/generational-layout";
+import type { CanvasThemeManifest } from "@/lib/themes/types";
+import type { Lineage, PersonViewModel } from "@/lib/types";
+
+type ThemedTreeCanvasProps = {
+  layout: GenerationalLayout;
+  focusPerson: PersonViewModel;
+  theme: CanvasThemeManifest;
+  familyName: string;
+  practiceName: string;
+  treeBasePath: string;
+  profilePathBase: string;
+  storyPathBase: string;
+  focusStory?: { id: string } | null;
+  lineages: Lineage[];
+  selectedLineageId?: string | null;
+  depth: number;
+  maxDepth: number;
+  queryString?: string;
+  shareToken?: string | null;
+};
+
+export function ThemedTreeCanvas({
+  layout,
+  focusPerson,
+  theme,
+  familyName,
+  practiceName,
+  treeBasePath,
+  profilePathBase,
+  storyPathBase,
+  focusStory,
+  lineages,
+  selectedLineageId,
+  depth,
+  maxDepth,
+  queryString = "",
+  shareToken,
+}: ThemedTreeCanvasProps) {
+  const router = useRouter();
+  const canvasRef = useRef<HTMLElement>(null);
+  const searchDialogRef = useRef<HTMLDialogElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState("");
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const visiblePeople = useMemo(() => {
+    const byId = new Map<string, GenerationalPersonSlot>();
+    layout.rows.forEach((row) => {
+      row.slots.forEach((slot) => {
+        if (slot.kind === "person") byId.set(slot.id, slot);
+      });
+    });
+    return [...byId.values()].sort((left, right) =>
+      left.person.fullName.localeCompare(right.person.fullName),
+    );
+  }, [layout.rows]);
+  const filteredPeople = visiblePeople.filter((slot) =>
+    slot.person.fullName.toLowerCase().includes(search.trim().toLowerCase()),
+  );
+
+  useEffect(() => {
+    const focusNode = canvasRef.current?.querySelector<HTMLElement>("[data-focus-person='true']");
+    if (!focusNode) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    focusNode.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: "center",
+      inline: "center",
+    });
+    const frame = window.requestAnimationFrame(() => setIsTransitioning(false));
+    return () => window.cancelAnimationFrame(frame);
+  }, [layout.focusPersonId]);
+
+  const pushParams = (mutate: (params: URLSearchParams) => void) => {
+    const params = new URLSearchParams(queryString);
+    mutate(params);
+    if (shareToken) params.set("share", shareToken);
+    const query = params.toString();
+    router.push(query ? `${treeBasePath}?${query}` : treeBasePath, { scroll: false });
+  };
+
+  const selectPerson = (personId: string) => {
+    if (personId === layout.focusPersonId) return;
+    searchDialogRef.current?.close();
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) {
+      pushParams((params) => params.set("person", personId));
+      return;
+    }
+    setIsTransitioning(true);
+    window.setTimeout(() => {
+      pushParams((params) => params.set("person", personId));
+    }, 120);
+  };
+
+  const openSearch = () => {
+    setSearch("");
+    searchDialogRef.current?.showModal();
+    window.setTimeout(() => searchInputRef.current?.focus(), 0);
+  };
+
+  return (
+    <section
+      ref={canvasRef}
+      className={`themed-tree-canvas${isTransitioning ? " is-transitioning" : ""}`}
+      data-canvas-theme={theme.cssScope}
+    >
+      <div className="themed-canvas-frame" aria-hidden="true" />
+      <header className="themed-tree-title-band">
+        <p className="themed-tree-practice">Presented by {practiceName}</p>
+        <h1>{familyName}</h1>
+        <p className="themed-tree-relationship">{relationshipCaption(focusPerson)}</p>
+      </header>
+
+      <div className="themed-generation-stack">
+        {layout.rows.map((row, rowIndex) => (
+          <Fragment key={row.id}>
+            <section
+              className={`themed-generation-row${row.generation === 0 ? " themed-generation-row--focus" : ""}`}
+              aria-labelledby={`${row.id}-label`}
+            >
+              <h2 id={`${row.id}-label`}>{theme.voice.generationLabels[row.labelKey] ?? row.labelKey}</h2>
+              <div className="themed-generation-rail">
+                {row.slots.map((slot, slotIndex) => {
+                  const nextSlot = row.slots[slotIndex + 1];
+                  const union = nextSlot
+                    ? row.unions.find(
+                        (candidate) =>
+                          candidate.memberIds.includes(slot.id) &&
+                          candidate.memberIds.includes(nextSlot.id),
+                      )
+                    : null;
+                  return (
+                    <Fragment key={slot.id}>
+                      <ThemedPersonNode
+                        slot={slot}
+                        theme={theme}
+                        onSelect={selectPerson}
+                        profileHref={
+                          slot.kind === "person" && slot.isFocus
+                            ? withShare(`${profilePathBase}/${slot.id}`, shareToken)
+                            : undefined
+                        }
+                        storyHref={
+                          slot.kind === "person" && slot.isFocus && focusStory
+                            ? withShare(`${storyPathBase}/${focusStory.id}`, shareToken)
+                            : null
+                        }
+                      />
+                      {union ? (
+                        <span className="themed-couple-union" aria-label="Couple">
+                          <span />
+                        </span>
+                      ) : null}
+                    </Fragment>
+                  );
+                })}
+              </div>
+            </section>
+            {rowIndex < layout.rows.length - 1 ? (
+              <div className="themed-generation-join" aria-hidden="true">
+                <span />
+              </div>
+            ) : null}
+          </Fragment>
+        ))}
+      </div>
+
+      <p className="themed-scroll-cue">
+        <span aria-hidden="true">â—†</span> {theme.voice.scrollCue} <span aria-hidden="true">â—†</span>
+      </p>
+
+      <FloatingControls
+        depth={depth}
+        maxDepth={maxDepth}
+        lineages={lineages}
+        selectedLineageId={selectedLineageId}
+        fullscreenTarget={canvasRef}
+        onSearch={openSearch}
+        onDepthChange={(nextDepth) =>
+          pushParams((params) => {
+            if (nextDepth === 1) params.delete("depth");
+            else params.set("depth", String(nextDepth));
+          })
+        }
+        onLineageChange={(lineageId) =>
+          pushParams((params) => {
+            if (lineageId) params.set("lineage", lineageId);
+            else params.delete("lineage");
+          })
+        }
+      />
+
+      <dialog
+        ref={searchDialogRef}
+        className="themed-search-dialog"
+        aria-labelledby="themed-search-title"
+        onClose={() => setSearch("")}
+      >
+        <div className="themed-search-header">
+          <div>
+            <p>Archive index</p>
+            <h2 id="themed-search-title">Find a family member</h2>
+          </div>
+          <button
+            type="button"
+            onClick={() => searchDialogRef.current?.close()}
+            aria-label="Close search"
+          >
+            Ã—
+          </button>
+        </div>
+        <input
+          ref={searchInputRef}
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Type a name"
+          aria-label="Filter visible people by name"
+        />
+        <ul className="themed-search-results">
+          {filteredPeople.map((slot) => (
+            <li key={slot.id}>
+              <button type="button" onClick={() => selectPerson(slot.id)}>
+                <span>{slot.person.fullName}</span>
+                <small>{slot.person.isLiving ? "Living" : roleForSearch(slot.role)}</small>
+              </button>
+            </li>
+          ))}
+        </ul>
+        {filteredPeople.length === 0 ? <p className="themed-search-empty">No matching archive entry.</p> : null}
+      </dialog>
+    </section>
+  );
+}
+
+function relationshipCaption(person: PersonViewModel) {
+  const parts: string[] = [];
+  const firstName = person.givenName || person.fullName.split(" ")[0];
+  const parentNames = person.relatives.parents.map(firstNameOf);
+  const spouseNames = person.relatives.spouses.map(firstNameOf);
+  const childNames = person.relatives.children.map(firstNameOf);
+
+  if (parentNames.length) parts.push(`${childWord(person.gender)} of ${joinNames(parentNames)}`);
+  if (spouseNames.length) parts.push(`${spouseWord(person.gender)} of ${joinNames(spouseNames)}`);
+  if (childNames.length) parts.push(`${parentWord(person.gender)} of ${joinNames(childNames)}`);
+  return parts.length ? `${firstName}, ${parts.join(" Â· ")}` : `${firstName}, family record in focus`;
+}
+
+function firstNameOf(person: { givenName: string; fullName: string }) {
+  return person.givenName || person.fullName.split(" ")[0];
+}
+
+function joinNames(names: string[]) {
+  if (names.length <= 2) return names.join(" & ");
+  return `${names.slice(0, -1).join(", ")} & ${names.at(-1)}`;
+}
+
+function childWord(gender: PersonViewModel["gender"]) {
+  return gender === "female" ? "daughter" : gender === "male" ? "son" : "child";
+}
+
+function spouseWord(gender: PersonViewModel["gender"]) {
+  return gender === "female" ? "wife" : gender === "male" ? "husband" : "spouse";
+}
+
+function parentWord(gender: PersonViewModel["gender"]) {
+  return gender === "female" ? "mother" : gender === "male" ? "father" : "parent";
+}
+
+function roleForSearch(role: GenerationalPersonSlot["role"]) {
+  return role === "focus" ? "Current focus" : role[0].toUpperCase() + role.slice(1);
+}
+
+function withShare(path: string, shareToken?: string | null) {
+  return shareToken ? `${path}?share=${encodeURIComponent(shareToken)}` : path;
+}
+"use client";
+
+import { useEffect, useState } from "react";
+
+import type { Lineage } from "@/lib/types";
+
+type FloatingControlsProps = {
+  depth: number;
+  maxDepth: number;
+  lineages: Lineage[];
+  selectedLineageId?: string | null;
+  fullscreenTarget: React.RefObject<HTMLElement | null>;
+  onSearch: () => void;
+  onDepthChange: (depth: number) => void;
+  onLineageChange: (lineageId: string | null) => void;
+};
+
+export function FloatingControls({
+  depth,
+  maxDepth,
+  lineages,
+  selectedLineageId,
+  fullscreenTarget,
+  onSearch,
+  onDepthChange,
+  onLineageChange,
+}: FloatingControlsProps) {
+  const [fullscreenSupported, setFullscreenSupported] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const supportCheck = window.setTimeout(
+      () => setFullscreenSupported("requestFullscreen" in document.documentElement),
+      0,
+    );
+    const syncFullscreen = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", syncFullscreen);
+    return () => {
+      window.clearTimeout(supportCheck);
+      document.removeEventListener("fullscreenchange", syncFullscreen);
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else {
+      await fullscreenTarget.current?.requestFullscreen();
+    }
+  };
+
+  return (
+    <nav className="themed-floating-controls" aria-label="Tree canvas controls">
+      <button type="button" onClick={onSearch} aria-label="Search visible people">
+        <span aria-hidden="true">âŒ•</span>
+        <span className="themed-control-label">Search</span>
+      </button>
+
+      <div className="themed-depth-stepper" aria-label="Visible generation depth">
+        <button
+          type="button"
+          disabled={depth <= 1}
+          onClick={() => onDepthChange(Math.max(1, depth - 1))}
+          aria-label="Show one fewer generation"
+        >
+          âˆ’
+        </button>
+        <output aria-live="polite" aria-label={`${depth} generation steps`}>
+          <span className="themed-control-label">Depth </span>
+          {depth}
+        </output>
+        <button
+          type="button"
+          disabled={depth >= maxDepth}
+          onClick={() => onDepthChange(Math.min(maxDepth, depth + 1))}
+          aria-label="Show one more generation"
+        >
+          +
+        </button>
+      </div>
+
+      <label className="themed-lineage-control">
+        <span className="themed-control-label">Branch</span>
+        <select
+          aria-label="Filter by family branch"
+          value={selectedLineageId ?? ""}
+          onChange={(event) => onLineageChange(event.target.value || null)}
+        >
+          <option value="">All branches</option>
+          {lineages.map((lineage) => (
+            <option key={lineage.id} value={lineage.id}>
+              {lineage.name}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {fullscreenSupported ? (
+        <button
+          type="button"
+          onClick={toggleFullscreen}
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        >
+          <span aria-hidden="true">{isFullscreen ? "âŠ¡" : "â–¡"}</span>
+          <span className="themed-control-label">Fullscreen</span>
+        </button>
+      ) : null}
+    </nav>
+  );
+}
+import Link from "next/link";
+
+import { PersonSilhouette } from "@/components/canvas-themed/person-silhouette";
+import type { GenerationalSlot } from "@/lib/canvas/generational-layout";
+import type { CanvasThemeManifest } from "@/lib/themes/types";
+
+type ThemedPersonNodeProps = {
+  slot: GenerationalSlot;
+  theme: CanvasThemeManifest;
+  onSelect: (personId: string) => void;
+  profileHref?: string;
+  storyHref?: string | null;
+};
+
+export function ThemedPersonNode({
+  slot,
+  theme,
+  onSelect,
+  profileHref,
+  storyHref,
+}: ThemedPersonNodeProps) {
+  if (slot.kind === "record-sought") {
+    return (
+      <article
+        className="themed-person-node themed-person-node--record-sought"
+        data-node-variant={theme.nodeVariant}
+        tabIndex={0}
+      >
+        <div className="themed-record-mark" aria-hidden="true">
+          ?
+        </div>
+        <p className="themed-person-name">{theme.voice.unknownAncestor}</p>
+        <p className="themed-record-note">{slot.note}</p>
+      </article>
+    );
+  }
+
+  const { person } = slot;
+  const years = person.isLiving
+    ? "Living"
+    : `${yearOf(person.birthDateNormalized) ?? "Unknown"}â€“${
+        yearOf(person.deathDateNormalized) ?? "Unknown"
+      }`;
+
+  return (
+    <article
+      className={`themed-person-node${slot.isFocus ? " themed-person-node--focus" : ""}${
+        person.isLiving ? " themed-person-node--living" : ""
+      }`}
+      data-focus-person={slot.isFocus ? "true" : undefined}
+      data-node-variant={theme.nodeVariant}
+    >
+      <button
+        className="themed-person-node__main"
+        type="button"
+        onClick={() => onSelect(person.id)}
+        aria-label={`Center tree on ${person.fullName}`}
+      >
+        <span className="themed-portrait-frame" aria-hidden="true">
+          <PersonSilhouette className="themed-silhouette" />
+          {person.isLiving ? <span className="themed-lock">â–£</span> : null}
+        </span>
+        <span className="themed-person-name">{person.fullName}</span>
+        <span className="themed-person-years">{years}</span>
+        <span className="themed-person-role">{roleLabel(slot.role)}</span>
+        {slot.isFocus && person.summary ? (
+          <span className="themed-person-summary">{person.summary}</span>
+        ) : null}
+        {person.isLiving ? (
+          <span className="themed-living-privacy">{theme.voice.livingPrivacy}</span>
+        ) : null}
+      </button>
+
+      {slot.isFocus && (profileHref || storyHref) ? (
+        <div className="themed-person-links">
+          {profileHref ? <Link href={profileHref}>Open full profile</Link> : null}
+          {storyHref ? (
+            <Link className="themed-story-link" href={storyHref}>
+              {theme.voice.storyLinkTemplate.replace(
+                "{firstName}",
+                person.givenName || person.fullName.split(" ")[0],
+              )}
+            </Link>
+          ) : null}
+        </div>
+      ) : null}
+    </article>
+  );
+}
+
+function yearOf(value?: string | null) {
+  return value?.slice(0, 4) || null;
+}
+
+function roleLabel(role: Exclude<GenerationalSlot, { kind: "record-sought" }>["role"]) {
+  const labels = {
+    ancestor: "Ancestor",
+    parent: "Parent",
+    focus: "Focus record",
+    sibling: "Sibling",
+    spouse: "Spouse",
+    child: "Child",
+    descendant: "Descendant",
+  };
+  return labels[role];
+}
+
+{"type":"item.completed","item":{"id":"item_4","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command \"Get-Content components\\\\canvas-themed\\\\themed-tree-canvas.tsx; Get-Content components\\\\canvas-themed\\\\floating-controls.tsx; Get-Content components\\\\canvas-themed\\\\themed-person-node.tsx; Get-NetTCPConnection -LocalPort 3100 -State Listen -ErrorAction SilentlyContinue | Format-Table -AutoSize\"","aggregated_output":"\"use client\";\r\n\r\nimport { Fragment, useMemo, useRef, useState, useEffect } from \"react\";\r\nimport { useRouter } from \"next/navigation\";\r\n\r\nimport { FloatingControls } from \"@/components/canvas-themed/floating-controls\";\r\nimport { ThemedPersonNode } from \"@/components/canvas-themed/themed-person-node\";\r\nimport type { GenerationalLayout, GenerationalPersonSlot } from \"@/lib/canvas/generational-layout\";\r\nimport type { CanvasThemeManifest } from \"@/lib/themes/types\";\r\nimport type { Lineage, PersonViewModel } from \"@/lib/types\";\r\n\r\ntype ThemedTreeCanvasProps = {\r\n  layout: GenerationalLayout;\r\n  focusPerson: PersonViewModel;\r\n  theme: CanvasThemeManifest;\r\n  familyName: string;\r\n  practiceName: string;\r\n  treeBasePath: string;\r\n  profilePathBase: string;\r\n  storyPathBase: string;\r\n  focusStory?: { id: string } | null;\r\n  lineages: Lineage[];\r\n  selectedLineageId?: string | null;\r\n  depth: number;\r\n  maxDepth: number;\r\n  queryString?: string;\r\n  shareToken?: string | null;\r\n};\r\n\r\nexport function ThemedTreeCanvas({\r\n  layout,\r\n  focusPerson,\r\n  theme,\r\n  familyName,\r\n  practiceName,\r\n  treeBasePath,\r\n  profilePathBase,\r\n  storyPathBase,\r\n  focusStory,\r\n  lineages,\r\n  selectedLineageId,\r\n  depth,\r\n  maxDepth,\r\n  queryString = \"\",\r\n  shareToken,\r\n}: ThemedTreeCanvasProps) {\r\n  const router = useRouter();\r\n  const canvasRef = useRef<HTMLElement>(null);\r\n  const searchDialogRef = useRef<HTMLDialogElement>(null);\r\n  const searchInputRef = useRef<HTMLInputElement>(null);\r\n  const [search, setSearch] = useState(\"\");\r\n  const [isTransitioning, setIsTransitioning] = useState(false);\r\n  const visiblePeople = useMemo(() => {\r\n    const byId = new Map<string, GenerationalPersonSlot>();\r\n    layout.rows.forEach((row) => {\r\n      row.slots.forEach((slot) => {\r\n        if (slot.kind === \"person\") byId.set(slot.id, slot);\r\n      });\r\n    });\r\n    return [...byId.values()].sort((left, right) =>\r\n      left.person.fullName.localeCompare(right.person.fullName),\r\n    );\r\n  }, [layout.rows]);\r\n  const filteredPeople = visiblePeople.filter((slot) =>\r\n    slot.person.fullName.toLowerCase().includes(search.trim().toLowerCase()),\r\n  );\r\n\r\n  useEffect(() => {\r\n    const focusNode = canvasRef.current?.querySelector<HTMLElement>(\"[data-focus-person='true']\");\r\n    if (!focusNode) return;\r\n    const reducedMotion = window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches;\r\n    focusNode.scrollIntoView({\r\n      behavior: reducedMotion ? \"auto\" : \"smooth\",\r\n      block: \"center\",\r\n      inline: \"center\",\r\n    });\r\n    const frame = window.requestAnimationFrame(() => setIsTransitioning(false));\r\n    return () => window.cancelAnimationFrame(frame);\r\n  }, [layout.focusPersonId]);\r\n\r\n  const pushParams = (mutate: (params: URLSearchParams) => void) => {\r\n    const params = new URLSearchParams(queryString);\r\n    mutate(params);\r\n    if (shareToken) params.set(\"share\", shareToken);\r\n    const query = params.toString();\r\n    router.push(query ? `${treeBasePath}?${query}` : treeBasePath, { scroll: false });\r\n  };\r\n\r\n  const selectPerson = (personId: string) => {\r\n    if (personId === layout.focusPersonId) return;\r\n    searchDialogRef.current?.close();\r\n    const reducedMotion = window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches;\r\n    if (reducedMotion) {\r\n      pushParams((params) => params.set(\"person\", personId));\r\n      return;\r\n    }\r\n    setIsTransitioning(true);\r\n    window.setTimeout(() => {\r\n      pushParams((params) => params.set(\"person\", personId));\r\n    }, 120);\r\n  };\r\n\r\n  const openSearch = () => {\r\n    setSearch(\"\");\r\n    searchDialogRef.current?.showModal();\r\n    window.setTimeout(() => searchInputRef.current?.focus(), 0);\r\n  };\r\n\r\n  return (\r\n    <section\r\n      ref={canvasRef}\r\n      className={`themed-tree-canvas${isTransitioning ? \" is-transitioning\" : \"\"}`}\r\n      data-canvas-theme={theme.cssScope}\r\n    >\r\n      <div className=\"themed-canvas-frame\" aria-hidden=\"true\" />\r\n      <header className=\"themed-tree-title-band\">\r\n        <p className=\"themed-tree-practice\">Presented by {practiceName}</p>\r\n        <h1>{familyName}</h1>\r\n        <p className=\"themed-tree-relationship\">{relationshipCaption(focusPerson)}</p>\r\n      </header>\r\n\r\n      <div className=\"themed-generation-stack\">\r\n        {layout.rows.map((row, rowIndex) => (\r\n          <Fragment key={row.id}>\r\n            <section\r\n              className={`themed-generation-row${row.generation === 0 ? \" themed-generation-row--focus\" : \"\"}`}\r\n              aria-labelledby={`${row.id}-label`}\r\n            >\r\n              <h2 id={`${row.id}-label`}>{theme.voice.generationLabels[row.labelKey] ?? row.labelKey}</h2>\r\n              <div className=\"themed-generation-rail\">\r\n                {row.slots.map((slot, slotIndex) => {\r\n                  const nextSlot = row.slots[slotIndex + 1];\r\n                  const union = nextSlot\r\n                    ? row.unions.find(\r\n                        (candidate) =>\r\n                          candidate.memberIds.includes(slot.id) &&\r\n                          candidate.memberIds.includes(nextSlot.id),\r\n                      )\r\n                    : null;\r\n                  return (\r\n                    <Fragment key={slot.id}>\r\n                      <ThemedPersonNode\r\n                        slot={slot}\r\n                        theme={theme}\r\n                        onSelect={selectPerson}\r\n                        profileHref={\r\n                          slot.kind === \"person\" && slot.isFocus\r\n                            ? withShare(`${profilePathBase}/${slot.id}`, shareToken)\r\n                            : undefined\r\n                        }\r\n                        storyHref={\r\n                          slot.kind === \"person\" && slot.isFocus && focusStory\r\n                            ? withShare(`${storyPathBase}/${focusStory.id}`, shareToken)\r\n                            : null\r\n                        }\r\n                      />\r\n                      {union ? (\r\n                        <span className=\"themed-couple-union\" aria-label=\"Couple\">\r\n                          <span />\r\n                        </span>\r\n                      ) : null}\r\n                    </Fragment>\r\n                  );\r\n                })}\r\n              </div>\r\n            </section>\r\n            {rowIndex < layout.rows.length - 1 ? (\r\n              <div className=\"themed-generation-join\" aria-hidden=\"true\">\r\n                <span />\r\n              </div>\r\n            ) : null}\r\n          </Fragment>\r\n        ))}\r\n      </div>\r\n\r\n      <p className=\"themed-scroll-cue\">\r\n        <span aria-hidden=\"true\">â—†</span> {theme.voice.scrollCue} <span aria-hidden=\"true\">â—†</span>\r\n      </p>\r\n\r\n      <FloatingControls\r\n        depth={depth}\r\n        maxDepth={maxDepth}\r\n        lineages={lineages}\r\n        selectedLineageId={selectedLineageId}\r\n        fullscreenTarget={canvasRef}\r\n        onSearch={openSearch}\r\n        onDepthChange={(nextDepth) =>\r\n          pushParams((params) => {\r\n            if (nextDepth === 1) params.delete(\"depth\");\r\n            else params.set(\"depth\", String(nextDepth));\r\n          })\r\n        }\r\n        onLineageChange={(lineageId) =>\r\n          pushParams((params) => {\r\n            if (lineageId) params.set(\"lineage\", lineageId);\r\n            else params.delete(\"lineage\");\r\n          })\r\n        }\r\n      />\r\n\r\n      <dialog\r\n        ref={searchDialogRef}\r\n        className=\"themed-search-dialog\"\r\n        aria-labelledby=\"themed-search-title\"\r\n        onClose={() => setSearch(\"\")}\r\n      >\r\n        <div className=\"themed-search-header\">\r\n          <div>\r\n            <p>Archive index</p>\r\n            <h2 id=\"themed-search-title\">Find a family member</h2>\r\n          </div>\r\n          <button\r\n            type=\"button\"\r\n            onClick={() => searchDialogRef.current?.close()}\r\n            aria-label=\"Close search\"\r\n          >\r\n            Ã—\r\n          </button>\r\n        </div>\r\n        <input\r\n          ref={searchInputRef}\r\n          type=\"search\"\r\n          value={search}\r\n          onChange={(event) => setSearch(event.target.value)}\r\n          placeholder=\"Type a name\"\r\n          aria-label=\"Filter visible people by name\"\r\n        />\r\n        <ul className=\"themed-search-results\">\r\n          {filteredPeople.map((slot) => (\r\n            <li key={slot.id}>\r\n              <button type=\"button\" onClick={() => selectPerson(slot.id)}>\r\n                <span>{slot.person.fullName}</span>\r\n                <small>{slot.person.isLiving ? \"Living\" : roleForSearch(slot.role)}</small>\r\n              </button>\r\n            </li>\r\n          ))}\r\n        </ul>\r\n        {filteredPeople.length === 0 ? <p className=\"themed-search-empty\">No matching archive entry.</p> : null}\r\n      </dialog>\r\n    </section>\r\n  );\r\n}\r\n\r\nfunction relationshipCaption(person: PersonViewModel) {\r\n  const parts: string[] = [];\r\n  const firstName = person.givenName || person.fullName.split(\" \")[0];\r\n  const parentNames = person.relatives.parents.map(firstNameOf);\r\n  const spouseNames = person.relatives.spouses.map(firstNameOf);\r\n  const childNames = person.relatives.children.map(firstNameOf);\r\n\r\n  if (parentNames.length) parts.push(`${childWord(person.gender)} of ${joinNames(parentNames)}`);\r\n  if (spouseNames.length) parts.push(`${spouseWord(person.gender)} of ${joinNames(spouseNames)}`);\r\n  if (childNames.length) parts.push(`${parentWord(person.gender)} of ${joinNames(childNames)}`);\r\n  return parts.length ? `${firstName}, ${parts.join(\" Â· \")}` : `${firstName}, family record in focus`;\r\n}\r\n\r\nfunction firstNameOf(person: { givenName: string; fullName: string }) {\r\n  return person.givenName || person.fullName.split(\" \")[0];\r\n}\r\n\r\nfunction joinNames(names: string[]) {\r\n  if (names.length <= 2) return names.join(\" & \");\r\n  return `${names.slice(0, -1).join(\", \")} & ${names.at(-1)}`;\r\n}\r\n\r\nfunction childWord(gender: PersonViewModel[\"gender\"]) {\r\n  return gender === \"female\" ? \"daughter\" : gender === \"male\" ? \"son\" : \"child\";\r\n}\r\n\r\nfunction spouseWord(gender: PersonViewModel[\"gender\"]) {\r\n  return gender === \"female\" ? \"wife\" : gender === \"male\" ? \"husband\" : \"spouse\";\r\n}\r\n\r\nfunction parentWord(gender: PersonViewModel[\"gender\"]) {\r\n  return gender === \"female\" ? \"mother\" : gender === \"male\" ? \"father\" : \"parent\";\r\n}\r\n\r\nfunction roleForSearch(role: GenerationalPersonSlot[\"role\"]) {\r\n  return role === \"focus\" ? \"Current focus\" : role[0].toUpperCase() + role.slice(1);\r\n}\r\n\r\nfunction withShare(path: string, shareToken?: string | null) {\r\n  return shareToken ? `${path}?share=${encodeURIComponent(shareToken)}` : path;\r\n}\r\n\"use client\";\r\n\r\nimport { useEffect, useState } from \"react\";\r\n\r\nimport type { Lineage } from \"@/lib/types\";\r\n\r\ntype FloatingControlsProps = {\r\n  depth: number;\r\n  maxDepth: number;\r\n  lineages: Lineage[];\r\n  selectedLineageId?: string | null;\r\n  fullscreenTarget: React.RefObject<HTMLElement | null>;\r\n  onSearch: () => void;\r\n  onDepthChange: (depth: number) => void;\r\n  onLineageChange: (lineageId: string | null) => void;\r\n};\r\n\r\nexport function FloatingControls({\r\n  depth,\r\n  maxDepth,\r\n  lineages,\r\n  selectedLineageId,\r\n  fullscreenTarget,\r\n  onSearch,\r\n  onDepthChange,\r\n  onLineageChange,\r\n}: FloatingControlsProps) {\r\n  const [fullscreenSupported, setFullscreenSupported] = useState(false);\r\n  const [isFullscreen, setIsFullscreen] = useState(false);\r\n\r\n  useEffect(() => {\r\n    const supportCheck = window.setTimeout(\r\n      () => setFullscreenSupported(\"requestFullscreen\" in document.documentElement),\r\n      0,\r\n    );\r\n    const syncFullscreen = () => setIsFullscreen(Boolean(document.fullscreenElement));\r\n    document.addEventListener(\"fullscreenchange\", syncFullscreen);\r\n    return () => {\r\n      window.clearTimeout(supportCheck);\r\n      document.removeEventListener(\"fullscreenchange\", syncFullscreen);\r\n    };\r\n  }, []);\r\n\r\n  const toggleFullscreen = async () => {\r\n    if (document.fullscreenElement) {\r\n      await document.exitFullscreen();\r\n    } else {\r\n      await fullscreenTarget.current?.requestFullscreen();\r\n    }\r\n  };\r\n\r\n  return (\r\n    <nav className=\"themed-floating-controls\" aria-label=\"Tree canvas controls\">\r\n      <button type=\"button\" onClick={onSearch} aria-label=\"Search visible people\">\r\n        <span aria-hidden=\"true\">âŒ•</span>\r\n        <span className=\"themed-control-label\">Search</span>\r\n      </button>\r\n\r\n      <div className=\"themed-depth-stepper\" aria-label=\"Visible generation depth\">\r\n        <button\r\n          type=\"button\"\r\n          disabled={depth <= 1}\r\n          onClick={() => onDepthChange(Math.max(1, depth - 1))}\r\n          aria-label=\"Show one fewer generation\"\r\n        >\r\n          âˆ’\r\n        </button>\r\n        <output aria-live=\"polite\" aria-label={`${depth} generation steps`}>\r\n          <span className=\"themed-control-label\">Depth </span>\r\n          {depth}\r\n        </output>\r\n        <button\r\n          type=\"button\"\r\n          disabled={depth >= maxDepth}\r\n          onClick={() => onDepthChange(Math.min(maxDepth, depth + 1))}\r\n          aria-label=\"Show one more generation\"\r\n        >\r\n          +\r\n        </button>\r\n      </div>\r\n\r\n      <label className=\"themed-lineage-control\">\r\n        <span className=\"themed-control-label\">Branch</span>\r\n        <select\r\n          aria-label=\"Filter by family branch\"\r\n          value={selectedLineageId ?? \"\"}\r\n          onChange={(event) => onLineageChange(event.target.value || null)}\r\n        >\r\n          <option value=\"\">All branches</option>\r\n          {lineages.map((lineage) => (\r\n            <option key={lineage.id} value={lineage.id}>\r\n              {lineage.name}\r\n            </option>\r\n          ))}\r\n        </select>\r\n      </label>\r\n\r\n      {fullscreenSupported ? (\r\n        <button\r\n          type=\"button\"\r\n          onClick={toggleFullscreen}\r\n          aria-label={isFullscreen ? \"Exit fullscreen\" : \"Enter fullscreen\"}\r\n        >\r\n          <span aria-hidden=\"true\">{isFullscreen ? \"âŠ¡\" : \"â–¡\"}</span>\r\n          <span className=\"themed-control-label\">Fullscreen</span>\r\n        </button>\r\n      ) : null}\r\n    </nav>\r\n  );\r\n}\r\nimport Link from \"next/link\";\r\n\r\nimport { PersonSilhouette } from \"@/components/canvas-themed/person-silhouette\";\r\nimport type { GenerationalSlot } from \"@/lib/canvas/generational-layout\";\r\nimport type { CanvasThemeManifest } from \"@/lib/themes/types\";\r\n\r\ntype ThemedPersonNodeProps = {\r\n  slot: GenerationalSlot;\r\n  theme: CanvasThemeManifest;\r\n  onSelect: (personId: string) => void;\r\n  profileHref?: string;\r\n  storyHref?: string | null;\r\n};\r\n\r\nexport function ThemedPersonNode({\r\n  slot,\r\n  theme,\r\n  onSelect,\r\n  profileHref,\r\n  storyHref,\r\n}: ThemedPersonNodeProps) {\r\n  if (slot.kind === \"record-sought\") {\r\n    return (\r\n      <article\r\n        className=\"themed-person-node themed-person-node--record-sought\"\r\n        data-node-variant={theme.nodeVariant}\r\n        tabIndex={0}\r\n      >\r\n        <div className=\"themed-record-mark\" aria-hidden=\"true\">\r\n          ?\r\n        </div>\r\n        <p className=\"themed-person-name\">{theme.voice.unknownAncestor}</p>\r\n        <p className=\"themed-record-note\">{slot.note}</p>\r\n      </article>\r\n    );\r\n  }\r\n\r\n  const { person } = slot;\r\n  const years = person.isLiving\r\n    ? \"Living\"\r\n    : `${yearOf(person.birthDateNormalized) ?? \"Unknown\"}â€“${\r\n        yearOf(person.deathDateNormalized) ?? \"Unknown\"\r\n      }`;\r\n\r\n  return (\r\n    <article\r\n      className={`themed-person-node${slot.isFocus ? \" themed-person-node--focus\" : \"\"}${\r\n        person.isLiving ? \" themed-person-node--living\" : \"\"\r\n      }`}\r\n      data-focus-person={slot.isFocus ? \"true\" : undefined}\r\n      data-node-variant={theme.nodeVariant}\r\n    >\r\n      <button\r\n        className=\"themed-person-node__main\"\r\n        type=\"button\"\r\n        onClick={() => onSelect(person.id)}\r\n        aria-label={`Center tree on ${person.fullName}`}\r\n      >\r\n        <span className=\"themed-portrait-frame\" aria-hidden=\"true\">\r\n          <PersonSilhouette className=\"themed-silhouette\" />\r\n          {person.isLiving ? <span className=\"themed-lock\">â–£</span> : null}\r\n        </span>\r\n        <span className=\"themed-person-name\">{person.fullName}</span>\r\n        <span className=\"themed-person-years\">{years}</span>\r\n        <span className=\"themed-person-role\">{roleLabel(slot.role)}</span>\r\n        {slot.isFocus && person.summary ? (\r\n          <span className=\"themed-person-summary\">{person.summary}</span>\r\n        ) : null}\r\n        {person.isLiving ? (\r\n          <span className=\"themed-living-privacy\">{theme.voice.livingPrivacy}</span>\r\n        ) : null}\r\n      </button>\r\n\r\n      {slot.isFocus && (profileHref || storyHref) ? (\r\n        <div className=\"themed-person-links\">\r\n          {profileHref ? <Link href={profileHref}>Open full profile</Link> : null}\r\n          {storyHref ? (\r\n            <Link className=\"themed-story-link\" href={storyHref}>\r\n              {theme.voice.storyLinkTemplate.replace(\r\n                \"{firstName}\",\r\n                person.givenName || person.fullName.split(\" \")[0],\r\n              )}\r\n            </Link>\r\n          ) : null}\r\n        </div>\r\n      ) : null}\r\n    </article>\r\n  );\r\n}\r\n\r\nfunction yearOf(value?: string | null) {\r\n  return value?.slice(0, 4) || null;\r\n}\r\n\r\nfunction roleLabel(role: Exclude<GenerationalSlot, { kind: \"record-sought\" }>[\"role\"]) {\r\n  const labels = {\r\n    ancestor: \"Ancestor\",\r\n    parent: \"Parent\",\r\n    focus: \"Focus record\",\r\n    sibling: \"Sibling\",\r\n    spouse: \"Spouse\",\r\n    child: \"Child\",\r\n    descendant: \"Descendant\",\r\n  };\r\n  return labels[role];\r\n}\r\n","exit_code":1,"status":"failed"}}
+{"type":"item.started","item":{"id":"item_5","type":"file_change","changes":[{"path":"C:\\Dev\\github\\ftd-canvas-theme\\tests\\e2e\\themed-canvas.spec.ts","kind":"add"}],"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_5","type":"file_change","changes":[{"path":"C:\\Dev\\github\\ftd-canvas-theme\\tests\\e2e\\themed-canvas.spec.ts","kind":"add"}],"status":"completed"}}
+{"type":"item.started","item":{"id":"item_6","type":"file_change","changes":[{"path":"C:\\Dev\\github\\ftd-canvas-theme\\tests\\e2e\\themed-canvas.spec.ts","kind":"update"}],"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_6","type":"file_change","changes":[{"path":"C:\\Dev\\github\\ftd-canvas-theme\\tests\\e2e\\themed-canvas.spec.ts","kind":"update"}],"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_7","type":"agent_message","text":"The spec is in place. I’m now validating it against the dev server, starting from a confirmed-free port 3100."}}
+{"type":"item.started","item":{"id":"item_8","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command '$listeners = Get-NetTCPConnection -LocalPort 3100 -State Listen -ErrorAction SilentlyContinue; if ($listeners) { $listeners | Format-Table -AutoSize; exit 1 }; Write-Output '\"'Port 3100 is free.'; npx.cmd playwright test tests/e2e/themed-canvas.spec.ts\"","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+2026-07-15T12:11:01.529439Z ERROR codex_core::tools::router: error=Exit code: 124
+Wall time: 60.1 seconds
+Total output lines: 924
+Output:
+command timed out after 60115 milliseconds
+Port 3100 is free.
+[2m[WebServer] [22mError: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [2m[at finishWithoutResolve [90m(C:\Dev\github\ftd-canvas-theme\[39mnode_modules\[4menhanced-resolve[24m\lib\Resolver.js:587:18][0m[90m)[39m
+[2m[WebServer] [22m    [2m[at [90mC:\Dev\github\ftd-canvas-theme\[39mnode_modules\[4menhanced-resolve[24m\lib\Resolver.js:679:14][0m
+[2m[WebServer] [22m    [2m[at [90mC:\Dev\github\ftd-canvas-theme\[39mnode_modules\[4menhanced-resolve[24m\lib\Resolver.js:740:5][0m
+[2m[WebServer] [22m    [2m[at eval (eval at create [90m(C:\Dev\github\ftd-canvas-theme\[39mnode_modules\[4mtapable[24m\lib\HookCodeFactory.js:31:10), <anonymous>:15:1)][0m[90m)[39m
+[2m[WebServer] [22m    [2m[at [90mC:\Dev\github\ftd-canvas-theme\[39mnode_modules\[4menhanced-resolve[24m\lib\Resolver.js:740:5][0m
+[2m[WebServer] [22m    [2m[at eval (eval at create [90m(C:\Dev\github\ftd-canvas-theme\[39mnode_modules\[4mtapable[24m\lib\HookCodeFactory.js:31:10), <anonymous>:27:1)][0m[90m)[39m
+[2m[WebServer] [22m    [2m[at [90mC:\Dev\github\ftd-canvas-theme\[39mnode_modules\[4menhanced-resolve[24m\lib\DescriptionFilePlugin.js:89:43][0m
+[2m[WebServer] [22m    [2m[at [90mC:\Dev\github\ftd-canvas-theme\[39mnode_modules\[4menhanced-resolve[24m\lib\Resolver.js:740:5][0m
+[2m[WebServer] [22m    [2m[at eval (eval at create [90m(C:\Dev\github\ftd-canvas-theme\[39mnode_modules\[4mtapable[24m\lib\HookCodeFactory.js:31:10), <anonymous>:15:1)][0m[90m)[39m
+[2m[WebServer] [22m    [2m[at [90mC:\Dev\github\ftd-canvas-theme\[39mnode_modules\[4menhanced-resolve[24m\lib\Resolver.js:740:5][0m {
+[2m[WebServer] [22m  details: [32m"resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n"[39m +
+[2m[WebServer] [22m    [32m'  using description file: C:\\Dev\\github\\ftd-canvas-theme\\package.json (relative path: ./app)\n'[39m +
+[2m[WebServer] [22m    [32m'    using description file: C:\\Dev\\github\\ftd-canvas-theme\\package.json (relative path: ./styles/themes/illuminated-keep.css)\n'[39m +
+[2m[WebServer] [22m    [32m'      no extension\n'[39m +
+[2m[WebServer] [22m    [32m"        C:\\Dev\\github\\ftd-canvas-theme\\styles\\themes\\illuminated-keep.css doesn't exist\n"[39m +
+[2m[WebServer] [22m    [32m'      .css\n'[39m +
+[2m[WebServer] [22m    [32m"        C:\\Dev\\github\\ftd-canvas-theme\\styles\\themes\\illuminated-keep.css.css doesn't exist\n"[39m +
+[2m[WebServer] [22m    [32m'      as directory\n'[39m +
+[2m[WebServer] [22m    [32m"        C:\\Dev\\github\\ftd-canvas-theme\\styles\\themes\\illuminated-keep.css doesn't exist"[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailw…8981 tokens truncated…ocess.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[31m[1m⨯[22m[39m ./app/globals.css
+[2m[WebServer] [22mError evaluating Node.js code
+[2m[WebServer] [22mCssSyntaxError: tailwindcss: C:\Dev\github\ftd-canvas-theme\app\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\Dev\github\ftd-canvas-theme\app'
+[2m[WebServer] [22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+[2m[WebServer] [22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+[2m[WebServer] [22m    [at Object.Once (C:\Dev\github\ftd-canvas-theme\node_modules\@tailwindcss\postcss\dist\index.js:10:6913)]
+[2m[WebServer] [22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]
+[2m[WebServer] [22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+[2m[WebServer] [22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]
+[2m[WebServer] [22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]
+[2m[WebServer] [22m
+[2m[WebServer] [22mImport trace:
+[2m[WebServer] [22m  Client Component Browser:
+[2m[WebServer] [22m    ./app/globals.css [Client Component Browser]
+[2m[WebServer] [22m    ./app/layout.tsx [Server Component]
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+
+{"type":"item.completed","item":{"id":"item_8","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command '$listeners = Get-NetTCPConnection -LocalPort 3100 -State Listen -ErrorAction SilentlyContinue; if ($listeners) { $listeners | Format-Table -AutoSize; exit 1 }; Write-Output '\"'Port 3100 is free.'; npx.cmd playwright test tests/e2e/themed-canvas.spec.ts\"","aggregated_output":"Port 3100 is free.\r\n\u001b[2m[WebServer] \u001b[22mError: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    \u001b[2m[at finishWithoutResolve \u001b[90m(C:\\Dev\\github\\ftd-canvas-theme\\\u001b[39mnode_modules\\\u001b[4menhanced-resolve\u001b[24m\\lib\\Resolver.js:587:18]\u001b[0m\u001b[90m)\u001b[39m\n\u001b[2m[WebServer] \u001b[22m    \u001b[2m[at \u001b[90mC:\\Dev\\github\\ftd-canvas-theme\\\u001b[39mnode_modules\\\u001b[4menhanced-resolve\u001b[24m\\lib\\Resolver.js:679:14]\u001b[0m\n\u001b[2m[WebServer] \u001b[22m    \u001b[2m[at \u001b[90mC:\\Dev\\github\\ftd-canvas-theme\\\u001b[39mnode_modules\\\u001b[4menhanced-resolve\u001b[24m\\lib\\Resolver.js:740:5]\u001b[0m\n\u001b[2m[WebServer] \u001b[22m    \u001b[2m[at eval (eval at create \u001b[90m(C:\\Dev\\github\\ftd-canvas-theme\\\u001b[39mnode_modules\\\u001b[4mtapable\u001b[24m\\lib\\HookCodeFactory.js:31:10), <anonymous>:15:1)]\u001b[0m\u001b[90m)\u001b[39m\n\u001b[2m[WebServer] \u001b[22m    \u001b[2m[at \u001b[90mC:\\Dev\\github\\ftd-canvas-theme\\\u001b[39mnode_modules\\\u001b[4menhanced-resolve\u001b[24m\\lib\\Resolver.js:740:5]\u001b[0m\n\u001b[2m[WebServer] \u001b[22m    \u001b[2m[at eval (eval at create \u001b[90m(C:\\Dev\\github\\ftd-canvas-theme\\\u001b[39mnode_modules\\\u001b[4mtapable\u001b[24m\\lib\\HookCodeFactory.js:31:10), <anonymous>:27:1)]\u001b[0m\u001b[90m)\u001b[39m\n\u001b[2m[WebServer] \u001b[22m    \u001b[2m[at \u001b[90mC:\\Dev\\github\\ftd-canvas-theme\\\u001b[39mnode_modules\\\u001b[4menhanced-resolve\u001b[24m\\lib\\DescriptionFilePlugin.js:89:43]\u001b[0m\n\u001b[2m[WebServer] \u001b[22m    \u001b[2m[at \u001b[90mC:\\Dev\\github\\ftd-canvas-theme\\\u001b[39mnode_modules\\\u001b[4menhanced-resolve\u001b[24m\\lib\\Resolver.js:740:5]\u001b[0m\n\u001b[2m[WebServer] \u001b[22m    \u001b[2m[at eval (eval at create \u001b[90m(C:\\Dev\\github\\ftd-canvas-theme\\\u001b[39mnode_modules\\\u001b[4mtapable\u001b[24m\\lib\\HookCodeFactory.js:31:10), <anonymous>:15:1)]\u001b[0m\u001b[90m)\u001b[39m\n\u001b[2m[WebServer] \u001b[22m    \u001b[2m[at \u001b[90mC:\\Dev\\github\\ftd-canvas-theme\\\u001b[39mnode_modules\\\u001b[4menhanced-resolve\u001b[24m\\lib\\Resolver.js:740:5]\u001b[0m {\n\u001b[2m[WebServer] \u001b[22m  details: \u001b[32m\"resolve '../styles/themes/illuminated-keep.css' in 'C:\\\\Dev\\\\github\\\\ftd-canvas-theme\\\\app'\\n\"\u001b[39m +\n\u001b[2m[WebServer] \u001b[22m    \u001b[32m'  using description file: C:\\\\Dev\\\\github\\\\ftd-canvas-theme\\\\package.json (relative path: ./app)\\n'\u001b[39m +\n\u001b[2m[WebServer] \u001b[22m    \u001b[32m'    using description file: C:\\\\Dev\\\\github\\\\ftd-canvas-theme\\\\package.json (relative path: ./styles/themes/illuminated-keep.css)\\n'\u001b[39m +\n\u001b[2m[WebServer] \u001b[22m    \u001b[32m'      no extension\\n'\u001b[39m +\n\u001b[2m[WebServer] \u001b[22m    \u001b[32m\"        C:\\\\Dev\\\\github\\\\ftd-canvas-theme\\\\styles\\\\themes\\\\illuminated-keep.css doesn't exist\\n\"\u001b[39m +\n\u001b[2m[WebServer] \u001b[22m    \u001b[32m'      .css\\n'\u001b[39m +\n\u001b[2m[WebServer] \u001b[22m    \u001b[32m\"        C:\\\\Dev\\\\github\\\\ftd-canvas-theme\\\\styles\\\\themes\\\\illuminated-keep.css.css doesn't exist\\n\"\u001b[39m +\n\u001b[2m[WebServer] \u001b[22m    \u001b[32m'      as directory\\n'\u001b[39m +\n\u001b[2m[WebServer] \u001b[22m    \u001b[32m\"        C:\\\\Dev\\\\github\\\\ftd-canvas-theme\\\\styles\\\\themes\\\\illuminated-keep.css doesn't exist\"\u001b[39m\n\u001b[2m[WebServer] \u001b[22m}\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\u001b[31m\u001b[1m⨯\u001b[22m\u001b[39m ./app/globals.css\n\u001b[2m[WebServer] \u001b[22mError evaluating Node.js code\n\u001b[2m[WebServer] \u001b[22mCssSyntaxError: tailwindcss: C:\\Dev\\github\\ftd-canvas-theme\\app\\globals.css:1:1: Can't resolve '../styles/themes/illuminated-keep.css' in 'C:\\Dev\\github\\ftd-canvas-theme\\app'\n\u001b[2m[WebServer] \u001b[22m    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]\n\u001b[2m[WebServer] \u001b[22m    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]\n\u001b[2m[WebServer] \u001b[22m    [at Object.Once (C:\\Dev\\github\\ftd-canvas-theme\\node_modules\\@tailwindcss\\postcss\\dist\\index.js:10:6913)]\n\u001b[2m[WebServer] \u001b[22m    [at process.processTicksAndRejections (node:internal/process/task_queues:103:5)]\n\u001b[2m[WebServer] \u001b[22m    [at async LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]\n\u001b[2m[WebServer] \u001b[22m    [at async transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:34)]\n\u001b[2m[WebServer] \u001b[22m    [at async run (turbopack:///[turbopack-node]/child_process/evaluate.ts:89:23)]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22mImport trace:\n\u001b[2m[WebServer] \u001b[22m  Client Component Browser:\n\u001b[2m[WebServer] \u001b[22m    ./app/globals.css [Client Component Browser]\n\u001b[2m[WebServer] \u001b[22m    ./app/layout.tsx [Server Component]\n\u001b[2m[WebServer] \u001b[22m\n\u001b[2m[WebServer] \u001b[22m\n","exit_code":124,"status":"failed"}}
+{"type":"item.completed","item":{"id":"item_9","type":"agent_message","text":"Validation is blocked before the test file executes: the concurrent theme work currently imports a missing `styles/themes/illuminated-keep.css`. I’ll do a no-server Playwright discovery check for the spec and confirm no server remains."}}
+{"type":"item.started","item":{"id":"item_10","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command 'npx.cmd playwright test tests/e2e/themed-canvas.spec.ts --list; $listeners = Get-NetTCPConnection -LocalPort 3100 -State Listen -ErrorAction SilentlyContinue; if ($listeners) { $listeners | Format-Table -AutoSize; exit 1 }; Write-Output '\"'Port 3100 is free.'; git diff -- tests/e2e/themed-canvas.spec.ts\"","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_10","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command 'npx.cmd playwright test tests/e2e/themed-canvas.spec.ts --list; $listeners = Get-NetTCPConnection -LocalPort 3100 -State Listen -ErrorAction SilentlyContinue; if ($listeners) { $listeners | Format-Table -AutoSize; exit 1 }; Write-Output '\"'Port 3100 is free.'; git diff -- tests/e2e/themed-canvas.spec.ts\"","aggregated_output":"Listing tests:\n  [chromium] › themed-canvas.spec.ts:12:9 › midnight-archive themed tree canvas › renders the themed canvas\n  [chromium] › themed-canvas.spec.ts:28:9 › midnight-archive themed tree canvas › keeps living people private\n  [chromium] › themed-canvas.spec.ts:39:9 › midnight-archive themed tree canvas › recenters via a person node while preserving share\n  [chromium] › themed-canvas.spec.ts:48:9 › midnight-archive themed tree canvas › changes visible generation depth\n  [chromium] › themed-canvas.spec.ts:69:9 › midnight-archive themed tree canvas › searches and recenters on a visible person\n  [chromium] › themed-canvas.spec.ts:87:9 › midnight-archive themed tree canvas on mobile › renders the canvas controls and paired parents\nTotal: 6 tests in 1 file\nPort 3100 is free.\r\n","exit_code":0,"status":"completed"}}
+{"type":"item.started","item":{"id":"item_11","type":"file_change","changes":[{"path":"C:\\Dev\\github\\ftd-canvas-theme\\tests\\e2e\\themed-canvas.spec.ts","kind":"update"}],"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_11","type":"file_change","changes":[{"path":"C:\\Dev\\github\\ftd-canvas-theme\\tests\\e2e\\themed-canvas.spec.ts","kind":"update"}],"status":"completed"}}
+{"type":"item.started","item":{"id":"item_12","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command 'git status --short; npx.cmd playwright test tests/e2e/themed-canvas.spec.ts --list'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_12","type":"command_execution","command":"\"C:\\\\WINDOWS\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\" -Command 'git status --short; npx.cmd playwright test tests/e2e/themed-canvas.spec.ts --list'","aggregated_output":" M app/(auth)/projects/[projectId]/preview/tree/page.tsx\n M app/(client)/s/[slug]/tree/page.tsx\n M app/globals.css\n M lib/showcase/pilot-showcase.ts\n?? components/canvas-themed/\n?? docs/design/\n?? lib/canvas/\n?? lib/themes/\n?? public/fonts/\n?? styles/themes/\n?? tests/e2e/themed-canvas.spec.ts\n?? tests/unit/generational-layout.test.ts\nListing tests:\n  [chromium] › themed-canvas.spec.ts:12:9 › midnight-archive themed tree canvas › renders the themed canvas\n  [chromium] › themed-canvas.spec.ts:28:9 › midnight-archive themed tree canvas › keeps living people private\n  [chromium] › themed-canvas.spec.ts:39:9 › midnight-archive themed tree canvas › recenters via a person node while preserving share\n  [chromium] › themed-canvas.spec.ts:48:9 › midnight-archive themed tree canvas › changes visible generation depth\n  [chromium] › themed-canvas.spec.ts:69:9 › midnight-archive themed tree canvas › searches and recenters on a visible person\n  [chromium] › themed-canvas.spec.ts:87:9 › midnight-archive themed tree canvas on mobile › renders the canvas controls and paired parents\nTotal: 6 tests in 1 file\nwarning: unable to access 'C:\\Users\\eslavit/.config/git/ignore': Permission denied\nwarning: unable to access 'C:\\Users\\eslavit/.config/git/ignore': Permission denied\n","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_13","type":"agent_message","text":"Work performed: added six themed-canvas Playwright scenarios, desktop/mobile screenshots, and the future-theme TODO.\n\nPath touched: [tests/e2e/themed-canvas.spec.ts](C:\\Dev\\github\\ftd-canvas-theme\\tests\\e2e\\themed-canvas.spec.ts)\n\nValidation: Playwright discovery passed — 6 tests listed. Full run could not start tests: dev compilation fails because `app/globals.css` imports missing `styles/themes/illuminated-keep.css`. Port 3100 is free; no server remains.\n\nMarkup-contract mismatch: none found.\n\nUnresolved uncertainty: full runtime pass remains pending until the concurrent second-theme CSS file exists."}}
+{"type":"turn.completed","usage":{"input_tokens":329544,"cached_input_tokens":281856,"output_tokens":4252,"reasoning_output_tokens":1183}}

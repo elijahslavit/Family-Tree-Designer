@@ -1,6 +1,9 @@
-import { ArrowRight, BookOpenText, FileText, GitBranch, Quote } from "lucide-react";
+import { ArrowRight, BookOpenText, FileText, GitBranch, Lock, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+import { AncestorCard } from "@/components/showcase/ancestor-card";
+import { TiltCard } from "@/components/showcase/tilt-card";
 
 export type ShowcasePersonCard = {
   id: string;
@@ -25,89 +28,106 @@ export function ShowcaseHome({
   eyebrow,
   tagline,
   introduction,
-  heroPath,
   focalPerson,
   people,
   stories,
   sourcePreviewPath,
+  curatorName,
 }: {
   basePath: string;
   familyName: string;
   eyebrow: string;
   tagline: string;
   introduction: string;
-  heroPath: string;
+  heroPath?: string;
   focalPerson: ShowcasePersonCard;
   people: ShowcasePersonCard[];
   stories: ShowcaseStoryCard[];
   sourcePreviewPath: string;
+  curatorName?: string;
 }) {
   return (
     <div>
-      <section className="relative min-h-[min(780px,calc(100vh-65px))] overflow-hidden bg-[#252a24] text-white">
+      <section className="relative overflow-hidden bg-[#efe6d4] text-[#26231e]">
         <Image
-          src={heroPath}
-          alt="A clearly synthetic archival collage representing the Hart family demonstration"
+          src="/showcase/hub-archive-bg.webp"
+          alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-70"
+          className="hidden object-cover md:block"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(25,28,24,.88)_0%,rgba(25,28,24,.54)_55%,rgba(25,28,24,.24)_100%),linear-gradient(0deg,rgba(20,23,20,.65),transparent_55%)]" />
-        <div className="relative mx-auto flex min-h-[min(780px,calc(100vh-65px))] max-w-7xl items-end px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-          <div className="max-w-3xl space-y-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#e9d8b4]">{eyebrow}</p>
-            <div className="space-y-4">
-              <h1 className="font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.035em] sm:text-6xl lg:text-8xl">
+        <div
+          aria-hidden
+          className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(242,233,216,0)_0%,rgba(242,233,216,0)_38%,rgba(242,233,216,0.62)_58%,rgba(242,233,216,0.8)_100%)] md:block"
+        />
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-16 lg:px-8 lg:py-20">
+          <TiltCard className="mx-auto w-full max-w-[380px] lg:max-w-[420px]">
+            <AncestorCard
+              name={focalPerson.name}
+              lifespan={focalPerson.years}
+              portraitSrc={focalPerson.imagePath}
+              portraitTreatment="period"
+              zoom={1.22}
+              focalY={30}
+            />
+          </TiltCard>
+
+          <div className="max-w-xl space-y-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#7b6c54]">{eyebrow}</p>
+            <div className="space-y-3">
+              <h1 className="font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.035em] sm:text-6xl">
                 {familyName}
               </h1>
-              <p className="max-w-2xl font-serif text-2xl leading-snug text-[#f2eadb] sm:text-3xl">{tagline}</p>
+              <p className="max-w-lg font-serif text-2xl leading-snug text-[#4f4335]">{tagline}</p>
             </div>
-            <p className="max-w-xl text-sm leading-7 text-white/80 sm:text-base">{introduction}</p>
-            <div className="flex flex-wrap gap-3">
+            <p className="max-w-lg text-sm leading-7 text-[#5c5142] sm:text-base">{introduction}</p>
+
+            <div className="flex flex-col gap-3 sm:max-w-md">
+              <Link
+                href={`${basePath}/people/${focalPerson.id}`}
+                className="group flex items-center justify-between gap-4 rounded-lg bg-[#6b3e36] px-5 py-3.5 text-[#f3ead8] shadow-md transition-colors hover:bg-[#5a332c]"
+              >
+                <span>
+                  <span className="block text-sm font-semibold">Discover an ancestor</span>
+                  <span className="block text-xs text-[#f3ead8]/75">Open a person from your family history</span>
+                </span>
+                <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5" />
+              </Link>
               <Link
                 href={`${basePath}/tree?person=${focalPerson.id}`}
-                className="pilot-cream-cta inline-flex items-center gap-2 rounded-full bg-[#f6efe0] px-5 py-3 text-sm font-semibold text-[#2e322d] transition-transform hover:-translate-y-0.5"
+                className="group flex items-center justify-between gap-4 rounded-lg border border-[#8a6a43]/50 bg-[#f6efe0]/70 px-5 py-3.5 text-[#4f4335] backdrop-blur-sm transition-colors hover:bg-[#f6efe0]"
               >
-                Explore your family
-                <ArrowRight className="h-4 w-4" />
+                <span>
+                  <span className="block text-sm font-semibold">Browse a family branch</span>
+                  <span className="block text-xs text-[#4f4335]/70">Explore relationships across generations</span>
+                </span>
+                <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5" />
               </Link>
-              <Link
-                href={`${basePath}/stories`}
-                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur hover:bg-white/15"
-              >
-                Begin with a story
-              </Link>
+            </div>
+
+            <nav aria-label="Archive sections" className="flex flex-wrap gap-2">
+              <ChapterChip href={`${basePath}/people`} icon={<Users className="h-3.5 w-3.5" />} label="People" />
+              <ChapterChip href={`${basePath}/stories`} icon={<BookOpenText className="h-3.5 w-3.5" />} label="Stories" />
+              <ChapterChip href={`${basePath}/tree?person=${focalPerson.id}`} icon={<GitBranch className="h-3.5 w-3.5" />} label="Tree" />
+              <ChapterChip href={`${basePath}/sources/src01`} icon={<FileText className="h-3.5 w-3.5" />} label="Records" />
+            </nav>
+
+            <div className="flex items-start gap-3 rounded-lg border border-[#8a6a43]/55 bg-[#e5d3ab]/80 px-4 py-3 shadow-sm backdrop-blur-sm">
+              <Lock className="mt-0.5 h-4 w-4 shrink-0 text-[#7b6c54]" />
+              <p className="text-xs leading-5 text-[#5c5142]">
+                <span className="font-semibold">
+                  Prepared for {familyName}
+                  {curatorName ? ` by ${curatorName}` : ""}.
+                </span>{" "}
+                Private — shared only with invited family.
+              </p>
             </div>
           </div>
         </div>
-        <p className="absolute bottom-5 right-5 rounded-full bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-white/75 backdrop-blur">
+        <p className="absolute bottom-4 right-4 rounded-full bg-[#26231e]/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[#26231e]/70 backdrop-blur">
           Synthetic demonstration media
         </p>
-      </section>
-
-      <section className="mx-auto grid max-w-7xl gap-5 px-4 py-16 sm:px-6 lg:grid-cols-3 lg:px-8 lg:py-24">
-        <JourneyCard
-          href={`${basePath}/tree?person=${focalPerson.id}`}
-          icon={<GitBranch className="h-5 w-5" />}
-          eyebrow="See the relationships"
-          title="Explore the family tree"
-          detail={`Begin with ${focalPerson.name} and unfold the nearest generations at your own pace.`}
-        />
-        <JourneyCard
-          href={`${basePath}/people/${focalPerson.id}`}
-          icon={<Quote className="h-5 w-5" />}
-          eyebrow="Meet someone"
-          title={`The life of ${focalPerson.name}`}
-          detail={focalPerson.summary}
-        />
-        <JourneyCard
-          href={`${basePath}/stories/${stories[0]?.id ?? "story-letters-home"}`}
-          icon={<BookOpenText className="h-5 w-5" />}
-          eyebrow="Follow a thread"
-          title={stories[0]?.title ?? "A family story"}
-          detail={stories[0]?.dek ?? "Follow one carefully sourced moment through the archive."}
-        />
       </section>
 
       <section className="border-y border-[#3c3325]/10 bg-[#eee6d7]">
@@ -178,27 +198,14 @@ export function ShowcaseHome({
   );
 }
 
-function JourneyCard({
-  href,
-  icon,
-  eyebrow,
-  title,
-  detail,
-}: {
-  href: string;
-  icon: React.ReactNode;
-  eyebrow: string;
-  title: string;
-  detail: string;
-}) {
+function ChapterChip({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
-    <Link href={href} className="group flex min-h-56 flex-col rounded-2xl border border-[#3c3325]/10 bg-white p-6 transition-transform hover:-translate-y-1 hover:shadow-lg">
-      <span className="grid h-10 w-10 place-items-center rounded-full bg-[#e8eee8] text-[#3f5b47]">{icon}</span>
-      <div className="mt-auto space-y-2 pt-8">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#807463]">{eyebrow}</p>
-        <h2 className="font-serif text-2xl font-semibold leading-tight">{title}</h2>
-        <p className="text-sm leading-6 text-[#6f6557]">{detail}</p>
-      </div>
+    <Link
+      href={href}
+      className="inline-flex items-center gap-1.5 rounded-full border border-[#8a6a43]/45 bg-[#f6efe0]/70 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] text-[#5c5142] backdrop-blur-sm transition-colors hover:border-[#6b3e36] hover:text-[#6b3e36]"
+    >
+      {icon}
+      {label}
     </Link>
   );
 }

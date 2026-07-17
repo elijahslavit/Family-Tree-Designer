@@ -7,83 +7,80 @@ import { productConfig } from "@/lib/config/product";
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#f5f1e8] text-[#26231e]">
-      <header className="border-b border-black/10 bg-[#faf8f2]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#293a31] text-white">
-              <FileArchive className="h-4 w-4" />
-            </span>
-            <span>
-              <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#746d62]">
-                Professional delivery studio
-              </span>
-              <span className="block font-semibold">{productConfig.name}</span>
-            </span>
-          </Link>
-          <nav className="flex items-center gap-2">
-            <Link href="/sign-in" className="hidden rounded-full px-4 py-2 text-sm font-semibold text-[#615a50] hover:bg-black/[0.04] sm:inline-flex">
-              Sign in
-            </Link>
-            <Link href="/projects" className="inline-flex items-center gap-2 rounded-full bg-[#293a31] px-4 py-2 text-sm font-semibold text-white">
-              Open synthetic studio <ArrowRight className="h-4 w-4" />
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <section className="relative isolate overflow-hidden">
+        <Image
+          src="/landing/hero-atlas.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[70%_center]"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(242,233,216,0.96)_0%,rgba(242,233,216,0.9)_52%,rgba(242,233,216,0.42)_82%,rgba(242,233,216,0.05)_100%)] md:bg-[linear-gradient(90deg,rgba(242,233,216,0.94)_0%,rgba(242,233,216,0.72)_32%,rgba(242,233,216,0)_58%)] lg:bg-[linear-gradient(90deg,rgba(242,233,216,0.55)_0%,rgba(242,233,216,0.25)_28%,rgba(242,233,216,0)_46%)]"
+        />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-[#ebe5d9]" />
 
-      <section className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:py-20">
-        <div className="space-y-7">
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900">
-            <Sparkles className="h-3.5 w-3.5" />
-            Founding-pilot workspace · synthetic data only
+        <header className="relative">
+          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+            <Link href="/" className="flex items-center gap-3">
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#293a31] text-white">
+                <FileArchive className="h-4 w-4" />
+              </span>
+              <span>
+                <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6e6353]">
+                  Professional delivery studio
+                </span>
+                <span className="block font-semibold">{productConfig.name}</span>
+              </span>
+            </Link>
+            <nav className="flex items-center gap-2">
+              <Link href="/sign-in" className="rounded-full bg-[#f2e9d8]/85 px-4 py-2 text-sm font-semibold text-[#54493a] shadow-sm ring-1 ring-black/10 backdrop-blur-sm hover:bg-[#f2e9d8]">
+                Sign in
+              </Link>
+            </nav>
           </div>
-          <div className="space-y-5">
-            <h1 className="max-w-3xl font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+        </header>
+
+        <div className="relative mx-auto flex min-h-[540px] max-w-7xl items-center px-4 pb-24 pt-10 sm:px-6 sm:pt-14 lg:min-h-[680px] lg:px-8">
+          <div className="max-w-xl space-y-7">
+            <h1 className="font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
               Your research deserves a reveal—not another folder.
             </h1>
-            <p className="max-w-2xl text-lg leading-8 text-[#655e54]">
-              Turn a completed GEDCOM, photographs, short family stories, and source records into one private, branded client experience without building a custom website.
+            <p className="max-w-lg text-lg leading-8 text-[#5c5142]">
+              Months of careful research shouldn&apos;t end as an email attachment. {productConfig.name} turns your finished work into a beautiful, interactive experience—the tree, the stories, the photographs, the records—delivered as a moment your clients will never forget.
             </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/projects" className="inline-flex items-center gap-2 rounded-full bg-[#293a31] px-5 py-3 text-sm font-semibold text-white">
-              Open the pilot workspace <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link href="/projects/pilot-hart-001/preview" className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white px-5 py-3 text-sm font-semibold">
-              Preview the client experience
-            </Link>
-          </div>
-          <div className="flex items-start gap-3 border-t border-black/10 pt-5 text-sm leading-6 text-[#6e675d]">
-            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#4d6755]" />
-            <p>Private by default. Real client data remains blocked until infrastructure and attorney review are complete.</p>
-          </div>
-        </div>
-
-        <div className="relative overflow-hidden rounded-[28px] bg-[#273029] shadow-2xl">
-          <div className="relative aspect-[16/12] sm:aspect-[16/11] lg:aspect-[4/4.2] xl:aspect-[16/13]">
-            <Image
-              src="/demo/pilot/hart-family-hero.svg"
-              alt="Clearly synthetic Hart family archival collage used for the pilot demonstration"
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 55vw"
-              className="object-cover opacity-90"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(25,29,25,.75),transparent_50%)]" />
-            <div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ead8b4]">The Hart Family Legacy</p>
-              <p className="mt-2 max-w-xl font-serif text-3xl font-semibold leading-tight sm:text-4xl">Four generations, one unfolding story.</p>
-              <p className="mt-3 text-xs text-white/70">Synthetic people, media, records, and events</p>
+            <div className="flex flex-wrap items-center gap-4">
+              <Link href="/projects/pilot-hart-001/preview" className="inline-flex items-center gap-2 rounded-lg bg-[#6b3e36] px-6 py-3.5 text-sm font-semibold text-[#f3ead8] shadow-md transition-colors hover:bg-[#5a332c]">
+                See a finished reveal <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="/projects" className="inline-flex items-center gap-2 text-sm font-semibold text-[#54493a] underline decoration-[#a67c52]/60 underline-offset-4 hover:decoration-[#6b3e36]">
+                Open the pilot workspace <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
+            <p className="inline-block rounded bg-[#f2e9d8]/70 px-1.5 py-0.5 text-sm font-medium leading-6 text-[#4c4234]">
+              Keep the research tools you trust. Upgrade what your clients receive.
+            </p>
           </div>
         </div>
       </section>
 
       <section className="border-y border-black/10 bg-[#ebe5d9]">
-        <div className="mx-auto grid max-w-7xl gap-5 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8 lg:py-16">
+        <div className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+          <p className="inline-flex items-center gap-2 rounded-full border border-amber-200/80 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900">
+            <Sparkles className="h-3.5 w-3.5" />
+            Founding-pilot workspace · synthetic data only
+          </p>
+        </div>
+        <div className="mx-auto grid max-w-7xl gap-5 px-4 pb-6 pt-8 sm:px-6 md:grid-cols-3 lg:px-8">
           <ValueCard icon={<FileArchive className="h-5 w-5" />} step="01" title="Bring finished research" detail="Stage a GEDCOM, brand, selected media, stories, and source references in a guided professional workflow." />
           <ValueCard icon={<BookOpenText className="h-5 w-5" />} step="02" title="Curate the client reveal" detail="Choose a focal branch, shape the welcome, and connect a few meaningful stories to people and records." />
           <ValueCard icon={<ShieldCheck className="h-5 w-5" />} step="03" title="Review and hand off privately" detail="Freeze review versions, invite the client, collect approval, and transfer archive authority with an audit trail." />
+        </div>
+        <div className="mx-auto flex max-w-7xl items-start gap-3 px-4 pb-10 text-sm leading-6 text-[#6e675d] sm:px-6 lg:px-8">
+          <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#4d6755]" />
+          <p>Private by default. Real client data remains blocked until infrastructure and attorney review are complete.</p>
         </div>
       </section>
 

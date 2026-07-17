@@ -1,0 +1,4 @@
+interface:
+  display_name: "Google Flow Creator"
+  short_description: "Plan and prompt polished Google Flow videos"
+  default_prompt: "Use $google-flow to plan and prompt a cinematic, audio-native video workflow."

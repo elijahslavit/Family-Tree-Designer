@@ -1,0 +1,13 @@
+{
+  "output_dir": "C:/Dev/github/Family-Tree-Designer/.claude/codex-runs/canvas-theme/slice1",
+  "jobs": [
+    {
+      "id": "engine-midnight",
+      "brief_file": "C:/Dev/github/Family-Tree-Designer/.claude/codex-runs/canvas-theme/briefs/engine-midnight.md",
+      "workspace": "C:/Dev/github/ftd-canvas-theme",
+      "model": "sol",
+      "effort": "high",
+      "sandbox": "workspace-write"
+    }
+  ]
+}

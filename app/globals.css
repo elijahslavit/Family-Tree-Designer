@@ -29,6 +29,23 @@
   --transition-fast: 140ms;
   --transition-normal: 220ms;
   --transition-slow: 320ms;
+  --bg-primary: #f4f1ea;
+  --bg-surface: #fffdf8;
+  --bg-elevated: #ffffff;
+  --bg-canvas: #ebe6dc;
+  --text-primary: #241f18;
+  --text-secondary: #544c43;
+  --text-muted: #746b60;
+  --text-inverse: #ffffff;
+  --accent-primary: #4f5d4a;
+  --accent-hover: #3f4d3b;
+  --accent-muted: rgba(79, 93, 74, 0.12);
+  --accent-text: #3f513b;
+  --border-default: rgba(55, 45, 35, 0.12);
+  --border-strong: rgba(79, 93, 74, 0.34);
+  --border-muted: rgba(55, 45, 35, 0.07);
+  --color-success: #2f7d52;
+  --color-warning: #9a681d;
   --creator-bg: #f4f1ea;
   --creator-surface: #fffdf8;
   --creator-surface-muted: #f7f3eb;
@@ -39,6 +56,27 @@
   --creator-accent: #4f5d4a;
   --creator-accent-soft: rgba(79, 93, 74, 0.12);
   --color-danger: #b42318;
+  --color-info: #386c9e;
+  --shadow-sm: 0 2px 6px rgba(55, 45, 35, 0.08);
+  --shadow-md: 0 6px 14px rgba(55, 45, 35, 0.1);
+  --shadow-lg: 0 12px 28px rgba(55, 45, 35, 0.14);
+  --canvas-node-bg: #fffdf8;
+  --canvas-node-border: rgba(55, 45, 35, 0.1);
+  --canvas-node-text: #241f18;
+  --canvas-edge: rgba(79, 93, 74, 0.24);
+  --site-bg: #f5f1e8;
+  --site-bg-strong: #e9e3d7;
+  --site-surface: #fbf9f4;
+  --site-surface-raised: #ffffff;
+  --site-surface-muted: #eee8dc;
+  --site-text: #28241f;
+  --site-text-soft: #665e53;
+  --site-text-muted: #746b5e;
+  --site-border: rgba(40, 36, 31, 0.12);
+  --site-border-strong: rgba(40, 36, 31, 0.2);
+  --site-accent: #526b57;
+  --site-accent-soft: #e4ebe5;
+  --site-shadow: 0 4px 8px rgba(40, 36, 31, 0.12);
 }
 
 * {
@@ -49,12 +87,206 @@ html {
   color-scheme: light;
 }
 
+html[data-color-mode="dark"] {
+  color-scheme: dark;
+  --bg-primary: oklch(0.17 0.012 120);
+  --bg-surface: oklch(0.205 0.012 120);
+  --bg-elevated: oklch(0.235 0.014 120);
+  --bg-canvas: oklch(0.15 0.012 120);
+  --text-primary: oklch(0.94 0.012 90);
+  --text-secondary: oklch(0.82 0.012 90);
+  --text-muted: oklch(0.7 0.012 90);
+  --text-inverse: oklch(0.18 0.012 120);
+  --accent-primary: oklch(0.72 0.06 135);
+  --accent-hover: oklch(0.78 0.06 135);
+  --accent-muted: oklch(0.72 0.06 135 / 0.16);
+  --accent-text: oklch(0.82 0.065 135);
+  --border-default: oklch(0.94 0.012 90 / 0.13);
+  --border-strong: oklch(0.72 0.06 135 / 0.46);
+  --border-muted: oklch(0.94 0.012 90 / 0.08);
+  --color-success: oklch(0.74 0.13 150);
+  --color-warning: oklch(0.8 0.13 80);
+  --color-danger: oklch(0.72 0.16 25);
+  --color-info: oklch(0.74 0.11 245);
+  --shadow-sm: 0 2px 6px rgb(0 0 0 / 0.24);
+  --shadow-md: 0 6px 14px rgb(0 0 0 / 0.28);
+  --shadow-lg: 0 12px 28px rgb(0 0 0 / 0.34);
+  --canvas-node-bg: oklch(0.225 0.014 120);
+  --canvas-node-border: oklch(0.94 0.012 90 / 0.13);
+  --canvas-node-text: oklch(0.94 0.012 90);
+  --canvas-edge: oklch(0.72 0.06 135 / 0.32);
+  --creator-bg: oklch(0.15 0.012 120);
+  --creator-surface: oklch(0.2 0.012 120);
+  --creator-surface-muted: oklch(0.235 0.014 120);
+  --creator-border: oklch(0.94 0.012 90 / 0.12);
+  --creator-border-strong: oklch(0.72 0.06 135 / 0.36);
+  --creator-text: oklch(0.94 0.012 90);
+  --creator-text-muted: oklch(0.72 0.012 90);
+  --creator-accent: oklch(0.72 0.06 135);
+  --creator-accent-soft: oklch(0.72 0.06 135 / 0.16);
+  --site-bg: oklch(0.15 0.012 120);
+  --site-bg-strong: oklch(0.125 0.01 120);
+  --site-surface: oklch(0.2 0.012 120);
+  --site-surface-raised: oklch(0.235 0.014 120);
+  --site-surface-muted: oklch(0.265 0.016 120);
+  --site-text: oklch(0.94 0.012 90);
+  --site-text-soft: oklch(0.82 0.012 90);
+  --site-text-muted: oklch(0.7 0.012 90);
+  --site-border: oklch(0.94 0.012 90 / 0.13);
+  --site-border-strong: oklch(0.94 0.012 90 / 0.24);
+  --site-accent: oklch(0.74 0.07 140);
+  --site-accent-soft: oklch(0.4 0.045 140);
+  --site-shadow: 0 4px 8px rgb(0 0 0 / 0.32);
+}
+
+.color-mode-icon-dark {
+  display: none;
+}
+
+html[data-color-mode="dark"] .color-mode-icon-dark {
+  display: block;
+}
+
+html[data-color-mode="dark"] .color-mode-icon-light {
+  display: none;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
   background: var(--creator-bg);
   color: var(--creator-text);
   font-family: var(--font-body);
+  transition: background-color var(--transition-normal) ease-out, color var(--transition-normal) ease-out;
+}
+
+[data-skin="dark-gold"] {
+  color-scheme: dark;
+}
+
+[data-skin]:not([data-skin="dark-gold"]) {
+  color-scheme: light;
+}
+
+html[data-color-mode="dark"] [data-skin]:not([data-skin="dark-gold"]) {
+  color-scheme: dark;
+  --bg-primary: oklch(0.16 0.012 100);
+  --bg-surface: oklch(0.2 0.014 100);
+  --bg-elevated: oklch(0.235 0.016 100);
+  --bg-canvas: oklch(0.135 0.012 100);
+  --text-primary: oklch(0.94 0.015 90);
+  --text-secondary: oklch(0.82 0.014 90);
+  --text-muted: oklch(0.7 0.012 90);
+  --text-inverse: oklch(0.17 0.012 100);
+  --accent-hover: color-mix(in oklab, var(--accent-primary) 72%, white);
+  --accent-muted: color-mix(in oklab, var(--accent-primary) 18%, transparent);
+  --accent-text: color-mix(in oklab, var(--accent-primary) 58%, white);
+  --border-default: oklch(0.94 0.015 90 / 0.13);
+  --border-strong: color-mix(in oklab, var(--accent-primary) 52%, transparent);
+  --border-muted: oklch(0.94 0.015 90 / 0.08);
+  --canvas-node-bg: oklch(0.225 0.016 100);
+  --canvas-node-highlight-bg: color-mix(in oklab, oklch(0.225 0.016 100) 80%, var(--accent-primary));
+  --canvas-node-border: oklch(0.94 0.015 90 / 0.14);
+  --canvas-node-text: oklch(0.94 0.015 90);
+  --canvas-edge: color-mix(in oklab, var(--accent-primary) 38%, transparent);
+  --canvas-sidebar-bg: oklch(0.16 0.012 100 / 0.9);
+  --canvas-tooltip-bg: oklch(0.2 0.014 100 / 0.98);
+  --canvas-controls-bg: oklch(0.2 0.014 100 / 0.96);
+  --minimap-bg: oklch(0.16 0.012 100 / 0.96);
+  --minimap-mask: rgb(0 0 0 / 0.62);
+  --minimap-node: oklch(0.8 0.015 90 / 0.34);
+  --shadow-sm: 0 2px 6px rgb(0 0 0 / 0.24);
+  --shadow-md: 0 6px 14px rgb(0 0 0 / 0.28);
+  --shadow-lg: 0 12px 28px rgb(0 0 0 / 0.34);
+}
+
+/* The pilot predates the semantic token layer. These compatibility selectors
+   keep its existing utility markup readable until those screens are migrated. */
+html[data-color-mode="dark"] :is(
+  [class*="bg-[#f5f1e8]"],
+  [class*="bg-[#f8f4ea]"],
+  [class*="bg-[#f1eee7]"]
+) {
+  background-color: var(--site-bg) !important;
+}
+
+html[data-color-mode="dark"] :is(
+  [class*="bg-[#e9e3d7]"],
+  [class*="bg-[#ebe5d9]"],
+  [class*="bg-[#f1eadc]"]
+) {
+  background-color: var(--site-bg-strong) !important;
+}
+
+html[data-color-mode="dark"] :is(
+  [class*="bg-white"],
+  [class*="bg-[#faf8f2]"],
+  [class*="bg-[#faf8f3]"],
+  [class*="bg-[#fbf8f0]"],
+  [class*="bg-[#fbf9f4]"],
+  [class*="bg-[#f8f5ee]"],
+  [class*="bg-[#fffafa]"]
+) {
+  background-color: var(--site-surface) !important;
+}
+
+html[data-color-mode="dark"] :is(
+  [class*="bg-[#d"],
+  [class*="bg-[#e"],
+  [class*="bg-[#f0"],
+  [class*="bg-[#f2"],
+  [class*="bg-[#f3"],
+  [class*="bg-[#f4"],
+  [class*="bg-[#f6"],
+  [class*="bg-[#f7"]
+) {
+  background-color: var(--site-surface-muted) !important;
+}
+
+html[data-color-mode="dark"] :is(
+  [class*="text-[#2"],
+  [class*="text-[#3"],
+  [class*="text-[#4"],
+  [class*="text-[#5"]
+) {
+  color: var(--site-text) !important;
+}
+
+html[data-color-mode="dark"] [class*="text-[#6"] {
+  color: var(--site-text-soft) !important;
+}
+
+html[data-color-mode="dark"] :is([class*="text-[#7"], [class*="text-[#8"]) {
+  color: var(--site-text-muted) !important;
+}
+
+html[data-color-mode="dark"] :is(
+  [class*="border-black"],
+  [class*="border-[#3c3325]"],
+  [class*="border-[#b"],
+  [class*="border-[#c"],
+  [class*="border-[#d"]
+) {
+  border-color: var(--site-border) !important;
+}
+
+html[data-color-mode="dark"] [class*="hover:bg-black"]:hover,
+html[data-color-mode="dark"] [class*="hover:bg-white"]:hover,
+html[data-color-mode="dark"] [class*="hover:bg-[#f"]:hover,
+html[data-color-mode="dark"] [class*="hover:bg-[#e"]:hover {
+  background-color: var(--site-surface-muted) !important;
+}
+
+html[data-color-mode="dark"] :is([class*="bg-amber-50"], [class*="bg-red-50"], [class*="bg-emerald-50"], [class*="bg-stone-100"]) {
+  background-color: var(--site-surface-muted) !important;
+}
+
+html[data-color-mode="dark"] :is([class*="text-amber-900"], [class*="text-red-900"], [class*="text-emerald-700"], [class*="text-red-700"], [class*="text-stone-500"]) {
+  color: var(--site-text) !important;
+}
+
+html[data-color-mode="dark"] :is([class*="border-amber-200"], [class*="border-red-200"]) {
+  border-color: var(--site-border-strong) !important;
 }
 
 :root {

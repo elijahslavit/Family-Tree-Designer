@@ -21,6 +21,7 @@ export default async function PilotPreviewPage({
       tagline={project.welcome.headline}
       introduction={project.welcome.introduction}
       heroPath={showcase.heroPath}
+      curatorName={project.branding.practiceName}
       focalPerson={showcase.focalPerson}
       people={showcase.people}
       stories={showcase.stories}

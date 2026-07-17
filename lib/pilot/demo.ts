@@ -446,7 +446,7 @@ const hartProject: PilotProject = {
       role: "client_reviewer",
       status: "active",
       grantedAt: "2026-06-20T14:00:00.000Z",
-      expiresAt: "2026-07-19T14:00:00.000Z",
+      expiresAt: "2027-01-05T14:00:00.000Z",
       revokedAt: null,
     },
     {
@@ -474,7 +474,7 @@ const hartProject: PilotProject = {
       tokenHint: "…vite",
       status: "issued",
       issuedAt: "2026-07-12T14:00:00.000Z",
-      expiresAt: "2026-07-19T14:00:00.000Z",
+      expiresAt: "2027-01-05T14:00:00.000Z",
       redeemedAt: null,
       revokedAt: null,
       reissuedFromInviteId: null,
@@ -538,7 +538,7 @@ const hartProject: PilotProject = {
       tokenHint: "…vite",
       status: "issued",
       issuedAt: "2026-07-09T15:30:00.000Z",
-      expiresAt: "2026-07-16T15:30:00.000Z",
+      expiresAt: "2027-01-05T15:30:00.000Z",
       redeemedAt: null,
       revokedAt: null,
       reissuedFromInviteId: null,
@@ -892,7 +892,7 @@ export function createPilotDemoWorkspace(): PilotWorkspace {
     role: "client_reviewer",
     status: "active",
     grantedAt: NOW,
-    expiresAt: "2026-07-19T15:00:00.000Z",
+    expiresAt: "2027-01-05T15:00:00.000Z",
     revokedAt: null,
   });
 
