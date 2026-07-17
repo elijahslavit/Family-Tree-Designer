@@ -2,6 +2,16 @@
 
 2026-07-15. Human decisions made during the Shape/Plan phases (Claude design-orchestrator workflow).
 
+## Superseded (2026-07-17)
+
+Owner decision: replace the canvas on **all four** routes (creator `/canvas`, public
+`/t/[slug]/canvas`, client `/s/[slug]/tree`, project preview tree) with a diffui-style
+immersive engine — full-screen React Flow stage, cursor-centered zoom, scroll-pan, draggable
+cards (not persisted), floating inspector/toolbar/minimap — styled with existing app tokens.
+This supersedes the scrollable no-React-Flow engine planned below before any slice shipped.
+Still live from this record: the theme-as-data packaging model and the Midnight Archive /
+Illuminated Keep theme identities, expected to return as skins on the new engine (future task).
+
 ## Selected
 
 - **Model:** scrollable full-page themed canvas; floating themed controls; shared layout engine.

@@ -1,6 +1,10 @@
+"use client";
+
 import { memo } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
+import { ArrowUpRight, Crosshair } from "lucide-react";
 
+import { useCanvasActions } from "@/components/canvas/canvas-context";
 import { Badge } from "@/components/foundation/badge";
 import { cn } from "@/lib/utils/cn";
 
@@ -88,8 +92,9 @@ function relationStyles(group: CanvasNodePayload["relationGroup"]) {
   }
 }
 
-const PersonNode = memo(function PersonNode({ data, selected }: NodeProps) {
+const PersonNode = memo(function PersonNode({ id, data, selected, dragging }: NodeProps) {
   const payload = data as CanvasNodePayload;
+  const { centerPerson, openProfile } = useCanvasActions();
   const preview =
     payload.summary && payload.summary.length > 150
       ? `${payload.summary.slice(0, 150)}...`
@@ -100,11 +105,16 @@ const PersonNode = memo(function PersonNode({ data, selected }: NodeProps) {
   return (
     <div
       className={cn(
-        "group/node relative w-[15rem] rounded-[1.5rem] border px-4 py-4 backdrop-blur-md transition-all duration-200",
+        "canvas-node-enter group/node relative w-[15rem] rounded-[1.4rem] border px-4 py-4 backdrop-blur-md transition-[box-shadow,transform,border-color] duration-200",
+        !dragging && "hover:-translate-y-0.5",
         payload.isHighlighted
           ? "shadow-[0_0_0_1px_color-mix(in_oklab,var(--accent-primary)_26%,transparent),0_18px_42px_color-mix(in_oklab,var(--accent-primary)_14%,transparent)]"
           : "shadow-[var(--shadow-node)]",
-        selected && "ring-2 ring-[color-mix(in_oklab,var(--accent-primary)_60%,transparent)] ring-offset-2 ring-offset-transparent",
+        !dragging &&
+          "hover:shadow-[0_0_0_1px_color-mix(in_oklab,var(--accent-primary)_20%,transparent),var(--shadow-lg)]",
+        dragging && "cursor-grabbing shadow-[var(--shadow-lg)]",
+        selected &&
+          "ring-2 ring-[color-mix(in_oklab,var(--accent-primary)_60%,transparent)] ring-offset-2 ring-offset-transparent",
       )}
       style={{
         background: payload.isHighlighted
@@ -116,7 +126,7 @@ const PersonNode = memo(function PersonNode({ data, selected }: NodeProps) {
           : undefined,
       }}
     >
-      {preview ? (
+      {preview && !dragging ? (
         <div
           className="pointer-events-none absolute bottom-[calc(100%+0.8rem)] left-1/2 z-30 hidden w-64 -translate-x-1/2 rounded-[1.1rem] border border-[var(--border-default)] px-3.5 py-3 opacity-0 shadow-[var(--shadow-lg)] transition-all duration-150 group-hover/node:block group-hover/node:opacity-100 lg:block"
           style={{ background: "var(--canvas-tooltip-bg)" }}
@@ -130,6 +140,41 @@ const PersonNode = memo(function PersonNode({ data, selected }: NodeProps) {
           </p>
         </div>
       ) : null}
+
+      <div
+        className={cn(
+          "nodrag nopan absolute -top-3 right-3 z-20 flex items-center gap-1 rounded-full border border-[var(--border-default)] p-1 opacity-0 shadow-[var(--shadow-md)] transition-opacity duration-150",
+          !dragging && "group-hover/node:opacity-100 focus-within:opacity-100",
+        )}
+        style={{ background: "var(--canvas-controls-bg)" }}
+      >
+        {!payload.isFocus ? (
+          <button
+            type="button"
+            aria-label={`Center on ${payload.label}`}
+            title="Center here"
+            className="grid h-6 w-6 place-items-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[color-mix(in_oklab,var(--accent-primary)_16%,transparent)] hover:text-[var(--text-primary)]"
+            onClick={(event) => {
+              event.stopPropagation();
+              centerPerson(id);
+            }}
+          >
+            <Crosshair className="h-3.5 w-3.5" />
+          </button>
+        ) : null}
+        <button
+          type="button"
+          aria-label={`Open profile for ${payload.label}`}
+          title="Open profile"
+          className="grid h-6 w-6 place-items-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[color-mix(in_oklab,var(--accent-primary)_16%,transparent)] hover:text-[var(--text-primary)]"
+          onClick={(event) => {
+            event.stopPropagation();
+            openProfile(id);
+          }}
+        >
+          <ArrowUpRight className="h-3.5 w-3.5" />
+        </button>
+      </div>
 
       <Handle
         type="target"

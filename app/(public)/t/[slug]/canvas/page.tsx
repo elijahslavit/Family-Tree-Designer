@@ -1,6 +1,4 @@
-import { CanvasSidebar } from "@/components/canvas/canvas-sidebar";
-import { CanvasRouteViewer } from "@/components/canvas/canvas-route-viewer";
-import { PublicTreeShell } from "@/components/layouts/tree-shell";
+import { CanvasExperience } from "@/components/canvas/canvas-experience";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { getPublicViewerContext } from "@/lib/auth/session";
 import {
@@ -43,38 +41,34 @@ export default async function PublicCanvasPage({
   });
   const selectedLineage =
     canvas.availableLineages.find((lineage) => lineage.id === lineageId) ?? null;
+  const share = `share=${tree.shareToken}`;
 
   return (
     <ThemeProvider layout={tree.themeLayout} skin={tree.themeSkin}>
-      <PublicTreeShell
-        tree={tree}
-        main={
-          <CanvasRouteViewer
-            basePath={`/t/${tree.slug}/canvas`}
-            nodes={canvas.nodes}
-            edges={canvas.edges}
-            shareToken={tree.shareToken}
-            depth={canvas.depth}
-            selectedLineageId={lineageId}
-            selectedLineageName={selectedLineage?.name ?? null}
-            profilePathBase={`/t/${tree.slug}/person`}
-            focusLabel={canvas.focusPerson.fullName}
-          />
-        }
-        detail={
-          <CanvasSidebar
-            person={canvas.focusPerson}
-            profileHref={publicPersonHref(tree.slug, personId, tree.shareToken)}
-            basePath={`/t/${tree.slug}/canvas`}
-            depth={canvas.depth}
-            maxDepth={canvas.maxDepth}
-            visibleCount={canvas.nodes.length}
-            relatedCount={canvas.relatedCount}
-            lineages={canvas.availableLineages}
-            selectedLineageId={lineageId}
-            shareToken={tree.shareToken}
-          />
-        }
+      <CanvasExperience
+        nodes={canvas.nodes}
+        edges={canvas.edges}
+        basePath={`/t/${tree.slug}/canvas`}
+        profilePathBase={`/t/${tree.slug}/person`}
+        shareToken={tree.shareToken}
+        depth={canvas.depth}
+        maxDepth={canvas.maxDepth}
+        selectedLineageId={lineageId}
+        selectedLineageName={selectedLineage?.name ?? null}
+        lineages={canvas.availableLineages}
+        focusPerson={canvas.focusPerson}
+        profileHref={publicPersonHref(tree.slug, personId, tree.shareToken)}
+        relatedCount={canvas.relatedCount}
+        topBar={{
+          eyebrow: "Shared archive",
+          title: tree.name,
+          navItems: [
+            { href: `/t/${tree.slug}?${share}`, label: "Directory" },
+            { href: `/t/${tree.slug}/lineages?${share}`, label: "Lineages" },
+            { href: `/t/${tree.slug}/canvas?${share}`, label: "Canvas" },
+          ],
+          activeLabel: "Canvas",
+        }}
       />
     </ThemeProvider>
   );

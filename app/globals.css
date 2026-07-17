@@ -373,37 +373,17 @@ textarea {
   display: none;
 }
 
-.react-flow__controls {
-  left: 16px !important;
-  bottom: 16px !important;
-  top: auto !important;
-  border-radius: 10px !important;
-  overflow: hidden;
-  border: 1px solid var(--creator-border) !important;
-  box-shadow: none !important;
-}
-
-.react-flow__controls-button {
-  background: var(--creator-surface) !important;
-  border-bottom: 1px solid var(--creator-border) !important;
-  fill: var(--creator-text-muted) !important;
-}
-
-.react-flow__controls-button:hover {
-  background: var(--creator-surface-muted) !important;
-  fill: var(--creator-text) !important;
-}
-
-.react-flow__controls-button svg {
-  max-width: 14px;
-  max-height: 14px;
-}
-
+/* Offset from the right edge so the global color-mode toggle keeps its corner. */
 .react-flow__minimap {
-  right: 16px !important;
-  bottom: 16px !important;
+  right: 76px !important;
+  bottom: 12px !important;
   top: auto !important;
-  box-shadow: none !important;
+  overflow: hidden;
+  border-radius: 12px !important;
+  border: 1px solid var(--creator-border);
+  background: var(--canvas-controls-bg) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-md) !important;
 }
 
 .react-flow__minimap-mask {
@@ -414,9 +394,44 @@ textarea {
   margin: 0;
 }
 
+.canvas-stage .react-flow__pane {
+  cursor: grab;
+}
+
+.canvas-stage .react-flow__pane.dragging {
+  cursor: grabbing;
+}
+
+.canvas-stage .react-flow__node:focus-visible {
+  outline: 2px solid var(--creator-accent);
+  outline-offset: 4px;
+  border-radius: 1.4rem;
+}
+
+@keyframes canvas-node-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.canvas-node-enter {
+  animation: canvas-node-in 0.32s ease-out backwards;
+}
+
 @media (max-width: 767px) {
   .react-flow__minimap {
     display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas-node-enter {
+    animation: none;
   }
 }
 

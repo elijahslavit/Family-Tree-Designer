@@ -1,6 +1,5 @@
-import { CanvasSidebar } from "@/components/canvas/canvas-sidebar";
-import { CanvasRouteViewer } from "@/components/canvas/canvas-route-viewer";
-import { CreatorTreeShell } from "@/components/layouts/tree-shell";
+import { CanvasExperience } from "@/components/canvas/canvas-experience";
+import { creatorNavItems } from "@/components/layouts/tree-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { requireAccountSession } from "@/lib/auth/session";
 import {
@@ -39,34 +38,25 @@ export default async function CreatorCanvasPage({ searchParams }: CanvasPageProp
 
   return (
     <ThemeProvider layout={tree.themeLayout} skin={tree.themeSkin}>
-      <CreatorTreeShell
-        tree={tree}
-        activePath="/canvas"
-        main={
-          <CanvasRouteViewer
-            basePath="/canvas"
-            nodes={canvas.nodes}
-            edges={canvas.edges}
-            depth={canvas.depth}
-            selectedLineageId={lineageId}
-            selectedLineageName={selectedLineage?.name ?? null}
-            profilePathBase="/person"
-            focusLabel={canvas.focusPerson.fullName}
-          />
-        }
-        detail={
-          <CanvasSidebar
-            person={canvas.focusPerson}
-            profileHref={`/person/${personId}`}
-            basePath="/canvas"
-            depth={canvas.depth}
-            maxDepth={canvas.maxDepth}
-            visibleCount={canvas.nodes.length}
-            relatedCount={canvas.relatedCount}
-            lineages={canvas.availableLineages}
-            selectedLineageId={lineageId}
-          />
-        }
+      <CanvasExperience
+        nodes={canvas.nodes}
+        edges={canvas.edges}
+        basePath="/canvas"
+        profilePathBase="/person"
+        depth={canvas.depth}
+        maxDepth={canvas.maxDepth}
+        selectedLineageId={lineageId}
+        selectedLineageName={selectedLineage?.name ?? null}
+        lineages={canvas.availableLineages}
+        focusPerson={canvas.focusPerson}
+        profileHref={`/person/${personId}`}
+        relatedCount={canvas.relatedCount}
+        topBar={{
+          eyebrow: "Family Tree Designer",
+          title: tree.name,
+          navItems: creatorNavItems,
+          activeLabel: "Canvas",
+        }}
       />
     </ThemeProvider>
   );

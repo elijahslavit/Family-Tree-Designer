@@ -1,5 +1,4 @@
-import { CanvasSidebar } from "@/components/canvas/canvas-sidebar";
-import { CanvasRouteViewer } from "@/components/canvas/canvas-route-viewer";
+import { CanvasExperience } from "@/components/canvas/canvas-experience";
 import { getShowcaseCanvas } from "@/lib/showcase/pilot-showcase";
 import { getSyntheticPilotProject } from "@/lib/showcase/project";
 
@@ -13,9 +12,18 @@ export default async function PilotPreviewTreePage({ params, searchParams }: { p
   const canvas = await getShowcaseCanvas(project, personId, depth);
   const basePath = `/projects/${project.id}/preview`;
   return (
-    <div className="mx-auto grid max-w-[1500px] gap-5 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-8">
-      <CanvasRouteViewer nodes={canvas.nodes} edges={canvas.edges} basePath={`${basePath}/tree`} depth={canvas.depth} profilePathBase={`${basePath}/people`} focusLabel={canvas.focusPerson.fullName} />
-      <CanvasSidebar person={canvas.focusPerson} profileHref={`${basePath}/people/${canvas.focusPerson.id}`} basePath={`${basePath}/tree`} depth={canvas.depth} maxDepth={canvas.maxDepth} visibleCount={canvas.nodes.length} relatedCount={canvas.relatedCount} lineages={canvas.availableLineages} selectedLineageId={null} />
-    </div>
+    <CanvasExperience
+      nodes={canvas.nodes}
+      edges={canvas.edges}
+      basePath={`${basePath}/tree`}
+      profilePathBase={`${basePath}/people`}
+      depth={canvas.depth}
+      maxDepth={canvas.maxDepth}
+      lineages={canvas.availableLineages}
+      focusPerson={canvas.focusPerson}
+      profileHref={`${basePath}/people/${canvas.focusPerson.id}`}
+      relatedCount={canvas.relatedCount}
+      className="h-[calc(100dvh-7.5rem)] min-h-[560px]"
+    />
   );
 }

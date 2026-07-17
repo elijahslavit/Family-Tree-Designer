@@ -16,7 +16,7 @@ type ShellProps = {
   activePath?: string;
 };
 
-const creatorNavItems = [
+export const creatorNavItems = [
   { href: "/projects", label: "Projects" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/theme", label: "Theme" },

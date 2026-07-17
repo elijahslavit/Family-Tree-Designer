@@ -1,5 +1,13 @@
 # Themed Canvas — Approved Design Plan
 
+> **SUPERSEDED 2026-07-17.** Before any slice of this plan shipped, the owner redirected the
+> canvas to a diffui-style immersive engine (full-screen React Flow stage, floating panels,
+> pan/zoom, minimap) rolled out to all four canvas/tree routes — including the client tree
+> routes this plan targeted. The scrollable no-pan/zoom engine described below is therefore
+> not the current direction. The theme-as-data business model and the two theme identities
+> (Midnight Archive, Illuminated Keep) remain live ideas, now expected to ride on the new
+> engine as canvas skins (future task). See decisions.md for the record.
+
 Approved: 2026-07-15. Source of truth for the canvas-theme-worlds initiative.
 Shape/board artifact (directional authority): https://claude.ai/code/artifact/720a8dee-229f-47ba-8399-f5a1d95cb27f
 
