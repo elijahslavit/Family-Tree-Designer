@@ -87,9 +87,9 @@ describe("pilot showcase privacy boundary", () => {
       spouses: [],
       children: [],
     });
-    expect(displayNameOnly!.card.imagePath).toBe(
-      "/demo/pilot/meridian-family-histories-logo.svg",
-    );
+    // Consent covers the name only, so no portrait is exposed. A null path
+    // renders a monogram rather than leaking an image of any kind.
+    expect(displayNameOnly!.card.imagePath).toBeNull();
 
     expect(getShowcasePerson(project, "p19")).toBeNull();
   });

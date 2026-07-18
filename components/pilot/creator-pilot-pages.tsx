@@ -457,10 +457,10 @@ export function PilotImportPage({ project }: { project: PilotProject }) {
       </PrivacyCallout>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <PilotSection eyebrow="GEDCOM structure" title="Import or replace the synthetic file" description="The browser check below never sends a selected file. It demonstrates validation states safely.">
-          <PilotUploadControl kind="gedcom" />
+        <PilotSection eyebrow="GEDCOM structure" title="Import or replace the archive" description="Choosing a file parses it immediately and rebuilds this project's presentation around it.">
+          <PilotUploadControl kind="gedcom" projectRef={project.id} />
         </PilotSection>
-        <PilotSection eyebrow="Media intake" title="Send files to quarantine" description="Accepted format does not mean safe. Nothing appears in a preview, derivative, export, or client presentation before quarantine passes.">
+        <PilotSection eyebrow="Media intake" title="Photographs — not yet available" description="Format checking only. Uploading, quarantine scanning, and storage are not built, so no photograph can reach a client presentation in this build.">
           <PilotUploadControl kind="media" />
         </PilotSection>
       </div>
@@ -516,11 +516,11 @@ export function PilotCuratePage({ project }: { project: PilotProject }) {
     <>
       <PilotPageHeader eyebrow="State 4 · Curation" title="Shape the client’s opening moment" description="Turn structure into recognition and curiosity: one warm welcome, one focused family branch, and a small number of well-sourced stories." actions={<Link href={`/projects/${project.id}/review`} style={{ color: "#ffffff" }} className="inline-flex items-center gap-2 rounded-lg bg-[#263a31] px-4 py-2 text-sm font-semibold text-white">Open professional preview <ArrowRight className="h-4 w-4" /></Link>} />
       <PrivacyCallout>
-        Only media with passed quarantine status may be selected. Living minors are hidden; living adults expose only consented, minimized fields.
+        Living minors are hidden; living adults expose only consented, minimized fields. Photographs are not available in this build.
       </PrivacyCallout>
 
-      <PilotSection eyebrow="Welcome & brand" title="A curated book, not a database" description="Edits stay unpublished until a new revision is previewed, reviewed, explicitly approved, and published.">
-        <CurationEditor welcome={project.welcome} branding={project.branding} />
+      <PilotSection eyebrow="Welcome & brand" title="A curated book, not a database" description="Saving applies these details immediately to the preview and to anyone already invited. Review them before sharing a link.">
+        <CurationEditor projectRef={project.id} welcome={project.welcome} branding={project.branding} />
       </PilotSection>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">

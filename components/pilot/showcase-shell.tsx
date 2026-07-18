@@ -3,6 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import {
+  getShowcaseTheme,
+  showcaseThemeStyle,
+  type ShowcaseThemeId,
+} from "@/lib/themes/showcase-themes";
+
 export type ShowcaseBrand = {
   familyName: string;
   genealogistName: string;
@@ -14,13 +20,17 @@ export function ShowcaseShell({
   brand,
   basePath,
   viewerLabel,
+  themeId,
   children,
 }: {
   brand: ShowcaseBrand;
   basePath: string;
   viewerLabel: string;
+  themeId?: ShowcaseThemeId;
   children: ReactNode;
 }) {
+  const theme = getShowcaseTheme(themeId);
+
   const nav = [
     { href: basePath, label: "Welcome", icon: Home },
     { href: `${basePath}/tree`, label: "Family tree", icon: GitBranch },
@@ -30,19 +40,21 @@ export function ShowcaseShell({
 
   return (
     <div
-      className="min-h-screen bg-[#f8f4ea] text-[#2f2a22]"
-      style={{ "--showcase-accent": brand.accent } as React.CSSProperties}
+      data-skin={theme.skin}
+      data-showcase-theme={theme.id}
+      style={showcaseThemeStyle(theme)}
+      className="min-h-screen bg-[var(--sc-bg)] text-[var(--sc-ink)]"
     >
       <a
         href="#showcase-content"
-        className="sr-only z-50 rounded bg-white px-4 py-2 focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        className="sr-only z-50 rounded bg-[var(--sc-elevated)] px-4 py-2 focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
       >
         Skip to family story
       </a>
-      <header className="sticky top-0 z-30 border-b border-[#3c3325]/10 bg-[#fbf8f0]/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-[var(--sc-border)] bg-[var(--sc-header)] backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <Link href={basePath} className="flex min-w-0 items-center gap-3">
-            <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-[#3c3325]/15 bg-white">
+            <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-[var(--sc-border-strong)] bg-[var(--sc-elevated)]">
               <Image
                 src={brand.genealogistLogoPath}
                 alt=""
@@ -52,10 +64,10 @@ export function ShowcaseShell({
               />
             </span>
             <span className="min-w-0">
-              <span className="block truncate font-serif text-lg font-semibold leading-tight">
+              <span className="block truncate font-[family-name:var(--sc-display-font)] text-lg font-semibold leading-tight">
                 {brand.familyName}
               </span>
-              <span className="block truncate text-[10px] font-semibold uppercase tracking-[0.16em] text-[#766c5c]">
+              <span className="block truncate text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--sc-ink-muted)]">
                 Curated by {brand.genealogistName}
               </span>
             </span>
@@ -68,7 +80,7 @@ export function ShowcaseShell({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-[#665d50] transition-colors hover:bg-[#eee6d7] hover:text-[#2f2a22]"
+                  className="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-[var(--sc-ink-secondary)] transition-colors hover:bg-[var(--sc-accent-wash)] hover:text-[var(--sc-ink)]"
                 >
                   <Icon className="h-4 w-4" />
                   {item.label}
@@ -78,17 +90,24 @@ export function ShowcaseShell({
           </nav>
 
           <div className="flex items-center gap-2">
-            <span className="hidden items-center gap-2 rounded-full border border-[#3c3325]/10 bg-white px-3 py-2 text-xs text-[#665d50] lg:flex">
-              <ShieldCheck className="h-3.5 w-3.5 text-[#526b57]" />
+            <span className="hidden items-center gap-2 rounded-full border border-[var(--sc-border)] bg-[var(--sc-elevated)] px-3 py-2 text-xs text-[var(--sc-ink-secondary)] lg:flex">
+              <ShieldCheck className="h-3.5 w-3.5 text-[var(--sc-accent)]" />
               {viewerLabel}
             </span>
             <details className="relative md:hidden">
-              <summary className="grid h-10 w-10 cursor-pointer list-none place-items-center rounded-full border border-[#3c3325]/10 bg-white" aria-label="Open navigation">
+              <summary
+                className="grid h-10 w-10 cursor-pointer list-none place-items-center rounded-full border border-[var(--sc-border)] bg-[var(--sc-elevated)]"
+                aria-label="Open navigation"
+              >
                 <Menu className="h-4 w-4" />
               </summary>
-              <nav className="absolute right-0 top-12 grid w-52 gap-1 rounded-xl border border-[#3c3325]/10 bg-white p-2 shadow-xl">
+              <nav className="absolute right-0 top-12 grid w-52 gap-1 rounded-xl border border-[var(--sc-border)] bg-[var(--sc-elevated)] p-2 shadow-[var(--sc-shadow)]">
                 {nav.map((item) => (
-                  <Link key={item.href} href={item.href} className="rounded-lg px-3 py-2 text-sm hover:bg-[#f3ede2]">
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-lg px-3 py-2 text-sm hover:bg-[var(--sc-accent-wash)]"
+                  >
                     {item.label}
                   </Link>
                 ))}
@@ -100,8 +119,8 @@ export function ShowcaseShell({
 
       <main id="showcase-content">{children}</main>
 
-      <footer className="border-t border-[#3c3325]/10 bg-[#f1eadc]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-xs leading-5 text-[#706657] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+      <footer className="border-t border-[var(--sc-border)] bg-[var(--sc-footer)]">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-xs leading-5 text-[var(--sc-ink-muted)] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <p>This private family archive is shared only with invited recipients.</p>
           <p>Presented by {brand.genealogistName} · Powered by Family Tree Designer</p>
         </div>

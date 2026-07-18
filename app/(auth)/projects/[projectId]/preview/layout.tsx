@@ -25,14 +25,18 @@ export default async function PilotPreviewLayout({
 
   return (
     <div>
-      <div className="flex flex-col gap-2 border-b border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-950 sm:flex-row sm:items-center sm:justify-center">
+      <div
+        data-preview-banner
+        className="flex flex-col gap-2 border-b border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-950 sm:flex-row sm:items-center sm:justify-center"
+      >
         <strong>Authorized professional preview</strong>
-        <span>This renders the same privacy-filtered presentation DTO used for invited clients. Synthetic data only.</span>
+        <span>This renders the same privacy-filtered presentation the family sees. Nothing here is published.</span>
       </div>
       <ShowcaseShell
         brand={showcase.brand}
         basePath={basePath}
         viewerLabel="Genealogist preview"
+        themeId={project.branding.themeId}
       >
         {children}
       </ShowcaseShell>

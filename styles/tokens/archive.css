@@ -1,0 +1,82 @@
+/* Archive skin — the warm archival world of the client demo walk (landing dawn
+   atlas → hub → person profile → tree). Palette locked to the hub/landing:
+   parchment #E8DDC8, ivory #F5F1E8, sepia #8A6A43, brass #A67C52,
+   oxblood #6B3E36, heritage olive #6C7A5A, dusty indigo #435D7A.
+   Applied via data-skin="archive" on the showcase shell; only the token-driven
+   canvas responds — the hub/profile use their own literal colors. */
+[data-skin="archive"] {
+  --bg-primary: #efe6d4;
+  --bg-surface: #f6efe0;
+  --bg-elevated: #fbf6ec;
+  --bg-canvas: #e8ddc8;
+  --text-primary: #2a221c;
+  --text-secondary: #4c4137;
+  --text-muted: #7a6f63;
+  --text-inverse: #f5f1e8;
+  --accent-primary: #6b3e36;
+  --accent-hover: #7d4a40;
+  --accent-muted: rgba(107, 62, 54, 0.12);
+  --accent-text: #6b3e36;
+  --border-default: rgba(74, 56, 40, 0.16);
+  --border-strong: rgba(107, 62, 54, 0.34);
+  --border-muted: rgba(74, 56, 40, 0.09);
+  --color-success: #4f6f4a;
+  --color-warning: #a67c52;
+  --color-danger: #9c4a3f;
+  --color-info: #435d7a;
+  --rel-focus-border: rgba(107, 62, 54, 0.46);
+  --rel-focus-text: #6b3e36;
+  --rel-focus-bg: rgba(107, 62, 54, 0.14);
+  --rel-parent-border: rgba(67, 93, 122, 0.32);
+  --rel-parent-text: #3c5471;
+  --rel-parent-bg: rgba(67, 93, 122, 0.1);
+  --rel-ancestor-border: rgba(67, 93, 122, 0.3);
+  --rel-ancestor-text: #3c5471;
+  --rel-ancestor-bg: rgba(67, 93, 122, 0.09);
+  --rel-spouse-border: rgba(108, 122, 90, 0.34);
+  --rel-spouse-text: #566341;
+  --rel-spouse-bg: rgba(108, 122, 90, 0.12);
+  --rel-child-border: rgba(166, 124, 82, 0.36);
+  --rel-child-text: #8a6a43;
+  --rel-child-bg: rgba(166, 124, 82, 0.13);
+  --rel-descendant-border: rgba(166, 124, 82, 0.32);
+  --rel-descendant-text: #8a6a43;
+  --rel-descendant-bg: rgba(166, 124, 82, 0.11);
+  --rel-sibling-border: rgba(138, 106, 67, 0.3);
+  --rel-sibling-text: #7a5f38;
+  --rel-sibling-bg: rgba(138, 106, 67, 0.1);
+  --rel-default-border: rgba(74, 56, 40, 0.16);
+  --rel-default-text: #7a6f63;
+  --rel-default-bg: rgba(74, 56, 40, 0.05);
+  --font-heading: var(--font-display-parchment);
+  --font-body: var(--font-body-parchment);
+  --shadow-sm: 0 8px 18px rgba(74, 56, 40, 0.09);
+  --shadow-md: 0 16px 32px rgba(74, 56, 40, 0.13);
+  --shadow-lg: 0 24px 48px rgba(74, 56, 40, 0.2);
+  --shadow-node: 0 18px 36px rgba(74, 56, 40, 0.18);
+  --canvas-node-bg: #fbf6ec;
+  --canvas-node-highlight-bg: color-mix(in oklab, #fbf6ec 80%, var(--accent-primary));
+  --canvas-node-border: rgba(107, 62, 54, 0.18);
+  --canvas-node-text: #2a221c;
+  --canvas-edge: rgba(107, 62, 54, 0.3);
+  --canvas-sidebar-bg: rgba(251, 246, 236, 0.9);
+  --canvas-tooltip-bg: rgba(251, 246, 236, 0.98);
+  --canvas-avatar-bg: rgba(166, 124, 82, 0.14);
+  --canvas-controls-bg: rgba(251, 246, 236, 0.96);
+  --canvas-grid-color: rgba(138, 106, 67, 0.14);
+  --canvas-node-gradient: linear-gradient(135deg, rgba(166, 124, 82, 0.1), transparent);
+  --minimap-bg: rgba(251, 246, 236, 0.96);
+  --minimap-mask: rgba(232, 221, 200, 0.55);
+  --minimap-node: rgba(107, 62, 54, 0.4);
+}
+
+/* Aged-paper ground for the archive canvas: a warm parchment base plus a faint,
+   large-scale grain — legible behind scattered nodes, unlike the busy collage. */
+[data-skin="archive"] .canvas-stage {
+  background-color: var(--bg-canvas);
+  background-image:
+    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(166, 124, 82, 0.1), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: cover, 220px 220px;
+  background-blend-mode: normal, soft-light;
+}

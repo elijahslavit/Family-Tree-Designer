@@ -9,6 +9,7 @@ import {
   Images,
   KeyRound,
   LayoutDashboard,
+  Palette,
   ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
@@ -29,6 +30,7 @@ export type PilotWorkspaceProject = {
 const navigation = [
   { segment: "", label: "Overview", icon: LayoutDashboard },
   { segment: "intake", label: "Intake", icon: ClipboardCheck },
+  { segment: "theme", label: "Theme", icon: Palette },
   { segment: "import", label: "Import", icon: FileUp },
   { segment: "curate", label: "Curate", icon: Images },
   { segment: "review", label: "Review", icon: BookOpenText },

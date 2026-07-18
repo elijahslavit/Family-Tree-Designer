@@ -14,7 +14,9 @@ test("creator portfolio and professional preview are complete", async ({ page })
   await expect(page.getByRole("link", { name: /Discover an ancestor/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Browse a family branch/ })).toBeVisible();
   await expect(page.getByText(/Prepared for The Hart Family by Meridian Family Histories/)).toBeVisible();
-  await expect(page.getByText("Synthetic demonstration media")).toBeVisible();
+  // The presentation carries no "synthetic" watermark now that it renders real
+  // imported archives; the professional preview banner states the demo context.
+  await expect(page.getByText(/privacy-filtered presentation the family sees/)).toBeVisible();
 });
 
 test("invitation errors disclose no family content", async ({ page }) => {

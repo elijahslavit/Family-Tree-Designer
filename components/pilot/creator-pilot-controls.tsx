@@ -16,6 +16,7 @@ import {
   ShieldAlert,
   UserCheck,
 } from "lucide-react";
+import Link from "next/link";
 import { useRef, useState, useTransition } from "react";
 
 import { Badge } from "@/components/foundation/badge";
@@ -29,6 +30,11 @@ import {
   requestPilotExportAction,
   revokePilotRecipientAccessAction,
 } from "@/lib/pilot/actions";
+import {
+  importPilotGedcomAction,
+  updatePilotCurationAction,
+  updatePilotProjectDetailsAction,
+} from "@/lib/pilot/presentation-actions";
 import type {
   PilotBranding,
   PilotImportIssue,
@@ -39,6 +45,10 @@ import type {
   PilotReviewVersion,
   PilotWelcome,
 } from "@/lib/pilot/types";
+import {
+  getShowcaseTheme,
+  showcaseThemeStyle,
+} from "@/lib/themes/showcase-themes";
 import { cn } from "@/lib/utils/cn";
 
 function InlineNotice({
@@ -67,61 +77,72 @@ function InlineNotice({
 }
 
 export function LocalDraftForm({ project }: { project: PilotProject }) {
+  const [draft, setDraft] = useState({
+    title: project.title,
+    clientLabel: project.clientLabel,
+  });
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSaving, startSaving] = useTransition();
+
+  function save(event: React.FormEvent) {
+    event.preventDefault();
+    setError(null);
+    setSaved(false);
+
+    startSaving(async () => {
+      const result = await updatePilotProjectDetailsAction({
+        projectRef: project.id,
+        ...draft,
+      });
+
+      if (result.ok) {
+        setSaved(true);
+      } else {
+        setError(result.error);
+      }
+    });
+  }
 
   return (
-    <form
-      className="space-y-5"
-      onSubmit={(event) => {
-        event.preventDefault();
-        setSaved(true);
-      }}
-    >
+    <form className="space-y-5" onSubmit={save}>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="space-y-2 text-sm font-medium text-[#40382f]">
           Project title
-          <Input name="title" defaultValue={project.title} required />
+          <Input
+            value={draft.title}
+            onChange={(event) =>
+              setDraft((current) => ({ ...current, title: event.target.value }))
+            }
+            required
+            maxLength={120}
+          />
         </label>
         <label className="space-y-2 text-sm font-medium text-[#40382f]">
           Client label
-          <Input name="clientLabel" defaultValue={project.clientLabel} required />
-        </label>
-        <label className="space-y-2 text-sm font-medium text-[#40382f]">
-          Engagement type
-          <Select name="engagement" defaultValue="legacy">
-            <option value="legacy">Commissioned legacy history</option>
-            <option value="reunion">Family reunion presentation</option>
-            <option value="memorial">Memorial family history</option>
-          </Select>
-        </label>
-        <label className="space-y-2 text-sm font-medium text-[#40382f]">
-          Geographic scope
-          <Select name="region" defaultValue="us">
-            <option value="us">United States only</option>
-          </Select>
+          <Input
+            value={draft.clientLabel}
+            onChange={(event) =>
+              setDraft((current) => ({ ...current, clientLabel: event.target.value }))
+            }
+            required
+            maxLength={120}
+          />
         </label>
       </div>
 
-      <label className="block space-y-2 text-sm font-medium text-[#40382f]">
-        Internal delivery note
-        <Textarea
-          name="deliveryNote"
-          defaultValue="Concierge-assisted founding pilot. Client receives a private, branded showcase with one year of hosting."
-        />
-      </label>
-
-      {saved ? (
-        <InlineNotice>
-          Browser-only rehearsal captured. Refreshing this page discards the intake changes; no project record was mutated.
-        </InlineNotice>
-      ) : null}
+      {error ? <InlineNotice tone="danger">{error}</InlineNotice> : null}
+      {saved ? <InlineNotice>Project details saved.</InlineNotice> : null}
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="submit">
-          <Save className="h-4 w-4" />
-          Save intake draft
+        <Button type="submit" disabled={isSaving}>
+          {isSaving ? (
+            <LoaderCircle className="h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4" />
+          )}
+          {isSaving ? "Saving…" : "Save project details"}
         </Button>
-        <p className="text-xs text-[#746b5e]">Last synthetic update: today at 2:14 PM</p>
       </div>
     </form>
   );
@@ -132,27 +153,67 @@ type UploadState =
   | { status: "valid"; message: string }
   | { status: "invalid"; message: string };
 
-export function PilotUploadControl({ kind }: { kind: "gedcom" | "media" }) {
+export function PilotUploadControl({
+  kind,
+  projectRef,
+}: {
+  kind: "gedcom" | "media";
+  /** Required for GEDCOM, which writes into the project on selection. */
+  projectRef?: string;
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [upload, setUpload] = useState<UploadState>({ status: "idle" });
+  const [isImporting, startImport] = useTransition();
   const accept = kind === "gedcom" ? ".ged,.gedcom" : ".jpg,.jpeg,.png,.webp,.pdf";
+
+  function importGedcom(file: File) {
+    if (!projectRef) {
+      setUpload({
+        status: "invalid",
+        message: "This import control is not attached to a project.",
+      });
+      return;
+    }
+
+    startImport(async () => {
+      const formData = new FormData();
+      formData.set("projectRef", projectRef);
+      formData.set("file", file);
+
+      const result = await importPilotGedcomAction(formData);
+
+      if (!result.ok) {
+        setUpload({ status: "invalid", message: result.error });
+        return;
+      }
+
+      const hidden = result.hiddenLivingCount
+        ? ` ${result.hiddenLivingCount} living ${result.hiddenLivingCount === 1 ? "person is" : "people are"} hidden from the family presentation.`
+        : "";
+      const issues = result.issueCount
+        ? ` ${result.issueCount} ${result.issueCount === 1 ? "item needs" : "items need"} review below.`
+        : "";
+
+      setUpload({
+        status: "valid",
+        message: `Imported ${result.presentablePeopleCount} presentable people from ${result.familyCount} family groups.${hidden}${issues}`,
+      });
+    });
+  }
 
   function inspectFile(file?: File) {
     if (!file) return;
 
     if (kind === "gedcom") {
-      const valid = /\.(ged|gedcom)$/i.test(file.name);
-      setUpload(
-        valid
-          ? {
-              status: "valid",
-              message: `${file.name} is ready for a synthetic import review. No real client data is uploaded in this demo.`,
-            }
-          : {
-              status: "invalid",
-              message: "Choose a GEDCOM file ending in .ged or .gedcom.",
-            },
-      );
+      if (!/\.(ged|gedcom)$/i.test(file.name)) {
+        setUpload({
+          status: "invalid",
+          message: "Choose a GEDCOM file ending in .ged or .gedcom.",
+        });
+        return;
+      }
+
+      importGedcom(file);
       return;
     }
 
@@ -176,7 +237,7 @@ export function PilotUploadControl({ kind }: { kind: "gedcom" | "media" }) {
 
     setUpload({
       status: "valid",
-      message: `${file.name} passed the browser checks and would enter private quarantine. It cannot appear anywhere until signature validation and a named malware scan pass.`,
+      message: `${file.name} passes the browser format checks. Media intake is not built yet — the file was not uploaded or stored, and photographs cannot appear in a presentation in this build.`,
     });
   }
 
@@ -191,18 +252,27 @@ export function PilotUploadControl({ kind }: { kind: "gedcom" | "media" }) {
       />
       <button
         type="button"
+        disabled={isImporting}
         onClick={() => inputRef.current?.click()}
-        className="group flex min-h-40 w-full flex-col items-center justify-center rounded-xl border border-dashed border-[#bcb3a6] bg-[#faf8f3] p-6 text-center transition hover:border-[#637b68] hover:bg-[#f3f6f2] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#637b68]"
+        className="group flex min-h-40 w-full flex-col items-center justify-center rounded-xl border border-dashed border-[#bcb3a6] bg-[#faf8f3] p-6 text-center transition hover:border-[#637b68] hover:bg-[#f3f6f2] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#637b68] disabled:cursor-wait disabled:opacity-70"
       >
         <span className="grid h-11 w-11 place-items-center rounded-full bg-white text-[#4f6454] shadow-sm">
-          <FileUp className="h-5 w-5" />
+          {isImporting ? (
+            <LoaderCircle className="h-5 w-5 animate-spin" />
+          ) : (
+            <FileUp className="h-5 w-5" />
+          )}
         </span>
         <span className="mt-3 font-semibold text-[#302a23]">
-          {kind === "gedcom" ? "Choose a GEDCOM" : "Choose media for quarantine"}
+          {kind === "gedcom"
+            ? isImporting
+              ? "Reading the file…"
+              : "Choose a GEDCOM"
+            : "Choose media for quarantine"}
         </span>
         <span className="mt-1 max-w-lg text-xs leading-5 text-[#746b5e]">
           {kind === "gedcom"
-            ? "Synthetic files only until legal review is recorded complete."
+            ? "The file is read in memory on this machine and replaces the working archive."
             : "JPEG, PNG, WebP, or PDF · 20 MB each · 25 items / 500 MB per project"}
         </span>
       </button>
@@ -254,25 +324,53 @@ export function ImportIssueWorkbench({ issues }: { issues: PilotImportIssue[] })
 }
 
 export function CurationEditor({
+  projectRef,
   welcome,
   branding,
 }: {
+  projectRef: string;
   welcome: PilotWelcome;
   branding: PilotBranding;
 }) {
   const [draft, setDraft] = useState(welcome);
-  const [theme, setTheme] = useState(branding.themeId);
+  const [practice, setPractice] = useState({
+    practiceName: branding.practiceName,
+    byline: branding.byline,
+  });
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSaving, startSaving] = useTransition();
+  const theme = getShowcaseTheme(branding.themeId);
+
+  function save(event: React.FormEvent) {
+    event.preventDefault();
+    setError(null);
+    setSaved(false);
+
+    startSaving(async () => {
+      const result = await updatePilotCurationAction({
+        projectRef,
+        welcome: {
+          eyebrow: draft.eyebrow,
+          familyName: draft.familyName,
+          headline: draft.headline,
+          introduction: draft.introduction,
+          primaryActionLabel: draft.primaryActionLabel,
+        },
+        branding: practice,
+      });
+
+      if (result.ok) {
+        setSaved(true);
+      } else {
+        setError(result.error);
+      }
+    });
+  }
 
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)]">
-      <form
-        className="space-y-4"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setSaved(true);
-        }}
-      >
+      <form className="space-y-4" onSubmit={save}>
         <label className="block space-y-2 text-sm font-medium text-[#40382f]">
           Family name
           <Input
@@ -300,53 +398,91 @@ export function CurationEditor({
           />
         </label>
 
-        <fieldset className="space-y-3">
-          <legend className="text-sm font-medium text-[#40382f]">Presentation theme</legend>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {(["heirloom", "linen"] as const).map((value) => (
-              <label
-                key={value}
-                className={cn(
-                  "cursor-pointer rounded-xl border p-4",
-                  theme === value ? "border-[#637b68] bg-[#edf2ed]" : "border-black/10 bg-[#faf8f3]",
-                )}
-              >
-                <input
-                  type="radio"
-                  name="theme"
-                  value={value}
-                  checked={theme === value}
-                  onChange={() => setTheme(value)}
-                  className="sr-only"
-                />
-                <span className="font-semibold capitalize text-[#302a23]">{value}</span>
-                <span className="mt-1 block text-xs leading-5 text-[#746b5e]">
-                  {value === "heirloom" ? "Deep green, warm paper, editorial serif." : "Airy neutrals with restrained archival detail."}
-                </span>
-              </label>
-            ))}
-          </div>
+        <fieldset className="space-y-4 rounded-xl border border-black/10 bg-[#faf8f3] p-4">
+          <legend className="px-1 text-sm font-medium text-[#40382f]">
+            Your credit on this archive
+          </legend>
+          <label className="block space-y-2 text-sm font-medium text-[#40382f]">
+            Practice name
+            <Input
+              value={practice.practiceName}
+              onChange={(event) =>
+                setPractice((current) => ({ ...current, practiceName: event.target.value }))
+              }
+              required
+              maxLength={90}
+            />
+            <span className="block text-[11px] font-normal text-[#82796d]">
+              Appears to the family as “Curated by {practice.practiceName || "…"}”.
+            </span>
+          </label>
+          <label className="block space-y-2 text-sm font-medium text-[#40382f]">
+            Byline
+            <Input
+              value={practice.byline}
+              onChange={(event) =>
+                setPractice((current) => ({ ...current, byline: event.target.value }))
+              }
+              required
+              maxLength={140}
+            />
+          </label>
         </fieldset>
 
-        {saved ? <InlineNotice>Browser-only curation rehearsal saved in this view. Refreshing discards it; the synthetic lifecycle revision was not changed.</InlineNotice> : null}
-        <Button type="submit">
-          <Save className="h-4 w-4" />
-          Save unpublished revision
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-[#faf8f3] px-4 py-3">
+          <span className="text-sm text-[#40382f]">
+            Theme: <strong className="font-semibold">{theme.name}</strong>
+          </span>
+          <Link
+            href={`/projects/${projectRef}/theme`}
+            className="text-sm font-semibold text-[#3d5a49] underline underline-offset-2"
+          >
+            Change theme
+          </Link>
+        </div>
+
+        {error ? <InlineNotice tone="danger">{error}</InlineNotice> : null}
+        {saved ? (
+          <InlineNotice>
+            Saved. The preview and any invited family members now see these details.
+          </InlineNotice>
+        ) : null}
+        <Button type="submit" disabled={isSaving}>
+          {isSaving ? (
+            <LoaderCircle className="h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4" />
+          )}
+          {isSaving ? "Saving…" : "Save presentation details"}
         </Button>
       </form>
 
-      <div className="overflow-hidden rounded-2xl border border-black/10 bg-[#24362d] text-white shadow-sm">
-        <div className="relative min-h-[420px] bg-[url('/demo/pilot/hart-family-hero.svg')] bg-cover bg-center p-6">
-          <div className="absolute inset-0 bg-gradient-to-t from-[#17251e]/95 via-[#17251e]/55 to-transparent" />
-          <div className="relative flex min-h-[370px] flex-col justify-end">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70">{branding.practiceName}</p>
-            <p className="mt-3 text-sm text-white/75">{draft.eyebrow}</p>
-            <h3 className="mt-2 max-w-md font-serif text-4xl leading-tight text-white">{draft.headline || "Untitled welcome"}</h3>
-            <p className="mt-3 line-clamp-3 max-w-md text-sm leading-6 text-white/80">{draft.introduction}</p>
-            <span className="mt-5 inline-flex w-fit rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#24362d]">
-              {draft.primaryActionLabel}
-            </span>
-          </div>
+      {/* Live in the selected theme, so the words are judged where they land. */}
+      <div
+        // data-skin is required as well as the tokens: global rules colour
+        // headings from --text-primary, which would otherwise come from the
+        // surrounding workspace and render dark on a dark theme.
+        data-skin={theme.skin}
+        style={showcaseThemeStyle(theme)}
+        className="overflow-hidden rounded-2xl border border-black/10 shadow-sm"
+      >
+        <div className="flex h-full min-h-[420px] flex-col justify-end bg-[var(--sc-surface)] p-6 text-[var(--sc-ink)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--sc-ink-muted)]">
+            Curated by {practice.practiceName || "your practice"}
+          </p>
+          <p className="mt-3 text-sm text-[var(--sc-ink-secondary)]">{draft.eyebrow}</p>
+          <h3 className="mt-2 max-w-md font-serif text-4xl leading-tight">
+            {draft.familyName || "Untitled family"}
+          </h3>
+          <p className="mt-2 max-w-md font-serif text-xl leading-snug text-[var(--sc-ink-secondary)]">
+            {draft.headline || "Untitled welcome"}
+          </p>
+          <p className="mt-3 line-clamp-3 max-w-md text-sm leading-6 text-[var(--sc-ink-secondary)]">
+            {draft.introduction}
+          </p>
+          <span className="mt-5 inline-flex w-fit rounded-lg bg-[var(--sc-accent)] px-4 py-2 text-sm font-semibold text-[var(--sc-accent-contrast)]">
+            {draft.primaryActionLabel}
+          </span>
         </div>
       </div>
     </div>

@@ -744,7 +744,9 @@ function createPipelineProject(input: {
     id: input.id,
     slug: input.slug,
     portfolioId: PORTFOLIO_ID,
-    treeId: "tree-hart",
+    // Each project owns its own archive; importing for one client must never
+    // overwrite another's. Only the flagship Hart project uses the seeded tree.
+    treeId: `tree-${input.id}`,
     title: input.title,
     clientLabel: input.clientLabel,
     focalPersonId: input.focalPersonId,

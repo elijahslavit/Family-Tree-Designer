@@ -1,4 +1,5 @@
 import { CanvasExperience } from "@/components/canvas/canvas-experience";
+import { ShowcaseEmpty } from "@/components/pilot/showcase-empty";
 import { getShowcaseAccess } from "@/lib/showcase/access";
 import { getShowcaseCanvas } from "@/lib/showcase/pilot-showcase";
 
@@ -12,6 +13,16 @@ export default async function PrivateTreePage({ params, searchParams }: { params
   const depth = Number.isFinite(requestedDepth) ? Math.min(2, Math.max(1, requestedDepth)) : 1;
   const canvas = await getShowcaseCanvas(access.project, personId, depth);
   const basePath = `/s/${access.project.slug}`;
+
+  if (!canvas) {
+    return (
+      <ShowcaseEmpty
+        title="The family tree is not ready yet"
+        description="Your archive is still being prepared. The family tree will appear here once the records are in place."
+      />
+    );
+  }
+
   return (
     <CanvasExperience
       nodes={canvas.nodes}

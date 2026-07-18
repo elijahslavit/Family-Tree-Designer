@@ -2,6 +2,7 @@ import { createHash, randomBytes, randomUUID } from "node:crypto";
 
 import { z } from "zod";
 
+import { seedTreeBundleFromDemo } from "@/lib/data/demo-store";
 import { createPilotDemoWorkspace } from "@/lib/pilot/demo";
 import { isDemoMode } from "@/lib/runtime";
 import {
@@ -10,13 +11,16 @@ import {
   type PilotActorRole,
   type PilotAuditEvent,
   type PilotAuditEventType,
+  type PilotBranding,
   type PilotChecklistKey,
+  type PilotImportIssue,
   type PilotInvitePurpose,
   type PilotInviteRecord,
   type PilotProject,
   type PilotPublishGateResult,
   type PilotReviewItem,
   type PilotSessionRecord,
+  type PilotWelcome,
   type PilotWorkflowStatus,
   type PilotWorkspace,
 } from "@/lib/pilot/types";
@@ -90,6 +94,13 @@ function mutableWorkspace() {
 }
 
 function prepareWorkspace(workspace: PilotWorkspace) {
+  // Each project owns its own archive. The synthetic demonstration projects sit
+  // at mid-workflow states that imply records already exist, so seed theirs
+  // rather than leaving a genealogist clicking into empty pages.
+  for (const project of workspace.projects) {
+    seedTreeBundleFromDemo(project.treeId);
+  }
+
   // Backfill the synthetic seed generated before review capabilities were
   // explicit. Persisted production records must be migrated, never rebound at
   // request time, so every credential is stable for its entire lifetime.
@@ -385,6 +396,228 @@ export function setPilotProjectStatus(input: {
     summary: `Project moved from ${PILOT_WORKFLOW_LABELS[previousStatus]} to ${PILOT_WORKFLOW_LABELS[data.status]}.`,
     metadata: { from: previousStatus, to: data.status },
   });
+  return snapshot(project);
+}
+
+/**
+ * Record a real GEDCOM import against the project. The people themselves live in
+ * the tree bundle; this captures what the genealogist needs to see and approve.
+ */
+export function commitPilotGedcomImport(input: {
+  projectRef: string;
+  actorId: string;
+  fileName: string;
+  peopleCount: number;
+  familyCount: number;
+  sourceCount: number;
+  focalPersonId: string | null;
+  hiddenLivingCount: number;
+  issues: PilotImportIssue[];
+  /** Welcome copy derived from the imported data, replacing any demo text. */
+  welcome?: Partial<PilotWelcome>;
+  now?: string;
+}) {
+  const data = mutationBaseSchema
+    .extend({
+      fileName: z.string().trim().min(1).max(260),
+      peopleCount: z.number().int().min(0),
+      familyCount: z.number().int().min(0),
+      sourceCount: z.number().int().min(0),
+      focalPersonId: z.string().trim().min(1).max(160).nullable(),
+      hiddenLivingCount: z.number().int().min(0),
+    })
+    .parse(input);
+  const project = findMutableProject(data.projectRef);
+  requireActor(project, data.actorId, ["operator", "genealogist"], { now: data.now });
+  requireArchiveOnline(project);
+
+  const at = nowIso(data.now);
+  const issues = [...input.issues];
+
+  // Scope is a commercial promise, not a technical limit. Surface the overage
+  // rather than refusing the file, so the genealogist can decide.
+  if (data.peopleCount > project.scope.maxPeople) {
+    issues.unshift({
+      id: randomUUID(),
+      subjectType: "person",
+      subjectId: data.focalPersonId ?? "import",
+      severity: "blocking",
+      title: "Import exceeds the agreed project scope",
+      description: `${data.peopleCount} people were imported against a ${project.scope.maxPeople} person scope. Reduce the file or quote the additional work before continuing.`,
+      status: "open",
+    });
+  }
+
+  project.importSummary = {
+    importJobId: randomUUID(),
+    fileName: data.fileName,
+    importedAt: at,
+    stagingExpiresAt: new Date(
+      new Date(at).getTime() + 24 * 60 * 60 * 1000,
+    ).toISOString(),
+    parserStatus: "parsed",
+    sourceSystem: "gedcom",
+    peopleCount: data.peopleCount,
+    familyCount: data.familyCount,
+    sourceCount: data.sourceCount,
+    focalPersonId: data.focalPersonId,
+    issues,
+  };
+
+  project.counts = {
+    ...project.counts,
+    people: data.peopleCount,
+    unresolvedImportIssues: issues.filter((issue) => issue.status === "open").length,
+  };
+
+  if (data.focalPersonId) {
+    project.focalPersonId = data.focalPersonId;
+  }
+
+  // Demo stories, media, and welcome copy describe a different family entirely.
+  // Leaving them in place would show one client another family's material.
+  project.stories = [];
+  project.media = [];
+  project.consents = [];
+  project.counts = { ...project.counts, mediaItems: 0, mediaBytes: 0, featuredStories: 0 };
+  project.welcome = {
+    ...project.welcome,
+    ...input.welcome,
+    heroMediaId: null,
+  };
+
+  appendAudit(project, {
+    actorId: data.actorId,
+    type: "gedcom_imported",
+    occurredAt: at,
+    summary: `Imported ${data.peopleCount} people and ${data.familyCount} family groups from ${data.fileName}.`,
+    metadata: {
+      fileName: data.fileName,
+      people: data.peopleCount,
+      families: data.familyCount,
+      hiddenLiving: data.hiddenLivingCount,
+      issues: issues.length,
+    },
+  });
+
+  return snapshot(project);
+}
+
+/** Rename the project and the client it belongs to. Internal labels only. */
+export function updatePilotProjectDetails(input: {
+  projectRef: string;
+  actorId: string;
+  title: string;
+  clientLabel: string;
+  now?: string;
+}) {
+  const data = mutationBaseSchema
+    .extend({
+      title: z.string().trim().min(1).max(120),
+      clientLabel: z.string().trim().min(1).max(120),
+    })
+    .parse(input);
+  const project = findMutableProject(data.projectRef);
+  requireActor(project, data.actorId, ["operator", "genealogist"], { now: data.now });
+  requireArchiveOnline(project);
+
+  const at = nowIso(data.now);
+  project.title = data.title;
+  project.clientLabel = data.clientLabel;
+
+  appendAudit(project, {
+    actorId: data.actorId,
+    type: "curation_updated",
+    occurredAt: at,
+    summary: `Project details updated to ${data.title}.`,
+    metadata: { title: data.title, clientLabel: data.clientLabel },
+  });
+
+  return snapshot(project);
+}
+
+/**
+ * Save the words the family reads first, and the practice name credited beneath
+ * them. Applies to the live presentation immediately — there is no separate
+ * draft copy, so callers must not describe this as an unpublished rehearsal.
+ */
+export function updatePilotCuration(input: {
+  projectRef: string;
+  actorId: string;
+  welcome: Pick<
+    PilotWelcome,
+    "eyebrow" | "familyName" | "headline" | "introduction" | "primaryActionLabel"
+  >;
+  branding: Pick<PilotBranding, "practiceName" | "byline">;
+  now?: string;
+}) {
+  const data = mutationBaseSchema
+    .extend({
+      welcome: z.object({
+        eyebrow: z.string().trim().min(1).max(60),
+        familyName: z.string().trim().min(1).max(90),
+        headline: z.string().trim().min(1).max(90),
+        introduction: z.string().trim().min(1).max(600),
+        primaryActionLabel: z.string().trim().min(1).max(40),
+      }),
+      branding: z.object({
+        practiceName: z.string().trim().min(1).max(90),
+        byline: z.string().trim().min(1).max(140),
+      }),
+    })
+    .parse(input);
+  const project = findMutableProject(data.projectRef);
+  requireActor(project, data.actorId, ["operator", "genealogist"], { now: data.now });
+  requireArchiveOnline(project);
+
+  const at = nowIso(data.now);
+  project.welcome = { ...project.welcome, ...data.welcome };
+  project.branding = { ...project.branding, ...data.branding };
+
+  appendAudit(project, {
+    actorId: data.actorId,
+    type: "curation_updated",
+    occurredAt: at,
+    summary: `Presentation details updated for ${data.welcome.familyName}.`,
+    metadata: {
+      familyName: data.welcome.familyName,
+      practiceName: data.branding.practiceName,
+    },
+  });
+
+  return snapshot(project);
+}
+
+/** Choose which presentation world the family sees. */
+export function setPilotProjectTheme(input: {
+  projectRef: string;
+  actorId: string;
+  themeId: PilotBranding["themeId"];
+  now?: string;
+}) {
+  const data = mutationBaseSchema
+    .extend({ themeId: z.enum(["heirloom", "linen"]) })
+    .parse(input);
+  const project = findMutableProject(data.projectRef);
+  requireActor(project, data.actorId, ["operator", "genealogist"], { now: data.now });
+  requireArchiveOnline(project);
+
+  if (project.branding.themeId === data.themeId) {
+    return snapshot(project);
+  }
+
+  const at = nowIso(data.now);
+  const previous = project.branding.themeId;
+  project.branding = { ...project.branding, themeId: data.themeId };
+
+  appendAudit(project, {
+    actorId: data.actorId,
+    type: "theme_selected",
+    occurredAt: at,
+    summary: `Presentation theme changed from ${previous} to ${data.themeId}.`,
+    metadata: { from: previous, to: data.themeId },
+  });
+
   return snapshot(project);
 }
 

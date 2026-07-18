@@ -371,6 +371,9 @@ export interface PilotDeletionRequest {
 export type PilotAuditEventType =
   | "project_status_changed"
   | "checklist_updated"
+  | "gedcom_imported"
+  | "theme_selected"
+  | "curation_updated"
   | "media_quarantine_passed"
   | "media_quarantine_failed"
   | "review_submitted"

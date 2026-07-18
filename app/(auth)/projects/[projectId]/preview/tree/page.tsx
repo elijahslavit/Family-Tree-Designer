@@ -1,4 +1,5 @@
 import { CanvasExperience } from "@/components/canvas/canvas-experience";
+import { ShowcaseEmpty } from "@/components/pilot/showcase-empty";
 import { getShowcaseCanvas } from "@/lib/showcase/pilot-showcase";
 import { getSyntheticPilotProject } from "@/lib/showcase/project";
 
@@ -11,6 +12,16 @@ export default async function PilotPreviewTreePage({ params, searchParams }: { p
   const depth = Number.isFinite(requestedDepth) ? Math.min(2, Math.max(1, requestedDepth)) : 1;
   const canvas = await getShowcaseCanvas(project, personId, depth);
   const basePath = `/projects/${project.id}/preview`;
+
+  if (!canvas) {
+    return (
+      <ShowcaseEmpty
+        title="The family tree is not ready yet"
+        description="Once family records are imported, the tree appears here with the branches this presentation focuses on."
+      />
+    );
+  }
+
   return (
     <CanvasExperience
       nodes={canvas.nodes}

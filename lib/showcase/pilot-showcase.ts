@@ -1,8 +1,9 @@
 import type { Edge, Node } from "@xyflow/react";
 
 import type { ShowcasePersonCard, ShowcaseStoryCard } from "@/components/pilot/showcase-home";
-import { getDemoStore } from "@/lib/data/demo-store";
+import { getTreeBundle } from "@/lib/data/demo-store";
 import { getCanvasNeighborhoodFromBundle, getPersonViewFromBundle } from "@/lib/data/tree-selectors";
+import { extractYear } from "@/lib/import/living-inference";
 import type { PilotMediaAsset, PilotProject, PilotStory } from "@/lib/pilot/types";
 import type { Person, PersonViewModel } from "@/lib/types";
 
@@ -19,22 +20,22 @@ export type PilotShowcaseData = {
     accent: string;
   };
   heroPath: string;
-  focalPerson: ShowcasePersonCard;
+  /** Null before anything has been imported, which renders an empty state. */
+  focalPerson: ShowcasePersonCard | null;
   people: ShowcasePersonCard[];
   stories: ShowcaseStoryCard[];
   sourcePreviewPath: string;
+  /** Null when nothing privacy-cleared cites a source, which hides the record rail. */
+  featuredSourceId: string | null;
 };
 
 export function buildPilotShowcase(project: PilotProject, basePath: string): PilotShowcaseData {
-  const bundle = getDemoStore();
+  const bundle = getTreeBundle(project.treeId);
   const visiblePeople = bundle.people.filter((person) => canShowPerson(project, person));
   const people = visiblePeople.map((person) => personCard(project, person));
+  // A project with no import yet is a normal state, not an error.
   const focalPerson =
-    people.find((person) => person.id === project.focalPersonId) ?? people[0];
-
-  if (!focalPerson) {
-    throw new Error("The pilot presentation has no privacy-cleared focal person.");
-  }
+    people.find((person) => person.id === project.focalPersonId) ?? people[0] ?? null;
 
   const hero = project.media.find((asset) => asset.id === project.welcome.heroMediaId);
 
@@ -60,11 +61,16 @@ export function buildPilotShowcase(project: PilotProject, basePath: string): Pil
         project,
         project.media.find((asset) => asset.id === "media-reunion-circular"),
       ) ?? genericMediaPlaceholder,
+    // Only offer a record the viewer can actually open. A freshly imported
+    // GEDCOM carries no cited sources, so the rail stays hidden.
+    featuredSourceId:
+      bundle.sources.find((source) => getShowcaseSource(project, source.id))?.id ??
+      null,
   };
 }
 
 export function getShowcasePerson(project: PilotProject, personId: string) {
-  const bundle = getDemoStore();
+  const bundle = getTreeBundle(project.treeId);
   const raw = bundle.people.find((person) => person.id === personId);
 
   if (!raw || !canShowPerson(project, raw)) {
@@ -94,7 +100,7 @@ export function getShowcaseStory(project: PilotProject, storyId: string) {
     return null;
   }
 
-  const bundle = getDemoStore();
+  const bundle = getTreeBundle(project.treeId);
   const people = story.personIds
     .map((personId) => bundle.people.find((person) => person.id === personId))
     .filter(
@@ -111,7 +117,7 @@ export function getShowcaseStory(project: PilotProject, storyId: string) {
 }
 
 export function getShowcaseSource(project: PilotProject, sourceId: string) {
-  const bundle = getDemoStore();
+  const bundle = getTreeBundle(project.treeId);
   const source = bundle.sources.find((candidate) => candidate.id === sourceId);
 
   if (!source) {
@@ -169,8 +175,8 @@ export async function getShowcaseCanvas(
   depth: number;
   maxDepth: number;
   availableLineages: ReturnType<typeof getAllowedLineages>;
-}> {
-  const bundle = getDemoStore();
+} | null> {
+  const bundle = getTreeBundle(project.treeId);
   const allowedPersonIds = new Set(
     bundle.people
       .filter((person) => canShowRelationship(project, person))
@@ -182,8 +188,9 @@ export async function getShowcaseCanvas(
       ? project.focalPersonId
       : [...allowedPersonIds][0];
 
+  // Nothing imported yet, or everyone present is living and unconsented.
   if (!safeFocusId) {
-    throw new Error("No privacy-cleared person is available for the family tree.");
+    return null;
   }
 
   const result = await getCanvasNeighborhoodFromBundle({
@@ -195,7 +202,7 @@ export async function getShowcaseCanvas(
   });
 
   if (!result) {
-    throw new Error("Unable to build the focused family tree.");
+    return null;
   }
 
   const allowedNodeIds = new Set<string>();
@@ -275,7 +282,7 @@ function canShowStory(project: PilotProject, story: PilotStory) {
     return false;
   }
 
-  const bundle = getDemoStore();
+  const bundle = getTreeBundle(project.treeId);
   return story.personIds.every((personId) => {
     const person = bundle.people.find((candidate) => candidate.id === personId);
     return Boolean(person && canShowStorySubject(project, person));
@@ -337,23 +344,36 @@ function personCard(project: PilotProject, person: Person): ShowcasePersonCard {
       candidate.id !== project.welcome.heroMediaId,
   );
 
+  const portraitAllowed =
+    !person.isLiving || hasLivingFieldConsent(project, person, "portrait");
+
   return {
     id: person.id,
     name: person.fullName,
-    years: person.isLiving
-      ? "Living"
-      : `${person.birthDateNormalized?.slice(0, 4) ?? "Unknown"}–${
-          person.deathDateNormalized?.slice(0, 4) ?? "Unknown"
-        }`,
+    years: person.isLiving ? "Living" : lifespan(person),
     summary:
       person.isLiving && !hasLivingFieldConsent(project, person, "story")
         ? "Living details are intentionally minimized."
         : person.summary ?? "A member of this family branch.",
-    imagePath:
-      !person.isLiving || hasLivingFieldConsent(project, person, "portrait")
-        ? safeDisplayPath(project, asset) ?? fallbackPortrait
-        : fallbackPortrait,
+    // Null renders a monogram. Never fall back to the practice logo, which
+    // reads as a broken portrait rather than an absent one.
+    imagePath: portraitAllowed ? safeDisplayPath(project, asset) ?? null : null,
   };
+}
+
+/**
+ * Imported GEDCOM dates are free text and rarely normalized, so fall back to the
+ * year within the raw value before giving up on a lifespan.
+ */
+function lifespan(person: Person) {
+  const birth = person.birthDateNormalized?.slice(0, 4) ?? extractYear(person.birthDateText);
+  const death = person.deathDateNormalized?.slice(0, 4) ?? extractYear(person.deathDateText);
+
+  if (!birth && !death) {
+    return "Dates unrecorded";
+  }
+
+  return `${birth ?? "?"}–${death ?? "?"}`;
 }
 
 function storyCard(project: PilotProject, story: PilotStory): ShowcaseStoryCard {
@@ -384,7 +404,7 @@ export function safeDisplayPath(
     return null;
   }
 
-  const bundle = getDemoStore();
+  const bundle = getTreeBundle(project.treeId);
   const linkedPeopleAreCleared = asset.linkedPersonIds.every((personId) => {
     const person = bundle.people.find((candidate) => candidate.id === personId);
     if (!person) {
@@ -410,7 +430,9 @@ export function safeDisplayPath(
 }
 
 function minimizeLivingCanvasNode(project: PilotProject, node: Node): Node {
-  const person = getDemoStore().people.find((candidate) => candidate.id === node.id);
+  const person = getTreeBundle(project.treeId).people.find(
+    (candidate) => candidate.id === node.id,
+  );
   if (!person?.isLiving) {
     return node;
   }
@@ -432,7 +454,7 @@ function minimizeLivingCanvasNode(project: PilotProject, node: Node): Node {
 }
 
 function getAllowedLineages(project: PilotProject) {
-  const bundle = getDemoStore();
+  const bundle = getTreeBundle(project.treeId);
   const visibleIds = new Set(
     bundle.people
       .filter((person) => canShowRelationship(project, person))

@@ -26,6 +26,7 @@ export default async function PilotPreviewPage({
       people={showcase.people}
       stories={showcase.stories}
       sourcePreviewPath={showcase.sourcePreviewPath}
+      featuredSourceId={showcase.featuredSourceId}
     />
   );
 }
