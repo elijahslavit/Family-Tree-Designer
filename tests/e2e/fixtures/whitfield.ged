@@ -1,0 +1,82 @@
+0 HEAD
+1 SOUR RootsMagic
+2 NAME RootsMagic
+2 VERS 7.5.9.0
+1 GEDC
+2 VERS 5.5.1
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Thomas Alfred /Whitfield/
+1 SEX M
+1 BIRT
+2 DATE 14 MAR 1836
+2 PLAC Kendal, Westmorland, England
+1 DEAT
+2 DATE 2 NOV 1901
+2 PLAC Pittsburgh, Allegheny, Pennsylvania
+1 NOTE Emigrated in 1859 and worked the rolling mills for thirty years.
+0 @I2@ INDI
+1 NAME Margaret Ellen /Doyle/
+1 SEX F
+1 BIRT
+2 DATE ABT 1841
+2 PLAC County Cork, Ireland
+1 NOTE No death record has ever been located for Margaret.
+0 @I3@ INDI
+1 NAME James Whitfield /Whitfield/ Jr
+1 SEX M
+1 BIRT
+2 DATE 1863
+2 PLAC Pittsburgh, Pennsylvania
+0 @I4@ INDI
+1 NAME Sarah /Whitfield/
+1 SEX F
+1 BIRT
+2 DATE 22 JUL 1867
+0 @I5@ INDI
+1 NAME Infant /Whitfield/
+1 SEX U
+0 @I6@ INDI
+1 NAME Robert Doyle /Whitfield/
+1 SEX M
+1 BIRT
+2 DATE 3 JAN 1892
+1 DEAT
+2 DATE 1918
+2 PLAC Meuse-Argonne, France
+0 @I7@ INDI
+1 NAME Eleanor /Whitfield/
+1 SEX F
+1 BIRT
+2 DATE 1955
+0 @I8@ INDI
+1 NAME Michael /Whitfield/
+1 SEX M
+1 BIRT
+2 DATE 1988
+0 @I9@ INDI
+1 NAME Sarah /Whitfield/
+1 SEX F
+1 BIRT
+2 DATE 1994
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 MARR
+2 DATE 8 JUN 1861
+2 PLAC Pittsburgh, Pennsylvania
+1 CHIL @I3@
+1 CHIL @I4@
+1 CHIL @I5@
+0 @F2@ FAM
+1 HUSB @I3@
+1 CHIL @I6@
+0 @F3@ FAM
+1 HUSB @I6@
+1 CHIL @I7@
+0 @F4@ FAM
+1 HUSB @I7@
+1 CHIL @I8@
+1 CHIL @I9@
+1 CHIL @I99@
+0 TRLR

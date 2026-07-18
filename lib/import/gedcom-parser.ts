@@ -1,3 +1,4 @@
+import { inferLivingStatus } from "@/lib/import/living-inference";
 import { createReviewIssue } from "@/lib/import/review";
 import type {
   EventRecord,
@@ -8,13 +9,17 @@ import type {
   ReviewIssue,
 } from "@/lib/types";
 
-type ParsedGedcomPayload = {
+export type ParsedGedcomPayload = {
   people: Person[];
   families: Family[];
   familyChildren: FamilyChild[];
   events: EventRecord[];
   externalIds: ExternalId[];
   issues: ReviewIssue[];
+  /** People no date evidence could reach; hidden as possibly living. */
+  undatedPersonIds: string[];
+  /** People with no death record who are old enough to be presumed deceased. */
+  presumedDeceasedCount: number;
 };
 
 type GedcomPersonRecord = {
@@ -41,13 +46,35 @@ function sanitize(value: string | undefined) {
   return value?.replace(/\0/g, "").trim() ?? "";
 }
 
+/**
+ * GEDCOM delimits the surname with slashes: "John Michael /Van Dyke/ Jr".
+ * Honour that when present; fall back to a first-word split when it is missing.
+ */
 function parseName(rawName: string) {
-  const clean = sanitize(rawName).replaceAll("/", "").trim();
-  const parts = clean.split(/\s+/);
+  const raw = sanitize(rawName);
+  const delimited = raw.match(/^([^/]*)\/([^/]*)\/(.*)$/);
+
+  if (delimited) {
+    const givenName = sanitize(delimited[1]);
+    const surname = sanitize(delimited[2]);
+    const suffix = sanitize(delimited[3]);
+    const fullName = [givenName, surname, suffix].filter(Boolean).join(" ");
+
+    return {
+      givenName: givenName || "Unknown",
+      surname: surname || "Unknown",
+      suffix: suffix || null,
+      fullName: fullName || "Unknown Person",
+    };
+  }
+
+  const clean = raw.replaceAll("/", "").trim();
+  const parts = clean.split(/\s+/).filter(Boolean);
 
   return {
     givenName: parts[0] ?? "Unknown",
     surname: parts.slice(1).join(" ") || "Unknown",
+    suffix: null,
     fullName: clean || "Unknown Person",
   };
 }
@@ -199,7 +226,7 @@ export function parseGedcomText({
       givenName: name.givenName,
       surname: name.surname,
       fullName: name.fullName,
-      suffix: null,
+      suffix: name.suffix,
       gender:
         record.sex === "M"
           ? "male"
@@ -342,12 +369,30 @@ export function parseGedcomText({
     }
   });
 
+  // A DEAT tag is not the only evidence of death. Resolve living status against
+  // the whole graph, otherwise undated ancestors stay hidden from the family.
+  const living = inferLivingStatus({ people, families, familyChildren, events });
+
+  if (living.undatedPersonIds.length) {
+    issues.push(
+      createReviewIssue(
+        treeId,
+        "person",
+        living.undatedPersonIds[0]!,
+        `${living.undatedPersonIds.length} people carry no date evidence and stay hidden as possibly living until reviewed.`,
+        "missing_data",
+      ),
+    );
+  }
+
   return {
-    people,
+    people: living.people,
     families,
     familyChildren,
     events,
     externalIds,
     issues,
+    undatedPersonIds: living.undatedPersonIds,
+    presumedDeceasedCount: living.presumedDeceasedCount,
   };
 }
