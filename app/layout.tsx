@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, EB_Garamond, Spectral } from "next/font/google";
+import { Cormorant_Garamond, EB_Garamond, Instrument_Sans, Spectral } from "next/font/google";
 import Script from "next/script";
 
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
@@ -56,7 +56,24 @@ const bodyFont = Spectral({
   variable: "--font-spectral",
 });
 
-const fontVariables = [displayFont.variable, ceremonialFont.variable, bodyFont.variable].join(" ");
+/**
+ * The interface sans. The family-facing archive reads entirely in serif, but the
+ * genealogist's workspace is a working tool — its dense labels, badges, dates,
+ * and controls want a clean humanist sans, with the serif kept for display
+ * headings. Instrument Sans pairs quietly with Garamond and stays legible small.
+ */
+const uiFont = Instrument_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-instrument-sans",
+});
+
+const fontVariables = [
+  displayFont.variable,
+  ceremonialFont.variable,
+  bodyFont.variable,
+  uiFont.variable,
+].join(" ");
 
 const colorModeScript = `
   try {

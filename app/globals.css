@@ -14,6 +14,7 @@
   --font-garamond: var(--font-eb-garamond), Garamond, Georgia, serif;
   --font-ceremonial: var(--font-cormorant), Garamond, Georgia, serif;
   --font-reading: var(--font-spectral), Charter, Georgia, serif;
+  --font-ui: var(--font-instrument-sans), "Segoe UI", system-ui, sans-serif;
 
   --font-display-dark: var(--font-ceremonial);
   --font-body-dark: var(--font-reading);
@@ -397,6 +398,25 @@ p {
 /* Counts and measurements still want figures that line up in a column. */
 [data-showcase-theme] [data-figures="lining"] {
   font-variant-numeric: lining-nums tabular-nums;
+}
+
+/*
+ * The genealogist's workspace is a working tool, so its dense UI layer — labels,
+ * badges, controls, timestamps — reads in the interface sans. Display headings
+ * keep the Garamond that ties the tool to the archive it produces. Scoped to the
+ * workspace on purpose: the family-facing archive stays entirely serif.
+ */
+.workspace-ui {
+  font-family: var(--font-ui);
+}
+
+.workspace-ui :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-heading);
+}
+
+/* The workspace still shows dates; give them the same book-like figures. */
+.workspace-ui [data-figures="oldstyle"] {
+  font-variant-numeric: oldstyle-nums proportional-nums;
 }
 
 /*

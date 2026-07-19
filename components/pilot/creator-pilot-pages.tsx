@@ -134,7 +134,7 @@ export function PilotPortfolioPage({ workspace }: { workspace: PilotWorkspace })
   );
 
   return (
-    <main className="min-h-screen bg-[#f1eee7] text-[#241f18]">
+    <main className="workspace-ui min-h-screen bg-[#f1eee7] text-[#241f18]">
       <a href="#projects-main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2">
         Skip to projects
       </a>

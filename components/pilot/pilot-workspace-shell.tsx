@@ -53,7 +53,7 @@ export function PilotWorkspaceShell({
   const projectBase = `/projects/${project.id}`;
 
   return (
-    <div className="min-h-screen bg-[#f1eee7] text-[#241f18]">
+    <div className="workspace-ui min-h-screen bg-[#f1eee7] text-[#241f18]">
       <a
         href="#pilot-main"
         className="sr-only z-50 rounded bg-white px-4 py-2 focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
