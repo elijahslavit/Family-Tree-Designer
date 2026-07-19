@@ -1,10 +1,11 @@
-import { ArrowLeft, ArrowRight, CalendarDays, Download, FileCheck2, MapPin, Quote, UsersRound } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, Download, FileCheck2, MapPin, Quote, UsersRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
 import type { ShowcasePersonCard, ShowcaseStoryCard } from "@/components/pilot/showcase-home";
 import { AncestorCard } from "@/components/showcase/ancestor-card";
+import { ShowcaseEmpty } from "@/components/pilot/showcase-empty";
 import { PersonPortrait } from "@/components/showcase/person-portrait";
 import { TiltCard } from "@/components/showcase/tilt-card";
 
@@ -55,6 +56,18 @@ export function ShowcasePeopleIndex({ basePath, people }: { basePath: string; pe
 }
 
 export function ShowcaseStoriesIndex({ basePath, stories }: { basePath: string; stories: ShowcaseStoryCard[] }) {
+  // The section is hidden from navigation when empty, but the page is still
+  // reachable by a saved link, so it has to say something true.
+  if (!stories.length) {
+    return (
+      <ShowcaseEmpty
+        icon={<BookOpen className="h-5 w-5" />}
+        title="No stories yet"
+        description="This archive begins with the people and the family tree. Written stories can be added to it at any time."
+      />
+    );
+  }
+
   return (
     <div>
       <ShowcaseIndexHeader

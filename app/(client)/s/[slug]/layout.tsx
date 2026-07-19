@@ -23,5 +23,5 @@ export default async function PrivateShowcaseLayout({ children, params }: { chil
   }
   const basePath = `/s/${access.project.slug}`;
   const showcase = buildPilotShowcase(access.project, basePath);
-  return <ShowcaseShell brand={showcase.brand} basePath={basePath} viewerLabel={`Invited: ${access.context.recipientLabel}`} themeId={access.project.branding.themeId}>{children}</ShowcaseShell>;
+  return <ShowcaseShell brand={showcase.brand} basePath={basePath} viewerLabel={`Invited: ${access.context.recipientLabel}`} themeId={access.project.branding.themeId} hasStories={showcase.stories.length > 0}>{children}</ShowcaseShell>;
 }

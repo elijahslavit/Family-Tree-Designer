@@ -37,6 +37,7 @@ export default async function PilotPreviewLayout({
         basePath={basePath}
         viewerLabel="Genealogist preview"
         themeId={project.branding.themeId}
+        hasStories={showcase.stories.length > 0}
       >
         {children}
       </ShowcaseShell>

@@ -22,12 +22,19 @@ export function ShowcaseShell({
   basePath,
   viewerLabel,
   themeId,
+  hasStories = false,
   children,
 }: {
   brand: ShowcaseBrand;
   basePath: string;
   viewerLabel: string;
   themeId?: ShowcaseThemeId;
+  /**
+   * Whether any story is published. A freshly imported archive has none, and
+   * offering the family a Stories link that leads to an empty page is worse
+   * than not offering it at all.
+   */
+  hasStories?: boolean;
   children: ReactNode;
 }) {
   const theme = getShowcaseTheme(themeId);
@@ -36,7 +43,9 @@ export function ShowcaseShell({
     { href: basePath, label: "Welcome", icon: Home },
     { href: `${basePath}/tree`, label: "Family tree", icon: GitBranch },
     { href: `${basePath}/people`, label: "People", icon: UsersRound },
-    { href: `${basePath}/stories`, label: "Stories", icon: BookOpen },
+    ...(hasStories
+      ? [{ href: `${basePath}/stories`, label: "Stories", icon: BookOpen }]
+      : []),
   ];
 
   return (
