@@ -16,6 +16,12 @@ const eslintConfig = defineConfig([
     "test-results/**",
     "next-env.d.ts",
   ]),
+  {
+    // Build-time Node scripts are plain CommonJS, run directly with node rather
+    // than bundled, so require() is correct there.
+    files: ["scripts/**/*.js"],
+    rules: { "@typescript-eslint/no-require-imports": "off" },
+  },
 ]);
 
 export default eslintConfig;

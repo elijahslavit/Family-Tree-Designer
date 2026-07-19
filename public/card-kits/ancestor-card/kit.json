@@ -1,0 +1,27 @@
+{
+  "name": "Ancestor Card",
+  "slug": "ancestor-card",
+  "palette": ["#f2e8da", "#2a221c", "#d4af5a", "#efe7d6", "#4a3820"],
+  "mode": "light",
+  "cardAspect": "1002 / 1359",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-card-kit.js",
+  "cards": [
+    {
+      "name": "Ancestor frame",
+      "slug": "ancestor-frame",
+      "front": "cards/ancestor-frame.png",
+      "maps": {
+        "normal": "maps/ancestor-frame-normal.png",
+        "roughness": "maps/ancestor-frame-roughness.png",
+        "height": "maps/ancestor-frame-height.png"
+      },
+      "slots": {
+        "window": { "left": 25.0, "top": 16.9, "width": 52.0, "height": 53.9, "archRadiusY": 25 },
+        "plaque": { "left": 28.8, "top": 77.7, "width": 44.1, "height": 9.6 }
+      }
+    }
+  ],
+  "buildLink": "https://diffui.ai/app/canvas/169a7ae5-c19a-43b6-8076-d4d253a0bced",
+  "notes": "Frame is a reusable template: the arched window and plaque are empty slots filled by AncestorCard. Maps are built locally from source-frame.webp — gold ornament is held to a flat plateau in the height map so it does not smear under displacement."
+}

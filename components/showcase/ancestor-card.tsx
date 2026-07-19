@@ -1,24 +1,36 @@
 import { Lock } from "lucide-react";
 import Image from "next/image";
 
+import { LitCardSurface } from "./lit-card-surface";
+
 /**
  * Window/plaque geometry measured once per frame asset. All values are
  * percentages of the card box, so cards scale freely.
- * - ornate: public/showcase/ancestor-card-frame.png (662x896) — period-era vessel
+ * - ornate: public/card-kits/ancestor-card (1002x1359) — period-era vessel,
+ *   embossed topographic relief with normal/height/specular maps for the
+ *   cursor-tracked lighting in TiltCard. Geometry is measured by
+ *   scripts/build-card-kit.js and mirrored in that kit's kit.json.
  * - plain:  public/showcase/ancestor-card-frame-plain.png (663x924) — modern-era mat
  */
 const FRAMES = {
   ornate: {
-    src: "/showcase/ancestor-card-frame.png",
-    aspect: "662 / 896",
-    window: { left: 18.0, top: 11.3, width: 64.2, height: 65.3, archRadiusY: 36 },
-    plaque: { left: 27.5, top: 79.2, width: 45.0, height: 11.0 },
+    src: "/card-kits/ancestor-card/cards/ancestor-frame.png",
+    aspect: "1002 / 1359",
+    window: { left: 25.0, top: 16.9, width: 52.0, height: 53.9, archRadiusY: 25 },
+    plaque: { left: 28.8, top: 77.7, width: 44.1, height: 9.6 },
+    maps: {
+      normal: "/card-kits/ancestor-card/maps/ancestor-frame-normal.png",
+      roughness: "/card-kits/ancestor-card/maps/ancestor-frame-roughness.png",
+      height: "/card-kits/ancestor-card/maps/ancestor-frame-height.png",
+    },
   },
   plain: {
     src: "/showcase/ancestor-card-frame-plain.png",
     aspect: "663 / 924",
     window: { left: 18.1, top: 11.3, width: 62.1, height: 65.8, archRadiusY: 31 },
     plaque: { left: 26.4, top: 80.8, width: 46.8, height: 10.5 },
+    /** The modern mat is deliberately flat — no relief to light. */
+    maps: null,
   },
 } as const;
 
@@ -80,9 +92,12 @@ export function AncestorCard({
       style={{
         aspectRatio: frame.aspect,
         containerType: "inline-size",
-        borderRadius: "3.5% / 2.6%",
-        overflow: "hidden",
-        boxShadow: "0 18px 40px -18px rgba(38,28,14,0.55)",
+        /*
+         * The frame asset is a cutout that carries its own rounded silhouette,
+         * so the box must not clip or round it. The shadow follows the alpha
+         * rather than the element box for the same reason.
+         */
+        filter: "drop-shadow(0 18px 26px rgba(38,28,14,0.42))",
       }}
     >
       <Image
@@ -90,8 +105,35 @@ export function AncestorCard({
         alt=""
         fill
         sizes="(max-width: 640px) 90vw, 460px"
-        className="object-cover"
+        className="object-contain"
       />
+
+      {frame.maps ? (
+        /*
+         * Per-pixel relighting from the material maps. This replaces the frame
+         * image once its textures are up: a masked CSS gradient can only
+         * brighten regions, where the shader actually turns each contour groove
+         * toward or away from the light.
+         */
+        <LitCardSurface
+          diffuse={frame.src}
+          normal={frame.maps.normal}
+          roughness={frame.maps.roughness}
+          height={frame.maps.height}
+        />
+      ) : (
+        /* No maps: a single flat sheen, the same treatment the wrapper used to apply. */
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 transition-opacity duration-300"
+          style={{
+            opacity: "var(--sheen-o, 0)",
+            background:
+              "radial-gradient(ellipse 60% 45% at var(--sheen-x, 50%) var(--sheen-y, 50%), rgba(255,241,205,0.28), transparent 70%)",
+            mixBlendMode: "soft-light",
+          }}
+        />
+      )}
 
       <div
         className="absolute overflow-hidden bg-[#efe7d6]"

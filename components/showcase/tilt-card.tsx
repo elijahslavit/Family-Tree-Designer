@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 
 /**
  * Pointer-tracked presentation wrapper for the ancestor card: restrained 3D
- * tilt (max ~5deg) plus a soft light sheen that follows the cursor. Mouse-only
- * by design — touch gets the static card — and disabled entirely under
+ * tilt (max ~5deg), plus the cursor position published as --sheen-x/y/o for
+ * descendants to light themselves with. AncestorCard owns the lighting itself,
+ * because it alone knows which material maps the frame has. Mouse-only by
+ * design — touch gets the static card — and disabled entirely under
  * prefers-reduced-motion.
  */
 export function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -55,17 +57,6 @@ export function TiltCard({ children, className }: { children: React.ReactNode; c
         }}
       >
         {children}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 transition-opacity duration-300"
-          style={{
-            opacity: "var(--sheen-o, 0)",
-            background:
-              "radial-gradient(ellipse 60% 45% at var(--sheen-x, 50%) var(--sheen-y, 50%), rgba(255,241,205,0.28), transparent 70%)",
-            mixBlendMode: "soft-light",
-            borderRadius: "3.5% / 2.6%",
-          }}
-        />
       </div>
     </div>
   );
