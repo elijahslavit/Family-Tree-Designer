@@ -152,7 +152,7 @@ export function ShowcasePersonDetail({
         <article className="space-y-8">
           <div className="space-y-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--sc-ink-muted)]">Life sketch</p>
-            {biography.map((paragraph) => <p key={paragraph.slice(0, 40)} className="font-serif text-xl leading-9 text-[var(--sc-ink-secondary)]">{paragraph}</p>)}
+            {biography.map((paragraph) => <p key={paragraph.slice(0, 40)} className="archive-prose text-lg leading-8 text-[var(--sc-ink-secondary)]">{paragraph}</p>)}
           </div>
           {stories.length ? (
             <section className="space-y-4 border-t border-[var(--sc-border)] pt-8">
@@ -215,7 +215,7 @@ export function ShowcaseStoryDetail({
           {body.map((section, index) => (
             <section key={section.heading ?? index} className="space-y-5">
               {section.heading ? <h2 className="font-serif text-3xl font-semibold">{section.heading}</h2> : null}
-              {section.paragraphs.map((paragraph) => <p key={paragraph.slice(0, 50)} className="font-serif text-xl leading-9 text-[var(--sc-ink-secondary)]">{paragraph}</p>)}
+              {section.paragraphs.map((paragraph) => <p key={paragraph.slice(0, 50)} className="archive-prose text-lg leading-8 text-[var(--sc-ink-secondary)]">{paragraph}</p>)}
               {section.pullQuote ? <blockquote className="border-l-2 border-[var(--sc-accent)] py-2 pl-6 font-serif text-3xl leading-snug text-[var(--sc-accent)]"><Quote className="mb-3 h-5 w-5" />{section.pullQuote}</blockquote> : null}
             </section>
           ))}

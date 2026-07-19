@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, EB_Garamond, Instrument_Sans, Spectral } from "next/font/google";
+import { Cormorant_Garamond, EB_Garamond, Instrument_Sans, Libre_Baskerville } from "next/font/google";
 import Script from "next/script";
 
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
@@ -49,11 +49,18 @@ const ceremonialFont = Cormorant_Garamond({
   variable: "--font-cormorant",
 });
 
-const bodyFont = Spectral({
+/**
+ * The reading serif. Baskerville is the English book face of Austen's era — a
+ * Jane Austen novel today is most often reprinted in it — so the archive's prose
+ * reads like a classic novel rather than a web page. Libre Baskerville is the
+ * screen-tuned cut: a large x-height and sturdier hairlines keep it easy to read
+ * at body sizes, where the original Baskerville would shimmer.
+ */
+const bodyFont = Libre_Baskerville({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "700"],
   display: "swap",
-  variable: "--font-spectral",
+  variable: "--font-baskerville",
 });
 
 /**

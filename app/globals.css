@@ -13,7 +13,7 @@
      swap is not jarring. */
   --font-garamond: var(--font-eb-garamond), Garamond, Georgia, serif;
   --font-ceremonial: var(--font-cormorant), Garamond, Georgia, serif;
-  --font-reading: var(--font-spectral), Charter, Georgia, serif;
+  --font-reading: var(--font-baskerville), "Baskerville", Charter, Georgia, serif;
   --font-ui: var(--font-instrument-sans), "Segoe UI", system-ui, sans-serif;
 
   --font-display-dark: var(--font-ceremonial);
@@ -393,6 +393,17 @@ p {
 [data-showcase-theme] .font-serif {
   font-family: var(--sc-display-font);
   letter-spacing: var(--sc-display-tracking);
+}
+
+/*
+ * Long-form reading prose — biographies and story bodies — is set in the
+ * reading Baskerville rather than the display face. A display type is drawn for
+ * headlines; paragraphs of it read thin and tiring. Baskerville is the English
+ * novel face, so the family reads their history the way they would read a book.
+ */
+[data-showcase-theme] .archive-prose {
+  font-family: var(--sc-body-font);
+  letter-spacing: normal;
 }
 
 /* Counts and measurements still want figures that line up in a column. */
