@@ -240,6 +240,8 @@ const hartProject: PilotProject = {
     // see docs/design/ancestor-portrait-prompts.md. Margaret is recorded as
     // living, so she is hidden from the presentation and keeps the placeholder.
     ...[
+      ["josiah", "Josiah Hart", "p21", "portraits/josiah.webp"],
+      ["martha", "Martha Ellen Hart", "p22", "portraits/martha.webp"],
       ["walter", "Walter Hart", "p01", "portraits/walter.webp"],
       ["june", "June Mercer Hart", "p02", "portraits/june.webp"],
       ["eleanor", "Eleanor Hart West", "p03", "portraits/eleanor.webp"],

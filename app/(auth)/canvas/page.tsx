@@ -1,3 +1,4 @@
+import { productConfig } from "@/lib/config/product";
 import { CanvasExperience } from "@/components/canvas/canvas-experience";
 import { creatorNavItems } from "@/components/layouts/tree-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -52,7 +53,7 @@ export default async function CreatorCanvasPage({ searchParams }: CanvasPageProp
         profileHref={`/person/${personId}`}
         relatedCount={canvas.relatedCount}
         topBar={{
-          eyebrow: "Family Tree Designer",
+          eyebrow: productConfig.name,
           title: tree.name,
           navItems: creatorNavItems,
           activeLabel: "Canvas",

@@ -1,3 +1,4 @@
+import { productConfig } from "@/lib/config/product";
 import {
   Archive,
   BookOpenText,
@@ -63,7 +64,7 @@ export function PilotWorkspaceShell({
         <div className="flex items-center justify-between gap-3 px-4 py-3">
           <div className="min-w-0">
             <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#746b5e]">
-              Family Tree Designer
+              {productConfig.name}
             </p>
             <p className="truncate font-semibold">{project.name}</p>
           </div>
@@ -103,7 +104,7 @@ export function PilotWorkspaceShell({
                 <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#746b5e]">
                   Professional studio
                 </span>
-                <span className="block font-semibold">Family Tree Designer</span>
+                <span className="block font-semibold">{productConfig.name}</span>
               </span>
             </Link>
           </div>

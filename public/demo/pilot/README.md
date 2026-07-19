@@ -15,12 +15,20 @@ now lives in the words around the images instead — each portrait's stored medi
 record states that it is synthetic demonstration artwork, and the marketing pages
 label the archive as a sample.
 
-They are deliberately not uniform. Walter and June are framed as 1948 studio
-portraits, Samuel as 1965 and Robert as 1972, because a real family archive
-accumulates photographs across decades rather than commissioning them all at once.
+They are deliberately not uniform. Josiah and Martha are 1885 albumen cabinet
+cards — warm, soft, heavily vignetted. Walter and June are 1948 silver gelatin
+prints, Samuel 1965 and Robert 1972, all neutral grey. A real family archive
+accumulates photographs across decades rather than commissioning them all at once,
+and the tonal shift between the 1880s and the 1940s is the evidence of that.
+
+Their son Albert Hart (`p23`) has no portrait deliberately. Genealogists know the
+generation with no surviving photograph, and it puts the monogram treatment on
+screen beside real ones.
 
 | Demo person | File | Existing demo ID |
 | --- | --- | --- |
+| Josiah Hart | `portraits/josiah.webp` | `p21` |
+| Martha Ellen Hart | `portraits/martha.webp` | `p22` |
 | Walter Hart | `portraits/walter.webp` | `p01` |
 | June Mercer Hart | `portraits/june.webp` | `p02` |
 | Eleanor Hart West | `portraits/eleanor.webp` | `p03` |

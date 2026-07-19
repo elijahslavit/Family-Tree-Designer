@@ -26,6 +26,69 @@ export const demoBundle: TreeBundle = {
     updatedAt: now,
   },
   people: [
+    // The earliest recorded generation. Josiah and Martha sat for cabinet-card
+    // portraits in 1885; their son Albert has no surviving photograph, which is
+    // ordinary in a real archive and shows the monogram treatment in context.
+    {
+      id: "p21",
+      treeId: "tree-hart",
+      givenName: "Josiah",
+      surname: "Hart",
+      fullName: "Josiah Hart",
+      gender: "male",
+      birthDateText: "4 MAR 1846",
+      birthDateNormalized: "1846-03-04",
+      birthPlace: "Wheeling, Virginia",
+      deathDateText: "11 JAN 1913",
+      deathDateNormalized: "1913-01-11",
+      deathPlace: "Cincinnati, Ohio",
+      summary: "Stonemason who brought the family down the Ohio River.",
+      biographyMd:
+        "Josiah cut and set the foundation stone for two Cincinnati churches. The family's earliest surviving document is his 1872 marriage record.",
+      isLiving: false,
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: "p22",
+      treeId: "tree-hart",
+      givenName: "Martha",
+      surname: "Ellen Hart",
+      fullName: "Martha Ellen Hart",
+      gender: "female",
+      birthDateText: "22 SEP 1849",
+      birthDateNormalized: "1849-09-22",
+      birthPlace: "Cincinnati, Ohio",
+      deathDateText: "3 FEB 1921",
+      deathDateNormalized: "1921-02-03",
+      deathPlace: "Cincinnati, Ohio",
+      summary: "Kept the household ledger that dates the family's first years.",
+      biographyMd:
+        "Martha's ledger records rent, coal, and funeral costs from 1873 onward, and is the reason the family's early movements can be traced at all.",
+      isLiving: false,
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: "p23",
+      treeId: "tree-hart",
+      givenName: "Albert",
+      surname: "Hart",
+      fullName: "Albert Hart",
+      gender: "male",
+      birthDateText: "17 JUN 1880",
+      birthDateNormalized: "1880-06-17",
+      birthPlace: "Cincinnati, Ohio",
+      deathDateText: "2 AUG 1946",
+      deathDateNormalized: "1946-08-02",
+      deathPlace: "Cincinnati, Ohio",
+      summary: "Rail yard foreman; no photograph of him has ever been found.",
+      biographyMd:
+        "Albert appears in three census records and on his son's birth registration, but no portrait of him survives. His wife's name is recorded only as \"Mrs. A. Hart\".",
+      isLiving: false,
+      createdAt: now,
+      updatedAt: now,
+    },
     {
       id: "p01",
       treeId: "tree-hart",
@@ -386,6 +449,26 @@ export const demoBundle: TreeBundle = {
   ],
   families: [
     {
+      id: "f08",
+      treeId: "tree-hart",
+      spouse1Id: "p21",
+      spouse2Id: "p22",
+      marriageDateText: "1872",
+      marriageDateNormalized: "1872-05-01",
+      marriagePlace: "Cincinnati, Ohio",
+    },
+    {
+      // Albert's wife is not recorded, which the presentation handles without
+      // inventing her.
+      id: "f09",
+      treeId: "tree-hart",
+      spouse1Id: "p23",
+      spouse2Id: null,
+      marriageDateText: null,
+      marriageDateNormalized: null,
+      marriagePlace: null,
+    },
+    {
       id: "f01",
       treeId: "tree-hart",
       spouse1Id: "p01",
@@ -450,6 +533,8 @@ export const demoBundle: TreeBundle = {
     },
   ],
   familyChildren: [
+    { familyId: "f08", childId: "p23", order: 1, relationshipType: "biological" },
+    { familyId: "f09", childId: "p01", order: 1, relationshipType: "biological" },
     { familyId: "f01", childId: "p03", order: 1, relationshipType: "biological" },
     { familyId: "f01", childId: "p04", order: 2, relationshipType: "biological" },
     { familyId: "f02", childId: "p06", order: 1, relationshipType: "biological" },

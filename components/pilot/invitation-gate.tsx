@@ -100,7 +100,7 @@ function GateFrame({ children }: { children: React.ReactNode }) {
       <section className="w-full max-w-2xl rounded-[28px] border border-black/10 bg-[#fbf9f4] p-6 shadow-2xl sm:p-10">
         {children}
         <p className="mt-8 border-t border-black/10 pt-5 text-center text-[10px] uppercase tracking-[0.14em] text-[#8a8174]">
-          Powered by Family Tree Designer · Never forward private invitation links
+          Powered by {productConfig.name} · Never forward private invitation links
         </p>
       </section>
     </main>

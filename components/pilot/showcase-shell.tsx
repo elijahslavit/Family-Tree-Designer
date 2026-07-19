@@ -1,3 +1,4 @@
+import { productConfig } from "@/lib/config/product";
 import { BookOpen, GitBranch, Home, Menu, ShieldCheck, UsersRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -122,7 +123,7 @@ export function ShowcaseShell({
       <footer className="border-t border-[var(--sc-border)] bg-[var(--sc-footer)]">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-xs leading-5 text-[var(--sc-ink-muted)] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <p>This private family archive is shared only with invited recipients.</p>
-          <p>Presented by {brand.genealogistName} · Powered by Family Tree Designer</p>
+          <p>Presented by {brand.genealogistName} · Powered by {productConfig.name}</p>
         </div>
       </footer>
     </div>

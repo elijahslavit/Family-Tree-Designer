@@ -1,3 +1,4 @@
+import { productConfig } from "@/lib/config/product";
 import {
   Activity,
   AlertTriangle,
@@ -145,7 +146,7 @@ export function PilotPortfolioPage({ workspace }: { workspace: PilotWorkspace })
             </span>
             <span>
               <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#746b5e]">Professional studio</span>
-              <span className="block font-semibold">Family Tree Designer</span>
+              <span className="block font-semibold">{productConfig.name}</span>
             </span>
           </Link>
           <div className="flex items-center gap-3 text-sm">

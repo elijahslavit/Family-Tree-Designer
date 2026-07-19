@@ -137,6 +137,15 @@ photographs anyway.
 | Samuel West | 1965 — period but cleaner | hero option D |
 | Eleanor Hart West | 1968 — derived from Samuel's portrait | derived |
 | Robert Hart | 1972 — sharpest, most modern light | hero option A |
+| Josiah Hart | 1885 — albumen cabinet card, warm tone | separate 1885 prompt |
+| Martha Ellen Hart | 1885 — derived from Josiah's portrait | derived |
+
+The 1885 pair use a different process on purpose. An albumen cabinet card is
+warm brown-black, softer, and more heavily vignetted than a mid-century silver
+gelatin print, so the archive shows a real tonal shift between the 1880s and the
+1940s rather than one look aged artificially. Adding them required a generation
+between them and Walter: their son Albert has no portrait, which is ordinary in a
+real archive and puts the monogram treatment on screen beside real photographs.
 
 The two women were each derived from the man closest to them in time, which is
 what keeps the 1948 pair and the 1965–72 group reading as consistent within

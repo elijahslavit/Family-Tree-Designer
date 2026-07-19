@@ -1,3 +1,4 @@
+import { productConfig } from "@/lib/config/product";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -36,7 +37,7 @@ export function CreatorTreeShell({
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <div className="space-y-0.5">
             <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--creator-text-muted)]">
-              Family Tree Designer
+              {productConfig.name}
             </p>
             <h1 className="text-lg font-semibold text-[var(--creator-text)]">{tree.name}</h1>
           </div>
