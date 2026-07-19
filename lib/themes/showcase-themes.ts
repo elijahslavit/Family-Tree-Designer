@@ -22,6 +22,9 @@ export type ShowcaseThemeTokens = {
   "--sc-border": string;
   "--sc-border-strong": string;
   "--sc-display-font": string;
+  "--sc-body-font": string;
+  /** Tracking for the display face; the two themes want different letterfit. */
+  "--sc-display-tracking": string;
   "--sc-shadow": string;
   /** Full-bleed tint over the hero photograph, so one image serves both themes. */
   "--sc-hero-tint": string;
@@ -77,7 +80,11 @@ export const SHOWCASE_THEMES: Record<ShowcaseThemeId, ShowcaseTheme> = {
       "--sc-accent-wash": "rgba(212, 175, 90, 0.14)",
       "--sc-border": "rgba(212, 175, 90, 0.22)",
       "--sc-border-strong": "rgba(212, 175, 90, 0.46)",
-      "--sc-display-font": "var(--font-serif, Georgia, 'Times New Roman', serif)",
+      // Cormorant is higher contrast and more ceremonial — the hairlines survive
+      // at display size on a dark ground, which is where this theme lives.
+      "--sc-display-font": "var(--font-ceremonial)",
+      "--sc-body-font": "var(--font-reading)",
+      "--sc-display-tracking": "-0.02em",
       "--sc-shadow": "0 24px 60px -32px rgba(0, 0, 0, 0.9)",
       "--sc-hero-tint": "rgba(17, 13, 10, 0.68)",
       "--sc-hero-scrim":
@@ -112,7 +119,11 @@ export const SHOWCASE_THEMES: Record<ShowcaseThemeId, ShowcaseTheme> = {
       "--sc-accent-wash": "rgba(107, 62, 54, 0.1)",
       "--sc-border": "rgba(74, 56, 40, 0.16)",
       "--sc-border-strong": "rgba(107, 62, 54, 0.34)",
-      "--sc-display-font": "var(--font-serif, Georgia, 'Times New Roman', serif)",
+      // EB Garamond is warmer and steadier — a printed book rather than an
+      // engraved plate, which suits the lighter, more scholarly world.
+      "--sc-display-font": "var(--font-garamond)",
+      "--sc-body-font": "var(--font-reading)",
+      "--sc-display-tracking": "-0.01em",
       "--sc-shadow": "0 22px 50px -34px rgba(58, 44, 30, 0.55)",
       "--sc-hero-tint": "rgba(242, 233, 216, 0.12)",
       "--sc-hero-scrim":

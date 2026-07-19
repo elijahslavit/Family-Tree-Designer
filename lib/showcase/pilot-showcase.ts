@@ -220,7 +220,7 @@ export async function getShowcaseCanvas(
   connectedIds.add(safeFocusId);
   const nodes = result.nodes
     .filter((node) => connectedIds.has(node.id))
-    .map((node) => minimizeLivingCanvasNode(project, node));
+    .map((node) => withNodePortrait(project, minimizeLivingCanvasNode(project, node)));
 
   return {
     nodes,
@@ -427,6 +427,32 @@ export function safeDisplayPath(
   }
 
   return asset.inertPreviewPath ?? asset.derivativePath ?? null;
+}
+
+/**
+ * Put the ancestor's photograph on their node in the family tree. Reuses the
+ * card rules, so a living person without recorded portrait consent resolves to
+ * null here exactly as they do everywhere else.
+ */
+function withNodePortrait(project: PilotProject, node: Node): Node {
+  const data = node.data as { kind?: string };
+
+  if (data.kind !== "person") {
+    return node;
+  }
+
+  const person = getTreeBundle(project.treeId).people.find(
+    (candidate) => candidate.id === node.id,
+  );
+
+  if (!person) {
+    return node;
+  }
+
+  return {
+    ...node,
+    data: { ...node.data, portraitPath: personCard(project, person).imagePath },
+  };
 }
 
 function minimizeLivingCanvasNode(project: PilotProject, node: Node): Node {

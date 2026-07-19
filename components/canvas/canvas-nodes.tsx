@@ -23,6 +23,8 @@ type CanvasNodePayload = {
     | "descendant"
     | "relative";
   lineageNames?: string[];
+  /** Portrait for this person, when one exists and privacy allows it. */
+  portraitPath?: string | null;
 };
 
 function initials(name: string) {
@@ -189,13 +191,26 @@ const PersonNode = memo(function PersonNode({ id, data, selected, dragging }: No
 
       <div className="flex items-start gap-3">
         <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-sm font-semibold tracking-[0.12em] text-[var(--text-primary)]"
+          className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border text-sm font-semibold tracking-[0.12em] text-[var(--text-primary)]"
           style={{
             background: "var(--canvas-avatar-bg)",
             borderColor: "color-mix(in oklab, var(--text-primary) 10%, transparent)",
           }}
         >
-          {initials(payload.label)}
+          {payload.portraitPath ? (
+            /* eslint-disable-next-line @next/next/no-img-element --
+               A fixed 44px avatar per node. Routing dozens of these through the
+               image optimizer costs a request each and gains nothing at this size. */
+            <img
+              src={payload.portraitPath}
+              alt=""
+              className="h-full w-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            initials(payload.label)
+          )}
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">

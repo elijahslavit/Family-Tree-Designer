@@ -243,6 +243,11 @@ export interface CanvasNodeData extends Record<string, unknown> {
   summary?: string | null;
   isLiving: boolean;
   kind: "person" | "family";
+  /**
+   * Portrait for the node, when the presentation has one and the person's
+   * privacy allows it. Null renders a monogram instead.
+   */
+  portraitPath?: string | null;
   isFocus?: boolean;
   isHighlighted?: boolean;
   relationGroup?:

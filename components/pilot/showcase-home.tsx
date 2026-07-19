@@ -72,7 +72,8 @@ export function ShowcaseHome({
           className="absolute inset-0 hidden bg-[image:var(--sc-hero-scrim)] md:block"
         />
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-16 lg:px-8 lg:py-20">
-          <TiltCard className="mx-auto w-full max-w-[380px] lg:max-w-[420px]">
+          <div data-reveal="portrait" className="mx-auto w-full max-w-[380px] lg:max-w-[420px]">
+          <TiltCard>
             <AncestorCard
               name={focalPerson.name}
               lifespan={focalPerson.years}
@@ -82,18 +83,19 @@ export function ShowcaseHome({
               focalY={30}
             />
           </TiltCard>
+          </div>
 
           <div className="max-w-xl space-y-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--sc-ink-muted)]">{eyebrow}</p>
-            <div className="space-y-3">
+            <p data-reveal data-reveal-step="1" className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--sc-ink-muted)]">{eyebrow}</p>
+            <div data-reveal data-reveal-step="2" className="space-y-3">
               <h1 className="font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.035em] sm:text-6xl">
                 {familyName}
               </h1>
               <p className="max-w-lg font-serif text-2xl leading-snug text-[var(--sc-ink-secondary)]">{tagline}</p>
             </div>
-            <p className="max-w-lg text-sm leading-7 text-[var(--sc-ink-secondary)] sm:text-base">{introduction}</p>
+            <p data-reveal data-reveal-step="3" className="max-w-lg text-sm leading-7 text-[var(--sc-ink-secondary)] sm:text-base">{introduction}</p>
 
-            <div className="flex flex-col gap-3 sm:max-w-md">
+            <div data-reveal data-reveal-step="4" className="flex flex-col gap-3 sm:max-w-md">
               <Link
                 href={`${basePath}/people/${focalPerson.id}`}
                 className="group flex items-center justify-between gap-4 rounded-lg bg-[var(--sc-accent)] px-5 py-3.5 text-[var(--sc-accent-contrast)] shadow-md transition-colors hover:bg-[var(--sc-accent-hover)]"

@@ -8,20 +8,27 @@
 @import "../styles/tokens/portrait-gallery.css";
 
 :root {
-  --font-display-dark: Georgia, "Times New Roman", serif;
-  --font-body-dark: "Segoe UI", system-ui, sans-serif;
-  --font-display-parchment: Georgia, "Times New Roman", serif;
-  --font-body-parchment: Charter, Georgia, serif;
-  --font-display-modern: "Trebuchet MS", "Segoe UI", sans-serif;
-  --font-body-modern: "Segoe UI", system-ui, sans-serif;
-  --font-display-botanical: Georgia, "Times New Roman", serif;
-  --font-body-botanical: Charter, Georgia, serif;
-  --font-display-inkwash: Georgia, "Times New Roman", serif;
-  --font-body-inkwash: Charter, Georgia, serif;
-  --font-display-portrait: Georgia, "Times New Roman", serif;
-  --font-body-portrait: "Segoe UI", system-ui, sans-serif;
-  --font-heading: Georgia, "Times New Roman", serif;
-  --font-body: "Segoe UI", system-ui, sans-serif;
+  /* Loaded in app/layout.tsx via next/font; the stacks below are fallbacks for
+     the moment before the face is available, chosen to be close in width so the
+     swap is not jarring. */
+  --font-garamond: var(--font-eb-garamond), Garamond, Georgia, serif;
+  --font-ceremonial: var(--font-cormorant), Garamond, Georgia, serif;
+  --font-reading: var(--font-spectral), Charter, Georgia, serif;
+
+  --font-display-dark: var(--font-ceremonial);
+  --font-body-dark: var(--font-reading);
+  --font-display-parchment: var(--font-garamond);
+  --font-body-parchment: var(--font-reading);
+  --font-display-modern: var(--font-garamond);
+  --font-body-modern: var(--font-reading);
+  --font-display-botanical: var(--font-garamond);
+  --font-body-botanical: var(--font-reading);
+  --font-display-inkwash: var(--font-garamond);
+  --font-body-inkwash: var(--font-reading);
+  --font-display-portrait: var(--font-garamond);
+  --font-body-portrait: var(--font-reading);
+  --font-heading: var(--font-garamond);
+  --font-body: var(--font-reading);
   --font-mono: "SFMono-Regular", ui-monospace, monospace;
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -339,6 +346,105 @@ h6 {
   color: var(--text-primary);
   font-family: var(--font-heading);
   margin: 0;
+  /* Stops a heading dropping a single orphan word onto its last line. */
+  text-wrap: balance;
+}
+
+/* Short runs of prose read better with an even rag than a ragged one. */
+p {
+  text-wrap: pretty;
+}
+
+/*
+ * This archive is mostly dates. Old-style figures sit on the baseline with
+ * ascenders and descenders like lowercase letters, so "1846–1913" reads as part
+ * of the sentence rather than as data in a spreadsheet. Applied to the elements
+ * that carry dates rather than globally, because tabular contexts — counts,
+ * percentages, file sizes — still want lining figures that align in a column.
+ */
+.oldstyle-figures,
+[data-figures="oldstyle"] {
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
+/*
+ * Real small capitals, drawn by the type designer, rather than uppercase letters
+ * squashed down by the browser. Used for the curator's plaque and section labels.
+ */
+.small-caps {
+  font-variant-caps: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+}
+
+/*
+ * The family-facing archive carries its own type, so the two presentation
+ * styles differ by voice and not only by colour. Existing font-serif utilities
+ * inside the archive are remapped to whichever display face the theme selects.
+ */
+[data-showcase-theme] {
+  font-family: var(--sc-body-font);
+  /* Nearly every number in an archive is a year. */
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
+[data-showcase-theme] :is(h1, h2, h3, h4, h5, h6),
+[data-showcase-theme] .font-serif {
+  font-family: var(--sc-display-font);
+  letter-spacing: var(--sc-display-tracking);
+}
+
+/* Counts and measurements still want figures that line up in a column. */
+[data-showcase-theme] [data-figures="lining"] {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/*
+ * The archive settles into place rather than appearing. Deliberately restrained:
+ * a family opening their history should feel a page being laid down, not a
+ * product demo. Transform and opacity only, so this stays on the compositor.
+ */
+@keyframes sc-settle {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sc-portrait-settle {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-showcase-theme] [data-reveal] {
+  animation: sc-settle 640ms cubic-bezier(0.22, 0.68, 0.32, 1) both;
+}
+
+[data-showcase-theme] [data-reveal="portrait"] {
+  animation: sc-portrait-settle 900ms cubic-bezier(0.22, 0.68, 0.32, 1) both;
+}
+
+/* Each element follows the one before it, so the page assembles in reading order. */
+[data-showcase-theme] [data-reveal-step="1"] { animation-delay: 90ms; }
+[data-showcase-theme] [data-reveal-step="2"] { animation-delay: 180ms; }
+[data-showcase-theme] [data-reveal-step="3"] { animation-delay: 270ms; }
+[data-showcase-theme] [data-reveal-step="4"] { animation-delay: 360ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-showcase-theme] [data-reveal],
+  [data-showcase-theme] [data-reveal="portrait"] {
+    animation: none;
+  }
 }
 
 p {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Cormorant_Garamond, EB_Garamond, Spectral } from "next/font/google";
 import Script from "next/script";
 
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
@@ -15,7 +16,47 @@ export const metadata: Metadata = {
   },
   description:
     "Private, presentation-first family archives for professional genealogists and their clients.",
+  openGraph: {
+    type: "website",
+    siteName: productConfig.name,
+    title: `${productConfig.name} — ${productConfig.tagline}`,
+    description:
+      "We turn a genealogist's finished research into a private family archive worth handing over.",
+  },
+  twitter: { card: "summary_large_image" },
 };
+
+/**
+ * Self-hosted at build time, so the deployed site makes no external font request
+ * and nothing reflows once the page paints.
+ *
+ * EB Garamond carries the archive: a genuine old-style face with the warmth of a
+ * printed book. Cormorant is the Heirloom theme's display voice — higher
+ * contrast and more ceremonial, but too delicate for body text at any size.
+ * Spectral was drawn for reading on screens and holds up small, which matters on
+ * pages that are mostly dates and short biographies.
+ */
+const displayFont = EB_Garamond({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-eb-garamond",
+});
+
+const ceremonialFont = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  display: "swap",
+  variable: "--font-cormorant",
+});
+
+const bodyFont = Spectral({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
+  variable: "--font-spectral",
+});
+
+const fontVariables = [displayFont.variable, ceremonialFont.variable, bodyFont.variable].join(" ");
 
 const colorModeScript = `
   try {
@@ -39,7 +80,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={fontVariables} suppressHydrationWarning>
       <body>
         <AnalyticsProvider>
           <ToastProvider>{children}</ToastProvider>
