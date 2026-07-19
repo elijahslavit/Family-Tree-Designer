@@ -1,5 +1,11 @@
 # Ancestor portraits for the Hart demonstration archive
 
+> **Status: done.** These five portraits were generated and are live in
+> `public/demo/pilot/portraits/`. Keep this file as the recipe — regenerate from
+> it if a portrait needs replacing, or adapt it when adding a demonstration
+> family. The assignment notes at the end record which era each sitter was
+> framed as, which is what keeps the set coherent.
+
 The demonstration family currently uses flat vector placeholders with the word
 SYNTHETIC drawn into the artwork. That watermark is right for the app — it stops
 placeholder art being mistaken for a real ancestor — but it appears on the
@@ -116,6 +122,25 @@ Portrait orientation, at least 900 pixels wide and 1200 tall. Larger is fine.
 
 Then say so, and the demonstration archive will be pointed at them and the
 marketing screenshots regenerated.
+
+## What was actually generated
+
+The four men came back as one batch of options rather than a derived chain, so
+they are not one studio. Rather than force uniformity, each was assigned to the
+decade its look suited — which is closer to how a real archive accumulates
+photographs anyway.
+
+| Sitter | Framed as | Source |
+| --- | --- | --- |
+| Walter Hart | 1948 — flattest, grainiest, plain wall | hero option B |
+| June Mercer Hart | 1948 — derived from Walter's portrait | derived |
+| Samuel West | 1965 — period but cleaner | hero option D |
+| Eleanor Hart West | 1968 — derived from Samuel's portrait | derived |
+| Robert Hart | 1972 — sharpest, most modern light | hero option A |
+
+The two women were each derived from the man closest to them in time, which is
+what keeps the 1948 pair and the 1965–72 group reading as consistent within
+themselves.
 
 ## Two notes
 

@@ -4,16 +4,32 @@ Every asset in this directory is **clearly synthetic** and was created specifica
 
 The SVGs are code-native, contain no scripts or external resources, and are safe to serve as static demo artwork. Each file also includes a synthetic-data notice in its `<title>`, `<desc>`, and `<metadata>` elements.
 
-## Suggested person mapping
+## Portraits
+
+The ancestor portraits in `portraits/` are generated photographs of people who
+never existed, produced from the prompt pack in
+[`docs/design/ancestor-portrait-prompts.md`](../../../docs/design/ancestor-portrait-prompts.md).
+They carry no visible watermark: the earlier placeholders had the word SYNTHETIC
+drawn into the artwork, which also reached the marketing pages. The declaration
+now lives in the words around the images instead — each portrait's stored media
+record states that it is synthetic demonstration artwork, and the marketing pages
+label the archive as a sample.
+
+They are deliberately not uniform. Walter and June are framed as 1948 studio
+portraits, Samuel as 1965 and Robert as 1972, because a real family archive
+accumulates photographs across decades rather than commissioning them all at once.
 
 | Demo person | File | Existing demo ID |
 | --- | --- | --- |
-| Walter Hart | `portrait-walter-hart.svg` | `p01` |
-| June Mercer Hart | `portrait-june-mercer-hart.svg` | `p02` |
-| Eleanor Hart West | `portrait-eleanor-hart-west.svg` | `p03` |
-| Robert Hart | `portrait-robert-hart.svg` | `p04` |
-| Samuel West | `portrait-samuel-west.svg` | `p05` |
+| Walter Hart | `portraits/walter.webp` | `p01` |
+| June Mercer Hart | `portraits/june.webp` | `p02` |
+| Eleanor Hart West | `portraits/eleanor.webp` | `p03` |
+| Robert Hart | `portraits/robert.webp` | `p04` |
+| Samuel West | `portraits/samuel.webp` | `p05` |
 | Margaret West Vale | `portrait-margaret-west-vale.svg` | `p06` |
+
+Margaret is recorded as living, so she is hidden from the presentation and keeps
+the original placeholder.
 
 ## Suggested presentation mapping
 

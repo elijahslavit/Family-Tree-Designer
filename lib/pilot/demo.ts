@@ -236,22 +236,25 @@ const hartProject: PilotProject = {
       quarantineFailureReason: null,
       uploadedAt: "2026-06-04T09:40:00.000Z",
     },
+    // Portraits are generated period photographs of people who never existed;
+    // see docs/design/ancestor-portrait-prompts.md. Margaret is recorded as
+    // living, so she is hidden from the presentation and keeps the placeholder.
     ...[
-      ["walter", "Walter Hart", "p01", "portrait-walter-hart.svg"],
-      ["june", "June Mercer Hart", "p02", "portrait-june-mercer-hart.svg"],
-      ["eleanor", "Eleanor Hart West", "p03", "portrait-eleanor-hart-west.svg"],
-      ["robert", "Robert Hart", "p04", "portrait-robert-hart.svg"],
-      ["samuel", "Samuel West", "p05", "portrait-samuel-west.svg"],
+      ["walter", "Walter Hart", "p01", "portraits/walter.webp"],
+      ["june", "June Mercer Hart", "p02", "portraits/june.webp"],
+      ["eleanor", "Eleanor Hart West", "p03", "portraits/eleanor.webp"],
+      ["robert", "Robert Hart", "p04", "portraits/robert.webp"],
+      ["samuel", "Samuel West", "p05", "portraits/samuel.webp"],
       ["margaret", "Margaret West Vale", "p06", "portrait-margaret-west-vale.svg"],
     ].map(([key, name, personId, path], index) => ({
       id: `media-portrait-${key}`,
       projectId: "pilot-hart-001",
       kind: "image" as const,
-      fileName: `${key}-portrait.jpg`,
-      mimeType: "image/jpeg" as const,
+      fileName: `${key}-portrait.webp`,
+      mimeType: "image/webp" as const,
       byteSize: 4_200_000 + index * 90_000,
       sha256: String(index + 1).repeat(64),
-      originalStoragePath: `private/pilot-hart-001/originals/${key}-portrait.jpg`,
+      originalStoragePath: `private/pilot-hart-001/originals/${key}-portrait.webp`,
       derivativePath: `/demo/pilot/${path}`,
       inertPreviewPath: null,
       caption: `${name}, synthetic demonstration portrait.`,
