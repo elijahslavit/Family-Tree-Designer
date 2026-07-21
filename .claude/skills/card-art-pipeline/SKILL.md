@@ -113,6 +113,31 @@ the arch are identical in color and form, mirrored left-to-right, not two differ
 rather than trusting "symmetric" alone, and check every flanking pair in the result before
 accepting: same rail motif, same flower color, same medallion, corner vignettes balanced in weight.
 
+**Every card needs both a window AND a nameplate — no exceptions, and both sized generously.**
+This is not a per-card judgment call: reject any option missing either one outright, regardless of
+how good the rest of the art is (observed repeatedly — a gorgeous rose garland or wreath with no
+empty plaque anywhere is not shippable, it's a dead end that costs a full regeneration cycle). Give
+the nameplate real size, not a decorative sliver: it has to hold a full name and a birth–death year
+range legibly, so undersize it and every card in the set inherits the same fix later. When unsure
+whether a nameplate is big enough, size it toward the *largest* comfortable option in the set, not
+the smallest.
+
+**Keep window and nameplate size consistent across the whole set.** Different themes will naturally
+land at different proportions from generation to generation, but don't let that drift go unchecked —
+after generating a theme, compare its window/plaque size against the rest of the set and regenerate
+outliers so every card reads as the same "weight" of object at a glance. If some vary, err toward
+the *larger* end of the set as the target (a bigger window and card reads better than a cramped
+one), never toward the smallest. This is a different axis from Phase 0b's per-theme differentiation
+— vary the *style* of the window/frame per theme, not its *size* relative to the rest of the set.
+
+**Never duplicate an object within one card.** Each corner vignette, each flanking motif instance,
+each medallion must depict something distinct from every other element on that same card — repeating
+the same little scene or charge twice on one face reads as a generation shortcut, not a design
+choice. Mirrored *pairs* (Phase 0b's bilateral symmetry) are the one deliberate exception: the two
+flanking sprays or ribbons are supposed to be identical to each other, that's symmetry, not
+duplication — duplication is two *different* slots on the card (e.g. both corner vignettes) showing
+the same scene.
+
 **The portrait window is the subject — keep it dominant.** This is a portrait frame, not a border
 showcase: the arched window must read as the single biggest element on the card, not one motif
 among equals. Target the window spanning roughly 45–60% of the card's height. Say so explicitly in

@@ -76,8 +76,8 @@ const FRAMES = {
   "italian-feminine": {
     src: "/card-kits/italian-heritage-feminine/cards/italian-heritage-feminine-frame.png",
     aspect: "900 / 1500",
-    window: { left: 30.8, top: 29.3, width: 38.0, height: 37.1, shape: "oval" },
-    plaque: { left: 34.4, top: 73.3, width: 31.4, height: 5.8 },
+    window: { left: 29.2, top: 29.4, width: 41.3, height: 37.8, shape: "oval" },
+    plaque: { left: 35.9, top: 74.9, width: 27.6, height: 7.5 },
     maps: {
       normal: "/card-kits/italian-heritage-feminine/maps/italian-heritage-feminine-normal.png",
       roughness: "/card-kits/italian-heritage-feminine/maps/italian-heritage-feminine-roughness.png",
