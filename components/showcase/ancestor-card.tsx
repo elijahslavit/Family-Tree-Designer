@@ -14,7 +14,7 @@ import { LitCardSurface } from "./lit-card-surface";
  */
 const FRAMES = {
   ornate: {
-    src: "/card-kits/ancestor-card/cards/ancestor-frame.png",
+    src: "/card-kits/ancestor-card/cards/ancestor-frame.webp",
     aspect: "1002 / 1359",
     window: { left: 25.0, top: 16.9, width: 52.0, height: 53.9, archRadiusY: 25 },
     plaque: { left: 28.8, top: 77.7, width: 44.1, height: 9.6 },
@@ -35,9 +35,10 @@ const FRAMES = {
   /**
    * Heritage theme (first of a set). Built from public/card-kits/italian-heritage
    * by scripts/build-theme-frame.js; slots and maps mirror that kit's kit.json.
+   * Display uses WebP; PNG remains the build-script source of truth.
    */
   italian: {
-    src: "/card-kits/italian-heritage/cards/italian-heritage-frame.png",
+    src: "/card-kits/italian-heritage/cards/italian-heritage-frame.webp",
     aspect: "900 / 1500",
     window: { left: 30.5, top: 22.6, width: 37.5, height: 38.1, archRadiusY: 26 },
     plaque: { left: 28.0, top: 65.8, width: 42.1, height: 7.4 },
@@ -48,7 +49,7 @@ const FRAMES = {
     },
   },
   england: {
-    src: "/card-kits/england-heritage/cards/england-heritage-frame.png",
+    src: "/card-kits/england-heritage/cards/england-heritage-frame.webp",
     aspect: "900 / 1500",
     window: { left: 31.0, top: 30.3, width: 41.4, height: 36.4, archRadiusY: 26 },
     plaque: { left: 30.9, top: 69.1, width: 40.5, height: 3.5 },
@@ -59,7 +60,7 @@ const FRAMES = {
     },
   },
   germany: {
-    src: "/card-kits/germany-heritage/cards/germany-heritage-frame.png",
+    src: "/card-kits/germany-heritage/cards/germany-heritage-frame.webp",
     aspect: "900 / 1500",
     window: { left: 34.1, top: 24.7, width: 32.3, height: 38.8, archRadiusY: 26 },
     plaque: { left: 34.3, top: 67.8, width: 30.9, height: 4.5 },
@@ -74,7 +75,7 @@ const FRAMES = {
    * slots from public/card-kits/italian-heritage-feminine/kit.json.
    */
   "italian-feminine": {
-    src: "/card-kits/italian-heritage-feminine/cards/italian-heritage-feminine-frame.png",
+    src: "/card-kits/italian-heritage-feminine/cards/italian-heritage-feminine-frame.webp",
     aspect: "900 / 1500",
     window: { left: 29.2, top: 29.4, width: 41.3, height: 37.8, shape: "oval" },
     plaque: { left: 35.9, top: 74.9, width: 27.6, height: 7.5 },
