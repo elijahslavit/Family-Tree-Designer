@@ -6,6 +6,7 @@ import { ArrowUpRight, Crosshair } from "lucide-react";
 
 import { useCanvasActions } from "@/components/canvas/canvas-context";
 import { Badge } from "@/components/foundation/badge";
+import { AncestorCard } from "@/components/showcase/ancestor-card";
 import { cn } from "@/lib/utils/cn";
 
 type CanvasNodePayload = {
@@ -258,6 +259,100 @@ const PersonNode = memo(function PersonNode({ id, data, selected, dragging }: No
   );
 });
 
+const HeritagePersonNode = memo(function HeritagePersonNode({
+  id,
+  data,
+  selected,
+  dragging,
+}: NodeProps) {
+  const payload = data as CanvasNodePayload;
+  const { centerPerson, openProfile } = useCanvasActions();
+
+  return (
+    <div
+      className={cn(
+        "canvas-node-enter group/node relative h-full w-full",
+        selected && "z-10",
+        payload.isFocus && "z-[11]",
+      )}
+    >
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="!h-2 !w-2 !border-0 !bg-[var(--accent-primary)]"
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="!h-2 !w-2 !border-0 !bg-[var(--accent-primary)]"
+      />
+
+      <div
+        className={cn(
+          "nodrag nopan absolute -top-3 right-1 z-20 flex items-center gap-1 rounded-full border border-[var(--border-default)] p-1 opacity-0 shadow-[var(--shadow-md)] transition-opacity duration-150",
+          !dragging && "group-hover/node:opacity-100 focus-within:opacity-100",
+        )}
+        style={{ background: "var(--canvas-controls-bg)" }}
+      >
+        {!payload.isFocus ? (
+          <button
+            type="button"
+            aria-label={`Center on ${payload.label}`}
+            title="Center here"
+            className="grid h-6 w-6 place-items-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[color-mix(in_oklab,var(--accent-primary)_16%,transparent)] hover:text-[var(--text-primary)]"
+            onClick={(event) => {
+              event.stopPropagation();
+              centerPerson(id);
+            }}
+          >
+            <Crosshair className="h-3.5 w-3.5" />
+          </button>
+        ) : null}
+        <button
+          type="button"
+          aria-label={`Open profile for ${payload.label}`}
+          title="Open profile"
+          className="grid h-6 w-6 place-items-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[color-mix(in_oklab,var(--accent-primary)_16%,transparent)] hover:text-[var(--text-primary)]"
+          onClick={(event) => {
+            event.stopPropagation();
+            openProfile(id);
+          }}
+        >
+          <ArrowUpRight className="h-3.5 w-3.5" />
+        </button>
+      </div>
+
+      <div
+        className={cn(
+          "h-full w-full transition-transform duration-200",
+          !dragging && "hover:-translate-y-0.5",
+          payload.isFocus && "scale-[1.03]",
+        )}
+        style={{
+          filter: payload.isFocus
+            ? "drop-shadow(0 0 10px color-mix(in oklab, var(--accent-primary) 45%, transparent)) drop-shadow(0 14px 22px rgba(38,28,14,0.4))"
+            : "drop-shadow(0 10px 16px rgba(38,28,14,0.28))",
+        }}
+      >
+        <AncestorCard
+          name={payload.label}
+          lifespan={payload.subtitle ?? undefined}
+          portraitSrc={payload.portraitPath ?? undefined}
+          portraitTreatment="period"
+          frameVariant="italian"
+          masked={Boolean(payload.isLiving)}
+          lit={false}
+          elevated={false}
+          zoom={1.12}
+          focalY={28}
+          className="h-full w-full"
+        />
+      </div>
+    </div>
+  );
+});
+
 export const nodeTypes = {
   person: PersonNode,
+  "heritage-person": HeritagePersonNode,
 };

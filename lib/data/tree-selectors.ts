@@ -265,12 +265,17 @@ export async function getCanvasNeighborhoodFromBundle({
   viewer,
   depth = 1,
   lineageId = null,
+  nodeFootprint = { width: 252, height: 150 },
+  nodeType = "person",
 }: {
   bundle: TreeBundle;
   personId: string;
   viewer: ViewerContext;
   depth?: number;
   lineageId?: string | null;
+  /** ELK node box — taller for heritage cards, shorter for workspace cards. */
+  nodeFootprint?: { width: number; height: number };
+  nodeType?: string;
 }) {
   const person = getPersonViewFromBundle(bundle, personId, viewer);
 
@@ -369,10 +374,14 @@ export async function getCanvasNeighborhoodFromBundle({
 
     return {
       id: visiblePerson.id,
-      type: "person",
+      type: nodeType,
       position: {
         x: (nodeDepths.get(visiblePerson.id) ?? 0) * 240,
         y: 0,
+      },
+      style: {
+        width: nodeFootprint.width,
+        height: nodeFootprint.height,
       },
       ariaLabel: highlightedIds.has(visiblePerson.id)
         ? `${visiblePerson.fullName}, highlighted lineage member`
@@ -412,12 +421,13 @@ export async function getCanvasNeighborhoodFromBundle({
 
       return String(left.data.label).localeCompare(String(right.data.label));
     });
-    const layerHeight = Math.max((sortedNodes.length - 1) * 190, 0);
+    const rowGap = Math.round(nodeFootprint.height + 40);
+    const layerHeight = Math.max((sortedNodes.length - 1) * rowGap, 0);
 
     sortedNodes.forEach((node, index) => {
       node.position = {
-        x: level * 320,
-        y: index * 190 - layerHeight / 2,
+        x: level * Math.round(nodeFootprint.width + 68),
+        y: index * rowGap - layerHeight / 2,
       };
     });
   });
@@ -426,6 +436,8 @@ export async function getCanvasNeighborhoodFromBundle({
     const ELKModule = await import("elkjs/lib/elk.bundled.js");
     const ELKConstructor = ELKModule.default;
     const elk = new ELKConstructor();
+    const layerGap = String(Math.round(nodeFootprint.width * 0.7));
+    const nodeGap = String(Math.round(nodeFootprint.height * 0.35));
     const layout = await elk.layout({
       id: "family-tree",
       layoutOptions: {
@@ -433,13 +445,13 @@ export async function getCanvasNeighborhoodFromBundle({
         "elk.direction": "RIGHT",
         "elk.edgeRouting": "ORTHOGONAL",
         "elk.layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
-        "elk.layered.spacing.nodeNodeBetweenLayers": "170",
-        "elk.spacing.nodeNode": "120",
+        "elk.layered.spacing.nodeNodeBetweenLayers": layerGap,
+        "elk.spacing.nodeNode": nodeGap,
       },
       children: nodes.map((node) => ({
         id: node.id,
-        width: 252,
-        height: 150,
+        width: nodeFootprint.width,
+        height: nodeFootprint.height,
       })),
       edges: edges.map((edge) => ({
         id: edge.id,

@@ -117,6 +117,13 @@ export type AncestorCardProps = {
   focalY?: number;
   /** Optional crop-in on the portrait (1 = no zoom). Applied around the focal point. */
   zoom?: number;
+  /**
+   * When false, skip the WebGL lit surface (canvas trees with many nodes).
+   * Showcase heroes keep the default lit treatment.
+   */
+  lit?: boolean;
+  /** When false, omit the alpha drop-shadow (canvas nodes apply their own). */
+  elevated?: boolean;
   className?: string;
 };
 
@@ -132,6 +139,8 @@ export function AncestorCard({
   focalX = 50,
   focalY = 18,
   zoom = 1,
+  lit = true,
+  elevated = true,
   className,
 }: AncestorCardProps) {
   const frame = FRAMES[frameVariant];
@@ -152,7 +161,7 @@ export function AncestorCard({
          * so the box must not clip or round it. The shadow follows the alpha
          * rather than the element box for the same reason.
          */
-        filter: "drop-shadow(0 18px 26px rgba(38,28,14,0.42))",
+        ...(elevated ? { filter: "drop-shadow(0 18px 26px rgba(38,28,14,0.42))" } : null),
       }}
     >
       <Image
@@ -163,7 +172,7 @@ export function AncestorCard({
         className="object-contain"
       />
 
-      {frame.maps ? (
+      {lit && frame.maps ? (
         /*
          * Per-pixel relighting from the material maps. This replaces the frame
          * image once its textures are up: a masked CSS gradient can only
@@ -176,7 +185,7 @@ export function AncestorCard({
           roughness={frame.maps.roughness}
           height={frame.maps.height}
         />
-      ) : (
+      ) : !lit && frame.maps ? null : (
         /* No maps: a single flat sheen, the same treatment the wrapper used to apply. */
         <div
           aria-hidden

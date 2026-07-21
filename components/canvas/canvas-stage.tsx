@@ -35,6 +35,11 @@ type CanvasStageProps = {
   onOpen: (personId: string) => void;
   onSearchShortcut?: () => void;
   isPending?: boolean;
+  /**
+   * Showcase trees drop the diagram-dot grid and lean on the skin's parchment /
+   * dark ground. Workspace canvases keep the tool-like dots.
+   */
+  presentation?: "workspace" | "showcase";
 };
 
 export function CanvasStage({
@@ -44,9 +49,11 @@ export function CanvasStage({
   onOpen,
   onSearchShortcut,
   isPending,
+  presentation = "workspace",
 }: CanvasStageProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(incomingNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(incomingEdges);
+  const isShowcase = presentation === "showcase";
 
   useEffect(() => {
     setNodes(incomingNodes);
@@ -57,7 +64,10 @@ export function CanvasStage({
   }, [incomingEdges, setEdges]);
 
   return (
-    <div className="canvas-stage h-full w-full" aria-busy={isPending || undefined}>
+    <div
+      className={`canvas-stage h-full w-full${isShowcase ? " canvas-stage--showcase" : ""}`}
+      aria-busy={isPending || undefined}
+    >
       <ReactFlow
         fitView
         fitViewOptions={FIT_VIEW_OPTIONS}
@@ -84,12 +94,14 @@ export function CanvasStage({
         <CanvasAutoFit resetKey={incomingNodes} />
         <CanvasShortcuts onSearchShortcut={onSearchShortcut} />
         <CanvasToolbar />
-        <Background
-          variant={BackgroundVariant.Dots}
-          gap={28}
-          size={1.2}
-          color="var(--canvas-grid-color)"
-        />
+        {isShowcase ? null : (
+          <Background
+            variant={BackgroundVariant.Dots}
+            gap={28}
+            size={1.2}
+            color="var(--canvas-grid-color)"
+          />
+        )}
         <MiniMap
           pannable
           zoomable

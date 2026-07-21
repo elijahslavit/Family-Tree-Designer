@@ -35,6 +35,7 @@ export default async function PrivateTreePage({ params, searchParams }: { params
       focusPerson={canvas.focusPerson}
       profileHref={`${basePath}/people/${canvas.focusPerson.id}`}
       relatedCount={canvas.relatedCount}
+      presentation="showcase"
       className="h-[calc(100dvh-4.25rem)] min-h-[560px]"
     />
   );

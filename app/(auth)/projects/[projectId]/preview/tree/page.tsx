@@ -34,6 +34,7 @@ export default async function PilotPreviewTreePage({ params, searchParams }: { p
       focusPerson={canvas.focusPerson}
       profileHref={`${basePath}/people/${canvas.focusPerson.id}`}
       relatedCount={canvas.relatedCount}
+      presentation="showcase"
       className="h-[calc(100dvh-7.5rem)] min-h-[560px]"
     />
   );

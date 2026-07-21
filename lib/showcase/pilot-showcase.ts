@@ -199,6 +199,9 @@ export async function getShowcaseCanvas(
     viewer: { mode: "creator", accountId: bundle.account.id },
     depth: Math.min(2, Math.max(1, depth)),
     lineageId: null,
+    // Compact Italian heritage cards (900×1500 → ~168×280) — showcase tree only.
+    nodeFootprint: { width: 168, height: 280 },
+    nodeType: "heritage-person",
   });
 
   if (!result) {

@@ -507,6 +507,18 @@ textarea {
   background: transparent;
 }
 
+.canvas-stage--showcase .react-flow__edge-path {
+  stroke: var(--canvas-edge);
+  stroke-width: 1.6;
+}
+
+.canvas-stage--showcase .react-flow__node {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
 .react-flow__attribution {
   display: none;
 }

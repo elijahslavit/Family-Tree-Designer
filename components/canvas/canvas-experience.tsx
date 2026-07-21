@@ -40,6 +40,8 @@ type CanvasExperienceProps = {
   relatedCount: number;
   topBar?: CanvasTopBar;
   className?: string;
+  /** Client showcase trees use heritage cards + quiet ground; workspace keeps tool chrome. */
+  presentation?: "workspace" | "showcase";
 };
 
 export function CanvasExperience({
@@ -58,6 +60,7 @@ export function CanvasExperience({
   relatedCount,
   topBar,
   className,
+  presentation = "workspace",
 }: CanvasExperienceProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -142,6 +145,7 @@ export function CanvasExperience({
         onOpen={openProfile}
         onSearchShortcut={focusSearch}
         isPending={isPending}
+        presentation={presentation}
       />
 
       <div

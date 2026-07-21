@@ -72,3 +72,19 @@
   --creator-accent: #e5aa45;
   --creator-accent-soft: rgba(229, 170, 69, 0.14);
 }
+
+/* Museum-at-night ground for Heirloom showcase trees: near-black with a single
+   warm lamp glow from the upper left — no diagram dots. */
+[data-skin="dark-gold"] .canvas-stage {
+  background-color: var(--bg-canvas);
+  background-image:
+    radial-gradient(ellipse 90% 70% at 28% 12%, rgba(229, 170, 69, 0.14), transparent 58%),
+    radial-gradient(ellipse 120% 90% at 50% 100%, rgba(0, 0, 0, 0.45), transparent 55%);
+  background-size: cover, cover;
+}
+
+[data-skin="dark-gold"] .canvas-stage--showcase {
+  background-image:
+    radial-gradient(ellipse 90% 70% at 28% 12%, rgba(229, 170, 69, 0.16), transparent 58%),
+    radial-gradient(ellipse 120% 90% at 50% 100%, rgba(0, 0, 0, 0.5), transparent 55%);
+}
