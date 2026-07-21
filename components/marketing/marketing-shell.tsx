@@ -34,7 +34,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
       </a>
 
       <header className="border-b border-[#a67c52]/30 bg-[#efe7d6]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-10 xl:px-16 2xl:px-24">
           <Link href="/" className="flex items-center gap-3">
             <Monogram />
             <span className="min-w-0">

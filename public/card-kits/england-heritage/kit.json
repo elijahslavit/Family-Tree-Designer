@@ -1,0 +1,27 @@
+{
+  "name": "England Heritage",
+  "slug": "england-heritage",
+  "palette": ["#E2D4B4", "#F4EBDD", "#3B2B1E", "#7A5A3A", "#B08A3E", "#5A6141", "#3E5063", "#8B3A3A"],
+  "mode": "light",
+  "cardAspect": "900 / 1500",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-theme-frame.js england-heritage",
+  "cards": [
+    {
+      "name": "England heritage frame",
+      "slug": "england-heritage-frame",
+      "front": "cards/england-heritage-frame.png",
+      "maps": {
+        "normal": "maps/england-heritage-normal.png",
+        "roughness": "maps/england-heritage-roughness.png",
+        "height": "maps/england-heritage-height.png"
+      },
+      "slots": {
+        "window": { "left": 31.0, "top": 30.3, "width": 41.4, "height": 36.4, "archRadiusY": 26 },
+        "plaque": { "left": 30.9, "top": 69.1, "width": 40.5, "height": 3.5 }
+      }
+    }
+  ],
+  "buildLink": "https://diffui.ai/app/canvas/2c8167a1-2cdc-4668-a042-967aecd4ed0e",
+  "notes": "Designed via the per-theme design card (Phase 0b): pointed Gothic Tudor arch, quatrefoil tracery rails, stained-glass rose window crown, White Cliffs of Dover + parish village vignettes, three lions of England shield. Built from diffui option england-v2-b (twin-lancet window). Canonical box 900x1500 (skinnier house default). Slot detection uses connected-component flood fill with a morphological closing pass on the ivory mask, so a thin gold mullion dividing a twin-lancet window doesn't split it into two components. Silhouette detection excludes a border margin ring before flooding, so a velvet fold catching warm bounce light (same hue/sat range as the card's own gold) can't bleed into the cutout."
+}

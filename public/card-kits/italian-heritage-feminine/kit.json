@@ -1,0 +1,32 @@
+{
+  "name": "Italian Heritage Feminine",
+  "slug": "italian-heritage-feminine",
+  "palette": ["#E2D4B4", "#F4EBDD", "#3B2B1E", "#B08A3E", "#6B6F4A", "#A04E3A", "#C4A07A", "#5A2D33"],
+  "mode": "light",
+  "cardAspect": "900 / 1500",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-theme-frame.js italian-heritage-feminine",
+  "cards": [
+    {
+      "name": "Italian heritage feminine frame",
+      "slug": "italian-heritage-feminine-frame",
+      "front": "cards/italian-heritage-feminine-frame.png",
+      "maps": {
+        "normal": "maps/italian-heritage-feminine-normal.png",
+        "roughness": "maps/italian-heritage-feminine-roughness.png",
+        "height": "maps/italian-heritage-feminine-height.png"
+      },
+      "slots": {
+        "window": {
+          "left": 30.8,
+          "top": 29.3,
+          "width": 38.0,
+          "height": 37.1,
+          "shape": "oval"
+        },
+        "plaque": { "left": 34.4, "top": 73.3, "width": 31.4, "height": 5.8 }
+      }
+    }
+  ],
+  "notes": "Feminine sibling of italian-heritage (Phase 0c): soft oval cameo window, olive wreath with grapes and tricolor ribbons, ribbon-bow crown, coastal village + olive grove vignettes, rose spray base, scalloped scroll plaque. Built from Italy feminine D refined. Canonical box 900x1500. Rebuild: node scripts/build-theme-frame.js italian-heritage-feminine."
+}

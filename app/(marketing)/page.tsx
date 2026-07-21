@@ -4,7 +4,6 @@ import Image from "next/image";
 
 import {
   ClosingBand,
-  Ornament,
   PrimaryButton,
   SecondaryLink,
   SectionHeading,
@@ -22,45 +21,40 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <section className="relative isolate overflow-hidden border-b border-[#a67c52]/30">
+      <section className="relative isolate overflow-hidden border-b border-[#a67c52]/30 bg-[#f2e9d8]">
         <Image
-          src="/landing/hero-atlas.webp"
+          src="/showcase/hub-archive-bg.webp"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[70%_center]"
+          className="object-cover object-top lg:object-left"
         />
         <div
           aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(242,233,216,0.96)_0%,rgba(242,233,216,0.9)_52%,rgba(242,233,216,0.42)_82%,rgba(242,233,216,0.05)_100%)] md:bg-[linear-gradient(90deg,rgba(242,233,216,0.95)_0%,rgba(242,233,216,0.74)_34%,rgba(242,233,216,0)_60%)]"
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(242,233,216,0.96)_0%,rgba(242,233,216,0.9)_52%,rgba(242,233,216,0.42)_82%,rgba(242,233,216,0.05)_100%)] md:bg-[linear-gradient(90deg,rgba(242,233,216,0)_0%,rgba(242,233,216,0)_20%,rgba(242,233,216,0.55)_32%,rgba(242,233,216,0.9)_40%,rgba(242,233,216,0.97)_47%,rgba(242,233,216,0.97)_100%)]"
         />
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-24">
-          <div className="max-w-xl space-y-7">
-            <h1 className="font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.04em] text-[#3a3026] sm:text-6xl lg:text-7xl">
-              Your research deserves a reveal
+        {/* Full-bleed grid: no centered max-width cap, so on wide and ultrawide
+            displays the content column hugs the right edge instead of stranding
+            cream there. Padding scales with the header's so the two align. */}
+        <div className="relative grid gap-10 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:items-center lg:gap-x-16 lg:gap-y-7 lg:px-10 lg:py-10 lg:min-h-[calc(100vh-4.25rem)] xl:px-16 2xl:px-24 2xl:py-14">
+          {/* Headline & lead — top of the right column on desktop, first on mobile. */}
+          <div className="w-full max-w-xl space-y-6 lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:self-end lg:justify-self-end lg:mr-4 lg:max-w-[520px] xl:mr-12 xl:max-w-[560px] 2xl:mr-24">
+            <h1 className="font-serif text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-[#3a3026] sm:text-6xl xl:text-7xl">
+              Your research deserves a{" "}
+              <span className="font-medium italic">reveal</span>.
             </h1>
-            <div>
-              <Ornament />
-            </div>
-            <p className="max-w-lg text-lg leading-8 text-[#5c5142]">
-              Months of careful work should not arrive as a PDF attachment. We
-              turn your finished research into a private family archive your
-              clients will open again for years — delivered under your name.
-            </p>
-            <div className="flex flex-wrap items-center gap-6">
-              <PrimaryButton href="/styles">See a finished reveal</PrimaryButton>
-              <SecondaryLink href="/how-it-works">
-                See how it works <ArrowRight className="h-4 w-4" />
-              </SecondaryLink>
-            </div>
-            <p className="text-sm leading-6 text-[#6e6353]">
-              Keep the research tools you trust. Upgrade what your clients receive.
+            <HeroFlourish />
+            <p className="max-w-md text-lg leading-8 text-[#5c5142] xl:max-w-lg xl:text-xl xl:leading-9">
+              Months of careful work shouldn&rsquo;t arrive as a PDF. We turn it into
+              a private family archive — delivered under your name.
             </p>
           </div>
 
-          <div className="mx-auto w-full max-w-[380px] lg:max-w-[420px]">
+          {/* The finished archive card — left column on desktop, resting over the
+              research so it reads as the "after" emerging from the "before". */}
+          <div className="mx-auto w-full max-w-[260px] sm:max-w-[300px] lg:col-span-5 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mx-0 lg:justify-self-end lg:self-center lg:max-w-[380px] xl:max-w-[420px] 2xl:max-w-[460px]">
             <TiltCard>
               <AncestorCard
                 name="Thomas Alfred Harrington"
@@ -74,6 +68,20 @@ export default function HomePage() {
             </TiltCard>
             <p className="mt-3 text-center text-[10px] uppercase tracking-[0.14em] text-[#8a7a62]">
               Sample archive · illustrative portrait
+            </p>
+          </div>
+
+          {/* Calls to action & tagline — bottom of the right column on desktop,
+              last on mobile. */}
+          <div className="w-full max-w-xl lg:col-span-6 lg:col-start-7 lg:row-start-2 lg:self-start lg:justify-self-end lg:mr-4 lg:max-w-[520px] xl:mr-12 xl:max-w-[560px] 2xl:mr-24">
+            <div className="flex flex-wrap items-center gap-6">
+              <PrimaryButton href="/styles">See a finished reveal</PrimaryButton>
+              <SecondaryLink href="/how-it-works">
+                See how it works <ArrowRight className="h-4 w-4" />
+              </SecondaryLink>
+            </div>
+            <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.26em] text-[#a67c52] xl:text-xs">
+              Private. Personal. Presented beautifully.
             </p>
           </div>
         </div>
@@ -132,6 +140,16 @@ export default function HomePage() {
         ctaLabel="See what it costs"
       />
     </>
+  );
+}
+
+/** A long engraved rule closing in a small diamond — the hero's flourish. */
+function HeroFlourish() {
+  return (
+    <span aria-hidden className="flex items-center gap-3 text-[#a67c52]">
+      <span className="h-px w-32 bg-current opacity-70 xl:w-40" />
+      <span className="text-[11px] leading-none">✦</span>
+    </span>
   );
 }
 

@@ -1,0 +1,27 @@
+{
+  "name": "Germany Heritage",
+  "slug": "germany-heritage",
+  "palette": ["#E2D4B4", "#F4EBDD", "#3B2B1E", "#7A5A3A", "#B08A3E", "#43503A", "#5A4632", "#4A5C7A"],
+  "mode": "light",
+  "cardAspect": "900 / 1500",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-theme-frame.js germany-heritage",
+  "cards": [
+    {
+      "name": "Germany heritage frame",
+      "slug": "germany-heritage-frame",
+      "front": "cards/germany-heritage-frame.png",
+      "maps": {
+        "normal": "maps/germany-heritage-normal.png",
+        "roughness": "maps/germany-heritage-roughness.png",
+        "height": "maps/germany-heritage-height.png"
+      },
+      "slots": {
+        "window": { "left": 34.1, "top": 24.7, "width": 32.3, "height": 38.8, "archRadiusY": 26 },
+        "plaque": { "left": 34.3, "top": 67.8, "width": 30.9, "height": 4.5 }
+      }
+    }
+  ],
+  "buildLink": "https://diffui.ai/app/canvas/2c8167a1-2cdc-4668-a042-967aecd4ed0e",
+  "notes": "Designed via the per-theme design card (Phase 0b), deliberately apolitical: dark carved-oak Gothic lancet arch, oak-and-linden knotwork rails, carved sunburst rosette crown, Rhine castle + Fachwerk market-well vignettes, plain oak-tree shield (no crown, no eagle, no cross, no flag colors). Built from diffui option germany-v2-a. Canonical box 900x1500 (skinnier house default). Same slot-detection and silhouette fixes as england-heritage."
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Italian Heritage",
+  "slug": "italian-heritage",
+  "palette": ["#E2D4B4", "#F4EBDD", "#3B2B1E", "#7A5A3A", "#B08A3E", "#6B6F4A", "#3F5F66", "#A04E3A", "#5A2D33"],
+  "mode": "light",
+  "cardAspect": "900 / 1500",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-theme-frame.js italian-heritage",
+  "cards": [
+    {
+      "name": "Italian heritage frame",
+      "slug": "italian-heritage-frame",
+      "front": "cards/italian-heritage-frame.png",
+      "maps": {
+        "normal": "maps/italian-heritage-normal.png",
+        "roughness": "maps/italian-heritage-roughness.png",
+        "height": "maps/italian-heritage-height.png"
+      },
+      "slots": {
+        "window": { "left": 30.5, "top": 22.6, "width": 37.5, "height": 38.1, "archRadiusY": 26 },
+        "plaque": { "left": 28.0, "top": 65.8, "width": 42.1, "height": 7.4 }
+      }
+    }
+  ],
+  "buildLink": "https://diffui.ai/app/canvas/2c8167a1-2cdc-4668-a042-967aecd4ed0e",
+  "notes": "Reusable heritage theme built from source-frame.webp (diffui Option A, chromolithograph on charcoal). Same fixed window+plaque template as ancestor-card. Maps are relief-aware: the printed corner vignettes are held to the paper plane (high-pass) so they do not crater, while the gold ornament rides a raised plateau and keeps its groove relief. Rebuild: npm run build:theme-frame -- italian-heritage (or node scripts/build-theme-frame.js italian-heritage)."
+}

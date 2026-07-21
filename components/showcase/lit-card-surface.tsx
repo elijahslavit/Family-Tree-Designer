@@ -118,7 +118,7 @@ export function LitCardSurface({ diffuse, normal, roughness, height, className }
       premultipliedAlpha: true,
       powerPreference: "default",
     });
-    if (!gl) return; // No WebGL2: the plain frame image stays visible.
+    if (!gl || gl.isContextLost()) return; // No WebGL2 or lost context: the plain frame image stays visible.
     // Bound once so the nested draw/upload closures keep the non-null type.
     const ctx: WebGL2RenderingContext = gl;
 
@@ -126,12 +126,15 @@ export function LitCardSurface({ diffuse, normal, roughness, height, className }
     let disposed = false;
 
     function compile(type: number, src: string) {
+      if (ctx.isContextLost()) return null;
       const s = ctx.createShader(type);
       if (!s) return null;
       ctx.shaderSource(s, src);
       ctx.compileShader(s);
       if (!ctx.getShaderParameter(s, ctx.COMPILE_STATUS)) {
-        console.error("lit card shader:", ctx.getShaderInfoLog(s));
+        if (!ctx.isContextLost()) {
+          console.error("lit card shader:", ctx.getShaderInfoLog(s));
+        }
         return null;
       }
       return s;
@@ -147,7 +150,9 @@ export function LitCardSurface({ diffuse, normal, roughness, height, className }
     ctx.attachShader(prog, fs);
     ctx.linkProgram(prog);
     if (!ctx.getProgramParameter(prog, ctx.LINK_STATUS)) {
-      console.error("lit card link:", ctx.getProgramInfoLog(prog));
+      if (!ctx.isContextLost()) {
+        console.error("lit card link:", ctx.getProgramInfoLog(prog));
+      }
       return;
     }
     ctx.useProgram(prog);
@@ -314,7 +319,17 @@ export function LitCardSurface({ diffuse, normal, roughness, height, className }
       window.removeEventListener("pointermove", onPointer);
       host?.removeEventListener("pointerleave", onLeave);
       ro.disconnect();
-      ctx.getExtension("WEBGL_lose_context")?.loseContext();
+      
+      // Clean up resources to avoid GPU memory leaks while keeping the context valid for reuse
+      if (vs) ctx.deleteShader(vs);
+      if (fs) ctx.deleteShader(fs);
+      if (prog) ctx.deleteProgram(prog);
+      if (vao) ctx.deleteVertexArray(vao);
+      if (buf) ctx.deleteBuffer(buf);
+      if (texDiffuse) ctx.deleteTexture(texDiffuse);
+      if (texNormal) ctx.deleteTexture(texNormal);
+      if (texRough) ctx.deleteTexture(texRough);
+      if (texHeight) ctx.deleteTexture(texHeight);
     };
   }, [diffuse, normal, roughness, height]);
 

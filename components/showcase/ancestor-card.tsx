@@ -32,6 +32,58 @@ const FRAMES = {
     /** The modern mat is deliberately flat — no relief to light. */
     maps: null,
   },
+  /**
+   * Heritage theme (first of a set). Built from public/card-kits/italian-heritage
+   * by scripts/build-theme-frame.js; slots and maps mirror that kit's kit.json.
+   */
+  italian: {
+    src: "/card-kits/italian-heritage/cards/italian-heritage-frame.png",
+    aspect: "900 / 1500",
+    window: { left: 30.5, top: 22.6, width: 37.5, height: 38.1, archRadiusY: 26 },
+    plaque: { left: 28.0, top: 65.8, width: 42.1, height: 7.4 },
+    maps: {
+      normal: "/card-kits/italian-heritage/maps/italian-heritage-normal.png",
+      roughness: "/card-kits/italian-heritage/maps/italian-heritage-roughness.png",
+      height: "/card-kits/italian-heritage/maps/italian-heritage-height.png",
+    },
+  },
+  england: {
+    src: "/card-kits/england-heritage/cards/england-heritage-frame.png",
+    aspect: "900 / 1500",
+    window: { left: 31.0, top: 30.3, width: 41.4, height: 36.4, archRadiusY: 26 },
+    plaque: { left: 30.9, top: 69.1, width: 40.5, height: 3.5 },
+    maps: {
+      normal: "/card-kits/england-heritage/maps/england-heritage-normal.png",
+      roughness: "/card-kits/england-heritage/maps/england-heritage-roughness.png",
+      height: "/card-kits/england-heritage/maps/england-heritage-height.png",
+    },
+  },
+  germany: {
+    src: "/card-kits/germany-heritage/cards/germany-heritage-frame.png",
+    aspect: "900 / 1500",
+    window: { left: 34.1, top: 24.7, width: 32.3, height: 38.8, archRadiusY: 26 },
+    plaque: { left: 34.3, top: 67.8, width: 30.9, height: 4.5 },
+    maps: {
+      normal: "/card-kits/germany-heritage/maps/germany-heritage-normal.png",
+      roughness: "/card-kits/germany-heritage/maps/germany-heritage-roughness.png",
+      height: "/card-kits/germany-heritage/maps/germany-heritage-height.png",
+    },
+  },
+  /**
+   * Feminine Italian heritage (Phase 0c sibling). Soft oval cameo + scroll plaque;
+   * slots from public/card-kits/italian-heritage-feminine/kit.json.
+   */
+  "italian-feminine": {
+    src: "/card-kits/italian-heritage-feminine/cards/italian-heritage-feminine-frame.png",
+    aspect: "900 / 1500",
+    window: { left: 30.8, top: 29.3, width: 38.0, height: 37.1, shape: "oval" },
+    plaque: { left: 34.4, top: 73.3, width: 31.4, height: 5.8 },
+    maps: {
+      normal: "/card-kits/italian-heritage-feminine/maps/italian-heritage-feminine-normal.png",
+      roughness: "/card-kits/italian-heritage-feminine/maps/italian-heritage-feminine-roughness.png",
+      height: "/card-kits/italian-heritage-feminine/maps/italian-heritage-feminine-height.png",
+    },
+  },
 } as const;
 
 export type AncestorCardFrameVariant = keyof typeof FRAMES;
@@ -84,7 +136,10 @@ export function AncestorCard({
 }: AncestorCardProps) {
   const frame = FRAMES[frameVariant];
   const { window: win, plaque } = frame;
-  const archRadius = `50% 50% 0 0 / ${win.archRadiusY}% ${win.archRadiusY}% 0 0`;
+  const isOval = "shape" in win && win.shape === "oval";
+  const windowRadius = isOval
+    ? "50%"
+    : `50% 50% 0 0 / ${"archRadiusY" in win ? win.archRadiusY : 25}% ${"archRadiusY" in win ? win.archRadiusY : 25}% 0 0`;
 
   return (
     <figure
@@ -142,7 +197,7 @@ export function AncestorCard({
           top: `${win.top}%`,
           width: `${win.width}%`,
           height: `${win.height}%`,
-          borderRadius: archRadius,
+          borderRadius: windowRadius,
         }}
       >
         {masked ? (
