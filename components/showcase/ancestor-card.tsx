@@ -149,6 +149,12 @@ export function AncestorCard({
   const windowRadius = isOval
     ? "50%"
     : `50% 50% 0 0 / ${"archRadiusY" in win ? win.archRadiusY : 25}% ${"archRadiusY" in win ? win.archRadiusY : 25}% 0 0`;
+  /*
+   * Canvas trees mount many cards at once. Routing each through next/image's
+   * sharp worker OOMs the Jest image workers (observed: "exceeding retry limit"
+   * on the showcase tree). Plain <img> is fine at ~168px card width.
+   */
+  const bypassOptimizer = !lit;
 
   return (
     <figure
@@ -164,13 +170,18 @@ export function AncestorCard({
         ...(elevated ? { filter: "drop-shadow(0 18px 26px rgba(38,28,14,0.42))" } : null),
       }}
     >
-      <Image
-        src={frame.src}
-        alt=""
-        fill
-        sizes="(max-width: 640px) 90vw, 460px"
-        className="object-contain"
-      />
+      {bypassOptimizer ? (
+        // eslint-disable-next-line @next/next/no-img-element -- many canvas nodes; avoid sharp workers
+        <img src={frame.src} alt="" className="absolute inset-0 h-full w-full object-contain" draggable={false} />
+      ) : (
+        <Image
+          src={frame.src}
+          alt=""
+          fill
+          sizes="(max-width: 640px) 90vw, 460px"
+          className="object-contain"
+        />
+      )}
 
       {lit && frame.maps ? (
         /*
@@ -218,28 +229,53 @@ export function AncestorCard({
           </div>
         ) : portraitSrc ? (
           <>
-            <Image
-              src={portraitSrc}
-              alt={portraitAlt ?? `Portrait of ${name}`}
-              fill
-              sizes="(max-width: 640px) 60vw, 300px"
-              className="object-cover"
-              style={{
-                objectPosition: `${focalX}% ${focalY}%`,
-                ...(portraitTreatment === "modern"
-                  ? {
-                      transform: `scale(${Math.max(zoom, 1.32)})`,
-                      transformOrigin: `${focalX}% ${focalY + 10}%`,
-                      filter: "grayscale(1) sepia(0.1) contrast(1.14) brightness(0.97)",
-                    }
-                  : {
-                      ...(zoom !== 1
-                        ? { transform: `scale(${zoom})`, transformOrigin: `${focalX}% ${focalY}%` }
-                        : {}),
-                      filter: "contrast(0.97) brightness(1.01)",
-                    }),
-              }}
-            />
+            {bypassOptimizer ? (
+              /* eslint-disable-next-line @next/next/no-img-element -- canvas node portraits */
+              <img
+                src={portraitSrc}
+                alt={portraitAlt ?? `Portrait of ${name}`}
+                className="absolute inset-0 h-full w-full object-cover"
+                draggable={false}
+                style={{
+                  objectPosition: `${focalX}% ${focalY}%`,
+                  ...(portraitTreatment === "modern"
+                    ? {
+                        transform: `scale(${Math.max(zoom, 1.32)})`,
+                        transformOrigin: `${focalX}% ${focalY + 10}%`,
+                        filter: "grayscale(1) sepia(0.1) contrast(1.14) brightness(0.97)",
+                      }
+                    : {
+                        ...(zoom !== 1
+                          ? { transform: `scale(${zoom})`, transformOrigin: `${focalX}% ${focalY}%` }
+                          : {}),
+                        filter: "contrast(0.97) brightness(1.01)",
+                      }),
+                }}
+              />
+            ) : (
+              <Image
+                src={portraitSrc}
+                alt={portraitAlt ?? `Portrait of ${name}`}
+                fill
+                sizes="(max-width: 640px) 60vw, 300px"
+                className="object-cover"
+                style={{
+                  objectPosition: `${focalX}% ${focalY}%`,
+                  ...(portraitTreatment === "modern"
+                    ? {
+                        transform: `scale(${Math.max(zoom, 1.32)})`,
+                        transformOrigin: `${focalX}% ${focalY + 10}%`,
+                        filter: "grayscale(1) sepia(0.1) contrast(1.14) brightness(0.97)",
+                      }
+                    : {
+                        ...(zoom !== 1
+                          ? { transform: `scale(${zoom})`, transformOrigin: `${focalX}% ${focalY}%` }
+                          : {}),
+                        filter: "contrast(0.97) brightness(1.01)",
+                      }),
+                }}
+              />
+            )}
             <div
               aria-hidden
               className="absolute inset-0"
