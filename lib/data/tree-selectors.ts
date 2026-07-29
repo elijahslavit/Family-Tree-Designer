@@ -267,6 +267,7 @@ export async function getCanvasNeighborhoodFromBundle({
   lineageId = null,
   nodeFootprint = { width: 252, height: 150 },
   nodeType = "person",
+  orientation = "horizontal",
 }: {
   bundle: TreeBundle;
   personId: string;
@@ -276,6 +277,8 @@ export async function getCanvasNeighborhoodFromBundle({
   /** ELK node box — taller for heritage cards, shorter for workspace cards. */
   nodeFootprint?: { width: number; height: number };
   nodeType?: string;
+  /** Layered flow: horizontal = generations left→right; vertical = top→bottom. */
+  orientation?: "horizontal" | "vertical";
 }) {
   const person = getPersonViewFromBundle(bundle, personId, viewer);
 
@@ -357,6 +360,8 @@ export async function getCanvasNeighborhoodFromBundle({
       : [],
   );
 
+  const isVertical = orientation === "vertical";
+
   const nodes: Node[] = [...visiblePeople.values()].map((visiblePerson) => {
     const personLineages = getLineagesForPerson(bundle, visiblePerson.id);
     const data: CanvasNodeData = {
@@ -370,14 +375,16 @@ export async function getCanvasNeighborhoodFromBundle({
       isHighlighted: highlightedIds.has(visiblePerson.id),
       relationGroup: relationGroups.get(visiblePerson.id) ?? "relative",
       lineageNames: personLineages.map((lineage) => lineage.name),
+      orientation,
+      gender: visiblePerson.gender,
     };
 
     return {
       id: visiblePerson.id,
       type: nodeType,
       position: {
-        x: (nodeDepths.get(visiblePerson.id) ?? 0) * 240,
-        y: 0,
+        x: isVertical ? 0 : (nodeDepths.get(visiblePerson.id) ?? 0) * 240,
+        y: isVertical ? (nodeDepths.get(visiblePerson.id) ?? 0) * 240 : 0,
       },
       style: {
         width: nodeFootprint.width,
@@ -421,14 +428,27 @@ export async function getCanvasNeighborhoodFromBundle({
 
       return String(left.data.label).localeCompare(String(right.data.label));
     });
-    const rowGap = Math.round(nodeFootprint.height + 40);
-    const layerHeight = Math.max((sortedNodes.length - 1) * rowGap, 0);
+    // Vertical stacks generations on Y; siblings fan on X. Horizontal is the reverse.
+    const peerGap = isVertical
+      ? Math.round(nodeFootprint.width + 48)
+      : Math.round(nodeFootprint.height + 40);
+    const layerStride = isVertical
+      ? Math.round(nodeFootprint.height + 72)
+      : Math.round(nodeFootprint.width + 68);
+    const peerSpan = Math.max((sortedNodes.length - 1) * peerGap, 0);
 
     sortedNodes.forEach((node, index) => {
-      node.position = {
-        x: level * Math.round(nodeFootprint.width + 68),
-        y: index * rowGap - layerHeight / 2,
-      };
+      if (isVertical) {
+        node.position = {
+          x: index * peerGap - peerSpan / 2,
+          y: level * layerStride,
+        };
+      } else {
+        node.position = {
+          x: level * layerStride,
+          y: index * peerGap - peerSpan / 2,
+        };
+      }
     });
   });
 
@@ -436,13 +456,18 @@ export async function getCanvasNeighborhoodFromBundle({
     const ELKModule = await import("elkjs/lib/elk.bundled.js");
     const ELKConstructor = ELKModule.default;
     const elk = new ELKConstructor();
-    const layerGap = String(Math.round(nodeFootprint.width * 0.7));
-    const nodeGap = String(Math.round(nodeFootprint.height * 0.35));
+    // Between layers: follow the flow axis. Within a layer: follow the peer axis.
+    const layerGap = String(
+      Math.round(isVertical ? nodeFootprint.height * 0.45 : nodeFootprint.width * 0.7),
+    );
+    const nodeGap = String(
+      Math.round(isVertical ? nodeFootprint.width * 0.4 : nodeFootprint.height * 0.35),
+    );
     const layout = await elk.layout({
       id: "family-tree",
       layoutOptions: {
         "elk.algorithm": "layered",
-        "elk.direction": "RIGHT",
+        "elk.direction": isVertical ? "DOWN" : "RIGHT",
         "elk.edgeRouting": "ORTHOGONAL",
         "elk.layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
         "elk.layered.spacing.nodeNodeBetweenLayers": layerGap,
@@ -486,6 +511,7 @@ export async function getCanvasNeighborhoodFromBundle({
     depth: safeDepth,
     maxDepth,
     availableLineages,
+    orientation,
   };
 }
 

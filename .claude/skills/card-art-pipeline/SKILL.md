@@ -39,6 +39,18 @@ public/card-kits/<set-slug>/
   maps/<card-slug>-height.png
 ```
 
+For a **template-frame product line** (Phase 0T — many themes sharing one geometry per gender/mode),
+two more permanent paths exist alongside the per-theme kits above:
+
+```
+public/card-kits/_templates/
+  canonical-slots.json          frozen window/plaque geometry, one entry per layout — the source
+                                 of truth every themed kit's slots are overwritten with post-build
+  layout-v1-masculine/          the golden template kit itself (built exactly like any other kit)
+  layout-v2-feminine/
+public/card-kits/<theme>-heritage-<masculine|feminine>/   one per theme, derived FROM a template
+```
+
 Commit the source art and the build script, not just the outputs. Generations live in a gitignored
 scratch folder; a kit whose inputs are gitignored cannot be rebuilt or retuned by anyone else.
 
@@ -88,6 +100,166 @@ If the image-prompt skill is available, apply its anti-generic rules when writin
 each later prompt derives ONE style and ONE scene from it — never paste the whole brief as an
 image prompt.
 
+## Phase 0T — golden templates: lock geometry once, theme forever
+
+For a product line of template frames (many themes, one product), do NOT generate each theme from
+scratch — that is how window size, plaque size, card proportions, and background tone drift from
+theme to theme, and no amount of prompt wording stops it (prompt-only geometry drifts every seed).
+Instead the line is built on **golden template cards**: exactly two layouts, generated once,
+approved once, and then reused as the structural reference for every theme ever made after.
+
+### Locked wireframes (non-negotiable)
+
+These two geometries are the **only** portrait-card wireframes for the heritage / keepsake product
+line. Themes are ornament + palette + motif layered onto them — never a new window shape, plaque
+shape, or card proportion.
+
+| Layout | Path | Window | Nameplate |
+|---|---|---|---|
+| `layout-v1-masculine` | `public/card-kits/_templates/layout-v1-masculine/` | Large round-top **arched** portrait window | Wide **rectangular** plaque (notched corners) |
+| `layout-v2-feminine` | `public/card-kits/_templates/layout-v2-feminine/` | Large **oval** cameo (beaded gold + ribbon bow crown) | **Cartouche** nameplate (scalloped / wavy) |
+
+Visual proof of the approved pair (side-by-side):
+`public/card-kits/_templates/approved-wireframes-reference.png`.
+
+Canonical slot percentages live in
+`public/card-kits/_templates/canonical-slots.json` and must be overwritten into every themed kit
+after build (step 7). Do **not** invent a `layout-v3-*` without an explicit user decision.
+
+**If `source-frame.webp` already exists for a layout, do not regenerate it.** Derive themes from
+those files. Only re-run the golden-template generation recipe below when the user explicitly asks
+to replace a golden template.
+
+**What a golden template is.** A finished, physically-real card with everything *structural* and
+nothing *thematic*: canonical card proportions on the canonical canvas, the window frame at its
+final size and position, the nameplate at its final size and position, the house paper color,
+the house gold treatment, corner medallions, and only quiet neutral ornament (or plain parchment)
+in the border zones where theme artwork will later live. No country motifs, no flowers with
+cultural meaning, no vignettes, no emblems. It should look like the blank stationery the themed
+cards were all printed on.
+
+**Exact recipe — only when a golden template is missing or the user asked to replace it:**
+
+1. **Generate the golden template.** One call per layout, 4 options, using this prompt verbatim
+   with only the bracketed window-shape clause swapped:
+
+   > "A single antique BLANK keepsake portrait-card template[, in a softer feminine register — feminine
+   > only], photographed straight-on on a seamless light platinum-grey studio backdrop — no fabric
+   > texture, no folds, no velvet weave, perfectly flat and evenly lit — under soft raking key light
+   > from the upper-left, shallow depth of field. This is the empty master stationery a series of
+   > themed cards will later be printed on, so it is deliberately plain: NO cultural or national
+   > motifs, no flowers, no plants, no scenic vignettes, no shields, no emblems, no animals. A tall
+   > slim card of aged golden-parchment stock (#E2D4B4) with visible paper fibers, faint foxing, and
+   > worn deckled edges. Its structure, rendered in hot-stamped physically embossed antique-brass
+   > gold foil (#B08A3E) with real specular sheen and raised relief casting tiny shadows, plus fine
+   > espresso engraved linework (#3B2B1E) with weathered sepia shading (#7A5A3A): (1) [MASCULINE: a
+   > LARGE round-top arched portrait window, framed by a simple beaded gold molding] [FEMININE: a
+   > LARGE OVAL portrait medallion, framed by a delicate beaded gold molding with a small gold ribbon
+   > bow crowning its top] — the dominant element, spanning roughly half the card's height, centered
+   > in the upper half — its interior smooth empty warm ivory (#F4EBDD), completely blank; (2) below
+   > it, a WIDE [MASCULINE: rectangular nameplate] [FEMININE: nameplate cartouche] with gently
+   > scalloped gold edging, spanning roughly forty-five percent of the card's width, its interior
+   > also smooth blank ivory, roomy enough for a full name and a year range; (3) four identical
+   > embossed brass rosette medallions anchoring the corners; (4) a thin double gold pinstripe border
+   > following the card edge. The remaining border zones are quiet, plain aged parchment with at most
+   > the faintest neutral engraved scrollwork — deliberately understated. Bilaterally symmetric: left
+   > and right sides mirror each other exactly. Muted, aged, restrained — never vivid or digital.
+   > Tactile and letterpress-real. NO text, no lettering, no labels, no numbers, no banners, no
+   > watermark, no face or portrait in the window, no flags, no insignia."
+
+   Generate at 1152×1920. Present all 4 and **stop — the user picks**, exactly as any other
+   generate_options call. Do this once for masculine, once for feminine.
+
+2. **Save the accepted template.** Download the chosen image and write it to
+   `public/card-kits/_templates/layout-v1-masculine/source-frame.webp` (masculine) or
+   `public/card-kits/_templates/layout-v2-feminine/source-frame.webp` (feminine). These two paths
+   are permanent constants — every future theme references them by path, so do not rename them and
+   do not create a third layout without a deliberate `layout-v3-*` decision with the user.
+
+3. **Build and freeze canonical slots.** Run `node scripts/build-theme-frame.js layout-v1-masculine`
+   (from `_templates/`, same builder, same flags) to produce the cutout, maps, and a measured
+   `kit.json`. Open that `kit.json`, copy its `slots.window` and `slots.plaque` objects verbatim,
+   and paste them into a new top-level file `public/card-kits/_templates/canonical-slots.json`:
+   ```json
+   {
+     "layout-v1-masculine": { "window": { "left":0,"top":0,"width":0,"height":0,"archRadiusY":0 },
+                               "plaque": { "left":0,"top":0,"width":0,"height":0 } },
+     "layout-v2-feminine":  { "window": { "left":0,"top":0,"width":0,"height":0,"shape":"oval" },
+                               "plaque": { "left":0,"top":0,"width":0,"height":0 } }
+   }
+   ```
+   These numbers are now canon. They do not change when new themes are built — only when a human
+   deliberately re-approves a new golden template.
+
+4. **Derive a theme.** One `generate_with_inputs` call. For the heritage country pack, feed the
+   **style master** as the ONLY image input — not the blank golden template alone:
+   - Masculine: `public/card-kits/italian-heritage-masculine/source-frame.webp` (@master)
+   - Feminine: `public/card-kits/italian-heritage-feminine/source-frame.webp` (@master)
+
+   **Feminine / heritage SIZE REQUIREMENTS — paste FIRST in every prompt (non-negotiable).**
+   Learned from England v3: only Option B met the bar; all future feminine countries must lead
+   with this block (full text also in `docs/design/heritage-frames/womens-layout-contract.md`):
+
+   > SIZE REQUIREMENTS — REJECT ANY RESULT THAT FAILS THESE:
+   > 1. ONE COMPLETE vertical keepsake card filling the ENTIRE frame edge-to-edge — identical card
+   >    proportions to @master. Not a cropped detail, not a floating motif, not a partial border,
+   >    not a white sheet with ornaments around a hole.
+   > 2. Oval cameo window: SAME size and position as @master (pixel-identical). Do not shrink,
+   >    enlarge, raise, or lower it.
+   > 3. Cartouche nameplate: SAME size and position as @master (pixel-identical). Do not shrink
+   >    it to a sliver.
+   > 4. Gap between window and plaque: SAME as @master — do not increase or collapse that gap.
+   > 5. Ornament density: SAME richness/fullness as @master — not sparse, not washed out, not a
+   >    fragment. Reject options where the card reads smaller than @master, or where window/plaque
+   >    are clearly different sizes.
+
+   Then the structural + motif body:
+
+   > "Using @master as the exact structural and spacing master — same rules as the men's heritage
+   > set: keep window and nameplate pixel-identical in size and position, keep the exact gap,
+   > border weight, ornament density, parchment, gold, aging, and bilateral symmetry. Change ONLY
+   > the decorative motifs to: [Phase 0b fields — Rail · Crown · Botanical · 2 Vignettes · Corner
+   > bosses · Palette accents · signature object]. [Required negatives]. Photographed on a seamless
+   > light platinum-grey studio backdrop."
+
+   Present options and **stop for the user to pick**. Never auto-select. For feminine, prefer
+   options that match Italy + England B size when judging. Never write a fresh from-scratch prompt
+   for a themed card once its layout's template / master exists — every theme generation call has
+   a reference image attached. This is the one rule in this whole skill with zero exceptions.
+
+5. **Build the themed kit as normal**: `node scripts/build-theme-frame.js <theme>-heritage-<masculine|feminine>`,
+   producing its own measured `kit.json` from the actual generated art (never hand-copy the
+   template's numbers into a themed kit — always measure the real pixels, then validate them).
+
+6. **Validate against canon before shipping.** Compare the themed kit's measured `slots.window` and
+   `slots.plaque` against `canonical-slots.json`'s entry for the template it was derived from, field
+   by field (`left`, `top`, `width`, `height`). **Tolerance: 2 percentage points of card dimension
+   per field.** Any field outside tolerance → the build **fails**: do not wire the kit into the app,
+   do not edit the canonical numbers to match the drifted art. Instead, regenerate the derivation
+   (step 4) with a stronger structural-adherence phrase ("keep the window and nameplate pixel-for-
+   pixel identical to the reference in size and position") or, if the tool supports it, a higher
+   reference-strength/lower-denoise setting, then rebuild and re-validate. If three derivations in a
+   row fail validation, stop and tell the user — that is a signal the template itself may need
+   revisiting, not something to force through.
+
+7. **On success**, the themed kit's `kit.json` gets its `slots` overwritten with the exact canonical
+   numbers from `canonical-slots.json` (not its own freshly-measured ones, which only exist to
+   validate) — this is what guarantees the consuming component needs exactly one geometry per
+   layout forever. Record which template it came from in `kit.json`'s `notes` field for traceability.
+
+**Variety budget (≈70/20/10).** With geometry locked, themes differentiate only in the ornament
+layer: roughly 70% fixed (geometry, paper, gold treatment, lighting, engraving language, aging),
+20% themed (flora, vignette subjects, rail pattern vocabulary, two accent colors), 10% unique
+(one signature emblem or object per theme). Phase 0b's design card still drives the 20+10 — but
+its structural levers (arch shape, window architecture) are now template-level decisions, made
+once per layout, not per theme.
+
+**Scaling note.** This reference-derivation workflow is the right weight up to roughly a couple
+dozen themes. If the line grows well past that and derivations show cumulative drift, that is the
+point to graduate to a pinned local pipeline (ComfyUI + ControlNet over an explicit layout plate,
+optionally a style LoRA trained on the approved cards) — and the approved template-derived cards
+are exactly the training set. Do not start there; start with templates + derivation.
+
 ## Phase 0b — theme sets: keep every theme distinct
 
 When the set is a series of **template frames on one shared house treatment** (e.g. per-country
@@ -95,11 +267,14 @@ heritage frames: same paper, foil, aging, window+plaque geometry — only the or
 failure mode is that every theme rhymes: same crown, same corner vignette, same filler botanicals,
 only the accent plant swapped. Two fixes.
 
-**Differentiate on structure, not just the plant.** The strongest levers change the *silhouette
-and texture*, not the flora. For each theme vary, in priority order:
+**Differentiate on structure, not just the plant** — *within whatever Phase 0T leaves variable.*
+When golden templates exist (heritage / keepsake line), window + plaque geometry is **frozen** to
+`layout-v1-masculine` / `layout-v2-feminine` — themes must not change arch↔oval or rectangle↔cartouche.
+Differentiate only on the remaining levers below. Without templates (a one-off art set), all four
+levers may be per-theme. In priority order:
 
-1. **Architecture** — the arch and frame tradition (Renaissance round arch / Gothic Perpendicular
-   / Rococo rocaille / Federal fanlight / …). This changes the outline itself.
+1. **Architecture** — FROZEN for the heritage line (Phase 0T). One-off kits only: Renaissance round
+   arch / Gothic Perpendicular / Rococo rocaille / Federal fanlight / ….
 2. **Rail band** — the culture's own ornament grammar (Cosmatesque mosaic / Gothic quatrefoil /
    rocaille scroll / Greek-key). 
 3. **Crown** (top-center emblem) — never reuse one crown across the set (compass rose, rose window,
@@ -128,7 +303,8 @@ after generating a theme, compare its window/plaque size against the rest of the
 outliers so every card reads as the same "weight" of object at a glance. If some vary, err toward
 the *larger* end of the set as the target (a bigger window and card reads better than a cramped
 one), never toward the smallest. This is a different axis from Phase 0b's per-theme differentiation
-— vary the *style* of the window/frame per theme, not its *size* relative to the rest of the set.
+— for the heritage line, window/plaque **size and shape stay at the golden-template numbers**; only
+ornament style varies. Never invent a third layout mid-set.
 
 **Never duplicate an object within one card.** Each corner vignette, each flanking motif instance,
 each medallion must depict something distinct from every other element on that same card — repeating
@@ -174,9 +350,9 @@ subjects), differentiated only along this axis.
 
 Vary, in priority order — mirroring Phase 0b's table but for gender instead of theme:
 
-1. **Window shape.** Masculine: a hard architectural opening (pointed arch, straight-edged panel).
-   Feminine: a soft oval or rounded medallion, optionally set in a ribbon bow or floral wreath
-   instead of bare architecture. This changes the silhouette, same as architecture does in 0b.
+1. **Window shape.** FROZEN by Phase 0T: masculine = `layout-v1` arched window; feminine =
+   `layout-v2` oval cameo with ribbon-bow crown. Do not invent pointed arches, fanlights, or other
+   silhouettes for heritage themes — derive from the matching golden template.
 2. **Primary motif register.** Masculine: heraldry, shields, laurel, oak, medals, architecture.
    Feminine: flowers in full bloom, ribbons, lace-like filigree, doves, fans — softer forms of the
    *theme's own* botanicals (a theme's oak can still appear feminine as a light spray rather than a
@@ -257,10 +433,20 @@ build from it with `sharp` in a checked-in script. `scripts/build-theme-frame.js
 the reference implementation of everything below — copy/adapt it rather than re-deriving from
 scratch; it is the product of several rounds of debugging the specific failure modes noted here.
 
-**Shoot every card on deep charcoal velvet**, regardless of whether the card itself is light or
-dark — this repo's cards are all light parchment, and dark-behind-light gives the cleanest
-brightness-based silhouette. State it in every generation prompt ("photographed on deep charcoal
-velvet under soft raking light from the upper-left").
+**Shoot every card on a seamless light platinum-grey studio backdrop — not black velvet, not pure
+white.** Velvet was the original choice (dark-behind-light gives a clean brightness-based
+silhouette) but its own fabric folds catch raking light and can read as warm and bright enough to
+be mistaken for card — a real, previously-hit failure mode (a velvet fold bled into a shipped
+cutout as opaque "card"). Pure white has the opposite failure already documented below (cream card
+on white is too close in luminance to separate). A **seamless light platinum-grey** ground (no
+fabric weave, no folds, evenly lit, distinctly lighter than the card's own cream but well short of
+paper-white) gives a flat, texture-free field with a reliable luminance gap in both directions, and
+reads as "clean/white" to the eye without recreating either failure. State it in every generation
+prompt: "photographed on a seamless light platinum-grey studio backdrop, no fabric texture, evenly
+lit, under soft raking key light from the upper-left." Silhouette math: with this backdrop the card
+is now the *darker* region relative to its ground (the reverse of the velvet setup) — mark pixels
+**below** backdrop luminance, and apply the same margin-exclusion technique from the far side (the
+inset margin ring reads as backdrop-bright instead of backdrop-dark, same fix, opposite polarity).
 
 **Silhouette: exclude a border margin, don't threshold or erode.** A lit velvet fold can catch warm
 bounce light off the card's own gold foil and land in the *same* hue/saturation/luminance range as
@@ -370,7 +556,10 @@ assembled prompts with the real card names filled in, no placeholders left for t
 Every front shares an identical frame at a glance; cutouts have real transparency (verify over a
 dark surface, not white); the art shows visible relief with cast shadow; the normal map reads as
 legible terrain rather than striping; maps align 1:1; the kit rebuilds from committed source with
-one command; `kit.json` is complete and paths resolve.
+one command; `kit.json` is complete and paths resolve. For a template-derived theme (Phase 0T)
+specifically: its measured slots passed validation against `canonical-slots.json` within the 2%
+tolerance, and its shipped `kit.json` carries the *canonical* slot numbers, not its own raw
+measurement.
 
 Then hand off to interactive-card-effects, which lights this kit with a WebGL shader — that skill
 is where the maps actually pay off, and its opening section explains why CSS cannot substitute.

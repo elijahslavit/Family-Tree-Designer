@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import { ClientAccessNotice, ClientAccessShell } from "@/components/pilot/client-access-shell";
-import { ShowcaseShell } from "@/components/pilot/showcase-shell";
+import { ShowcaseShellRouteChrome } from "@/components/pilot/showcase-shell-route-chrome";
 import { buildPilotShowcase } from "@/lib/showcase/pilot-showcase";
 import { getShowcaseAccess } from "@/lib/showcase/access";
 
@@ -23,5 +23,15 @@ export default async function PrivateShowcaseLayout({ children, params }: { chil
   }
   const basePath = `/s/${access.project.slug}`;
   const showcase = buildPilotShowcase(access.project, basePath);
-  return <ShowcaseShell brand={showcase.brand} basePath={basePath} viewerLabel={`Invited: ${access.context.recipientLabel}`} themeId={access.project.branding.themeId} hasStories={showcase.stories.length > 0}>{children}</ShowcaseShell>;
+  return (
+    <ShowcaseShellRouteChrome
+      brand={showcase.brand}
+      basePath={basePath}
+      viewerLabel={`Invited: ${access.context.recipientLabel}`}
+      themeId={access.project.branding.themeId}
+      hasStories={showcase.stories.length > 0}
+    >
+      {children}
+    </ShowcaseShellRouteChrome>
+  );
 }

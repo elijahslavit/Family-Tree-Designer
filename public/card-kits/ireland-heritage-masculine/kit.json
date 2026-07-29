@@ -1,0 +1,44 @@
+{
+  "name": "Ireland Heritage — Masculine",
+  "slug": "ireland-heritage-masculine",
+  "palette": [
+    "#E2D4B4",
+    "#F4EBDD",
+    "#3B2B1E",
+    "#7A5A3A",
+    "#B08A3E"
+  ],
+  "mode": "light",
+  "cardAspect": "900 / 1500",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-theme-frame.js ireland-heritage-masculine",
+  "template": "heritage-masculine-shared",
+  "cards": [
+    {
+      "name": "Ireland Heritage Masculine frame",
+      "slug": "ireland-heritage-masculine-frame",
+      "front": "cards/ireland-heritage-masculine-frame.png",
+      "maps": {
+        "normal": "maps/ireland-heritage-masculine-normal.png",
+        "roughness": "maps/ireland-heritage-masculine-roughness.png",
+        "height": "maps/ireland-heritage-masculine-height.png"
+      },
+      "slots": {
+        "window": {
+          "left": 22.8,
+          "top": 15.9,
+          "width": 54.6,
+          "height": 45.1,
+          "archRadiusY": 26
+        },
+        "plaque": {
+          "left": 17.1,
+          "top": 66.1,
+          "width": 65.8,
+          "height": 11.3
+        }
+      }
+    }
+  ],
+  "notes": "Canonical slots from heritage-masculine-shared. Rebuild: node scripts/build-theme-frame.js ireland-heritage-masculine"
+}

@@ -1,14 +1,21 @@
 {
-  "name": "Italian Heritage Feminine",
+  "name": "Italian Heritage — Feminine",
   "slug": "italian-heritage-feminine",
-  "palette": ["#E2D4B4", "#F4EBDD", "#3B2B1E", "#B08A3E", "#6B6F4A", "#A04E3A", "#C4A07A", "#5A2D33"],
+  "palette": [
+    "#E2D4B4",
+    "#F4EBDD",
+    "#3B2B1E",
+    "#7A5A3A",
+    "#B08A3E"
+  ],
   "mode": "light",
   "cardAspect": "900 / 1500",
   "source": "source-frame.webp",
   "build": "node scripts/build-theme-frame.js italian-heritage-feminine",
+  "template": "heritage-feminine-shared",
   "cards": [
     {
-      "name": "Italian heritage feminine frame",
+      "name": "Italian Heritage Feminine frame",
       "slug": "italian-heritage-feminine-frame",
       "front": "cards/italian-heritage-feminine-frame.png",
       "maps": {
@@ -19,14 +26,19 @@
       "slots": {
         "window": {
           "left": 29.2,
-          "top": 29.4,
-          "width": 41.3,
-          "height": 37.8,
+          "top": 26.5,
+          "width": 41.1,
+          "height": 30.6,
           "shape": "oval"
         },
-        "plaque": { "left": 35.9, "top": 74.9, "width": 27.6, "height": 7.5 }
+        "plaque": {
+          "left": 31.1,
+          "top": 57.7,
+          "width": 37.7,
+          "height": 11.4
+        }
       }
     }
   ],
-  "notes": "Feminine sibling of italian-heritage (Phase 0c): soft oval cameo window, olive wreath with grapes and mirrored tricolore ribbon woven through the whole wreath, gold ribbon-bow crown, coastal village + olive grove vignettes, rose spray gathered around the scalloped nameplate. Built from Italy feminine option D refined with C's tighter rose base (diffui derivation, image d6616641 lineage, final pick D→C). Canonical box 900x1500. Rebuild: node scripts/build-theme-frame.js italian-heritage-feminine."
+  "notes": "Canonical slots from heritage-feminine-shared. Rebuild: node scripts/build-theme-frame.js italian-heritage-feminine"
 }

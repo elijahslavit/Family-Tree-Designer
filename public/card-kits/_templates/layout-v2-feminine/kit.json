@@ -1,0 +1,37 @@
+{
+  "name": "Golden Template — Layout V2 Feminine",
+  "slug": "layout-v2-feminine",
+  "palette": ["#E2D4B4", "#F4EBDD", "#3B2B1E", "#7A5A3A", "#B08A3E"],
+  "mode": "light",
+  "cardAspect": "900 / 1500",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-theme-frame.js _templates/layout-v2-feminine",
+  "cards": [
+    {
+      "name": "Layout V2 feminine frame",
+      "slug": "layout-v2-feminine-frame",
+      "front": "cards/layout-v2-feminine-frame.png",
+      "maps": {
+        "normal": "maps/layout-v2-feminine-normal.png",
+        "roughness": "maps/layout-v2-feminine-roughness.png",
+        "height": "maps/layout-v2-feminine-height.png"
+      },
+      "slots": {
+        "window": {
+          "left": 12.9,
+          "top": 18.0,
+          "width": 61.8,
+          "height": 43.7,
+          "shape": "oval"
+        },
+        "plaque": {
+          "left": 14.7,
+          "top": 69.7,
+          "width": 58.4,
+          "height": 13.9
+        }
+      }
+    }
+  ],
+  "notes": "CANONICAL golden template (oval cameo + cartouche nameplate). Every themed feminine kit must derive from this source-frame.webp — never invent a new window or plaque geometry. Slots frozen in ../canonical-slots.json."
+}

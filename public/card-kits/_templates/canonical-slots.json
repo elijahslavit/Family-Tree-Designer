@@ -1,0 +1,64 @@
+{
+  "layout-v1-masculine": {
+    "window": {
+      "left": 29.5,
+      "top": 14.9,
+      "width": 53.5,
+      "height": 54.3,
+      "archRadiusY": 26
+    },
+    "plaque": {
+      "left": 27.9,
+      "top": 76.8,
+      "width": 57.1,
+      "height": 10.4
+    }
+  },
+  "layout-v2-feminine": {
+    "window": {
+      "left": 12.9,
+      "top": 18.0,
+      "width": 61.8,
+      "height": 43.7,
+      "shape": "oval"
+    },
+    "plaque": {
+      "left": 14.7,
+      "top": 69.7,
+      "width": 58.4,
+      "height": 13.9
+    }
+  },
+  "heritage-masculine-shared": {
+    "window": {
+      "left": 22.8,
+      "top": 15.9,
+      "width": 54.6,
+      "height": 45.1,
+      "archRadiusY": 26
+    },
+    "plaque": {
+      "left": 17.1,
+      "top": 66.1,
+      "width": 65.8,
+      "height": 11.3
+    },
+    "note": "Frozen from italian-heritage-masculine (Italy v5 Option D). All *-heritage-masculine kits target these slots."
+  },
+  "heritage-feminine-shared": {
+    "window": {
+      "left": 29.2,
+      "top": 26.5,
+      "width": 41.1,
+      "height": 30.6,
+      "shape": "oval"
+    },
+    "plaque": {
+      "left": 31.1,
+      "top": 57.7,
+      "width": 37.7,
+      "height": 11.4
+    },
+    "note": "Frozen from italian-heritage-feminine (style master). All *-heritage-feminine kits target these slots."
+  }
+}

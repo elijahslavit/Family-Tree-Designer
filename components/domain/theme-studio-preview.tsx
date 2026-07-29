@@ -150,8 +150,8 @@ function LandingScene({
             <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
               Featured lineages
             </p>
-            <LineItem name="Direct Hart Line" />
-            <LineItem name="West-Vale Branch" />
+            <LineItem name="Hart" />
+            <LineItem name="West–Vale" />
           </SurfaceCard>
           <SurfaceCard className="space-y-2">
             <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
@@ -311,7 +311,7 @@ function ProfileScene({
             <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
               Lineage
             </p>
-            <LineItem name="Direct Hart Line" />
+            <LineItem name="Hart" />
           </SurfaceCard>
         </div>
       </div>
@@ -365,7 +365,7 @@ function CanvasScene({
             <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
               Highlight
             </p>
-            <LineItem name="Direct Hart Line" />
+            <LineItem name="Hart" />
           </SurfaceCard>
         </div>
       </div>

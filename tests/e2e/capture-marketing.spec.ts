@@ -17,11 +17,10 @@ test("captures both presentation styles for the marketing pages", async ({ page 
     await page.getByRole("button", { name: new RegExp(theme, "i") }).click();
     await page.waitForTimeout(400);
 
-    // The preview banner and the floating colour-mode toggle are workspace
-    // chrome, not part of what a family sees, so keep them out of the imagery.
+    // The floating colour-mode toggle is workspace chrome, not part of what a
+    // family sees, so keep it out of the imagery.
     const hideBanner = {
-      content: `[data-preview-banner],
-                [aria-label='Toggle color mode'],
+      content: `[aria-label='Toggle color mode'],
                 nextjs-portal,
                 [data-nextjs-dev-tools-button],
                 #__next-build-watcher { display: none !important }`,

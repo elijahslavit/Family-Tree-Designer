@@ -54,7 +54,7 @@ test("canvas explorer can expand outward and preserve lineage highlighting in th
   await expect(page).toHaveURL(/\/canvas\?person=p03&depth=2/);
   await expect(page.getByText("George Vale").first()).toBeVisible();
 
-  await page.getByRole("button", { name: "West-Vale Branch" }).click();
+  await page.getByRole("button", { name: "West–Vale" }).click();
   await expect(page).toHaveURL(/lineage=l02/);
 });
 
@@ -65,7 +65,7 @@ test("viewer can open the lineage view from the shared archive", async ({ page }
 
   await expect(page).toHaveURL(/\/t\/hart-family-archive\/lineages\?share=share-hart-2026-demo/);
   await expect(page.getByRole("heading", { name: "Follow named descent paths" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Direct Hart Line" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Hart" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Jonah Brooks/ })).toBeVisible();
 });
 

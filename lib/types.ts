@@ -258,4 +258,8 @@ export interface CanvasNodeData extends Record<string, unknown> {
     | "descendant"
     | "relative";
   lineageNames?: string[];
+  /** Tree flow direction — drives handle placement on nodes. */
+  orientation?: "horizontal" | "vertical";
+  /** Drives masculine vs feminine heritage frame wireframe on showcase trees. */
+  gender?: Gender;
 }

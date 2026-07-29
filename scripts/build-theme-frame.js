@@ -23,7 +23,11 @@ const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
 
-const slug = process.argv[2] || "italian-heritage";
+const slugArg = process.argv[2] || "italian-heritage";
+// Nested kit paths are allowed (e.g. `_templates/layout-v1-masculine`); file
+// basenames always use the leaf slug so Windows/posix path separators never
+// leak into output filenames.
+const fileSlug = path.basename(slugArg);
 // Canonical output box so every theme in the set is the SAME pixel width AND
 // height. Each card is scaled to fit (aspect preserved) and the remainder is
 // padded — transparent on the cutout, neutral on the maps — so nothing is
@@ -31,7 +35,7 @@ const slug = process.argv[2] || "italian-heritage";
 // Default is a deliberately long/skinny card (~0.6 aspect) per house preference.
 const TARGET_H = Number(process.argv[3]) || 1500;
 const TARGET_W = Number(process.argv[4]) || 900;
-const ROOT = path.resolve(__dirname, "..", "public", "card-kits", slug);
+const ROOT = path.resolve(__dirname, "..", "public", "card-kits", slugArg);
 const SRC = path.join(ROOT, "source-frame.webp");
 
 // Dark surround: pixels brighter than this are card, dimmer are backdrop.
@@ -196,7 +200,7 @@ async function main() {
   const heightBuf = await blur1(height, W, H, 1.4);
   await sharp(heightBuf, { raw: { width: W, height: H, channels: 1 } })
     .extract(box).resize(TARGET_W, TARGET_H, { fit: "contain", background: { r: 0, g: 0, b: 0 } })
-    .png().toFile(path.join(ROOT, "maps", `${slug}-height.png`));
+    .png().toFile(path.join(ROOT, "maps", `${fileSlug}-height.png`));
 
   // ---- normal (Sobel over height) ---------------------------------------
   const STRENGTH = 2.2;
@@ -218,14 +222,14 @@ async function main() {
   }
   await sharp(normal, { raw: { width: W, height: H, channels: 3 } })
     .extract(box).resize(TARGET_W, TARGET_H, { fit: "contain", background: { r: 128, g: 128, b: 255 } })
-    .png().toFile(path.join(ROOT, "maps", `${slug}-normal.png`));
+    .png().toFile(path.join(ROOT, "maps", `${fileSlug}-normal.png`));
 
   // ---- roughness (gold smooth, everything else matte) -------------------
   const rough = Buffer.alloc(W * H, 255);
   for (let p = 0; p < W * H; p++) rough[p] = alpha[p] ? Math.round(235 - (goldSoft[p] / 255) * 190) : 255;
   await sharp(rough, { raw: { width: W, height: H, channels: 1 } })
     .extract(box).resize(TARGET_W, TARGET_H, { fit: "contain", background: { r: 255, g: 255, b: 255 } })
-    .png().toFile(path.join(ROOT, "maps", `${slug}-roughness.png`));
+    .png().toFile(path.join(ROOT, "maps", `${fileSlug}-roughness.png`));
 
   // ---- transparent front cutout -----------------------------------------
   fs.mkdirSync(path.join(ROOT, "cards"), { recursive: true });
@@ -236,7 +240,7 @@ async function main() {
   }
   await sharp(rgba, { raw: { width: W, height: H, channels: 4 } })
     .extract(box).resize(TARGET_W, TARGET_H, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
-    .png().toFile(path.join(ROOT, "cards", `${slug}-frame.png`));
+    .png().toFile(path.join(ROOT, "cards", `${fileSlug}-frame.png`));
 
   // ---- slots: the two ivory panels, as % of the card box -----------------
   // Connected-component flood fill on the ivory mask, not a per-row coverage
@@ -343,7 +347,7 @@ async function main() {
   drawRect(window, [0, 200, 255]);
   drawRect(plaque, [255, 80, 200]);
   await sharp(dbg, { raw: { width: W, height: H, channels: 4 } })
-    .extract(box).png().toFile(path.join(ROOT, `${slug}-slots-debug.png`));
+    .extract(box).png().toFile(path.join(ROOT, `${fileSlug}-slots-debug.png`));
 
   // Remap slots from the tight card box onto the padded canonical canvas, so the
   // percentages in kit.json match the resized, uniformly-sized output.

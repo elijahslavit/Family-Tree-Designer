@@ -603,13 +603,13 @@ export const demoBundle: TreeBundle = {
     {
       id: "l01",
       treeId: "tree-hart",
-      name: "Direct Hart Line",
+      name: "Hart",
       description: "A straight descent from Walter Hart to Jonah Brooks.",
     },
     {
       id: "l02",
       treeId: "tree-hart",
-      name: "West-Vale Branch",
+      name: "West–Vale",
       description: "The Eleanor Hart West line and its Nashville branch.",
     },
   ],

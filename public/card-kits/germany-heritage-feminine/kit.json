@@ -1,0 +1,44 @@
+{
+  "name": "Germany Heritage — Feminine",
+  "slug": "germany-heritage-feminine",
+  "palette": [
+    "#E2D4B4",
+    "#F4EBDD",
+    "#3B2B1E",
+    "#7A5A3A",
+    "#B08A3E"
+  ],
+  "mode": "light",
+  "cardAspect": "900 / 1500",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-theme-frame.js germany-heritage-feminine",
+  "template": "heritage-feminine-shared",
+  "cards": [
+    {
+      "name": "Germany Heritage Feminine frame",
+      "slug": "germany-heritage-feminine-frame",
+      "front": "cards/germany-heritage-feminine-frame.png",
+      "maps": {
+        "normal": "maps/germany-heritage-feminine-normal.png",
+        "roughness": "maps/germany-heritage-feminine-roughness.png",
+        "height": "maps/germany-heritage-feminine-height.png"
+      },
+      "slots": {
+        "window": {
+          "left": 29.2,
+          "top": 26.5,
+          "width": 41.1,
+          "height": 30.6,
+          "shape": "oval"
+        },
+        "plaque": {
+          "left": 31.1,
+          "top": 57.7,
+          "width": 37.7,
+          "height": 11.4
+        }
+      }
+    }
+  ],
+  "notes": "Canonical slots from heritage-feminine-shared. Rebuild: node scripts/build-theme-frame.js germany-heritage-feminine"
+}

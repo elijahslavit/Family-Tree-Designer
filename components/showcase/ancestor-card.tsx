@@ -1,6 +1,13 @@
 import { Lock } from "lucide-react";
 import Image from "next/image";
 
+import {
+  FEMININE_HERITAGE_MASTER,
+  HERITAGE_FRAME_SLOTS,
+  MASCULINE_HERITAGE_MASTER,
+  type HeritageKitSlug,
+} from "@/lib/data/heritage-frame-slots";
+
 import { LitCardSurface } from "./lit-card-surface";
 
 /**
@@ -12,6 +19,37 @@ import { LitCardSurface } from "./lit-card-surface";
  *   scripts/build-card-kit.js and mirrored in that kit's kit.json.
  * - plain:  public/showcase/ancestor-card-frame-plain.png (663x924) — modern-era mat
  */
+/** Per-kit measured slots, falling back to Italy v5 D / Italy feminine masters. */
+function masculineHeritageFrame(slug: HeritageKitSlug) {
+  const { window, plaque } = HERITAGE_FRAME_SLOTS[slug] ?? MASCULINE_HERITAGE_MASTER;
+  return {
+    src: `/card-kits/${slug}/cards/${slug}-frame.webp`,
+    aspect: "900 / 1500",
+    window,
+    plaque,
+    maps: {
+      normal: `/card-kits/${slug}/maps/${slug}-normal.png`,
+      roughness: `/card-kits/${slug}/maps/${slug}-roughness.png`,
+      height: `/card-kits/${slug}/maps/${slug}-height.png`,
+    },
+  };
+}
+
+function feminineHeritageFrame(slug: HeritageKitSlug) {
+  const { window, plaque } = HERITAGE_FRAME_SLOTS[slug] ?? FEMININE_HERITAGE_MASTER;
+  return {
+    src: `/card-kits/${slug}/cards/${slug}-frame.png`,
+    aspect: "900 / 1500",
+    window,
+    plaque,
+    maps: {
+      normal: `/card-kits/${slug}/maps/${slug}-normal.png`,
+      roughness: `/card-kits/${slug}/maps/${slug}-roughness.png`,
+      height: `/card-kits/${slug}/maps/${slug}-height.png`,
+    },
+  };
+}
+
 const FRAMES = {
   ornate: {
     src: "/card-kits/ancestor-card/cards/ancestor-frame.webp",
@@ -71,20 +109,47 @@ const FRAMES = {
     },
   },
   /**
-   * Feminine Italian heritage (Phase 0c sibling). Soft oval cameo + scroll plaque;
-   * slots from public/card-kits/italian-heritage-feminine/kit.json.
+   * Golden wireframe templates (Phase 0T). Plain stationery — every themed kit
+   * derives ornament onto these geometries. Slots from canonical-slots.json.
    */
-  "italian-feminine": {
-    src: "/card-kits/italian-heritage-feminine/cards/italian-heritage-feminine-frame.webp",
+  "template-masculine": {
+    src: "/card-kits/_templates/layout-v1-masculine/cards/layout-v1-masculine-frame.png",
     aspect: "900 / 1500",
-    window: { left: 29.2, top: 29.4, width: 41.3, height: 37.8, shape: "oval" },
-    plaque: { left: 35.9, top: 74.9, width: 27.6, height: 7.5 },
+    window: { left: 29.5, top: 14.9, width: 53.5, height: 54.3, archRadiusY: 26 },
+    plaque: { left: 27.9, top: 76.8, width: 57.1, height: 10.4 },
     maps: {
-      normal: "/card-kits/italian-heritage-feminine/maps/italian-heritage-feminine-normal.png",
-      roughness: "/card-kits/italian-heritage-feminine/maps/italian-heritage-feminine-roughness.png",
-      height: "/card-kits/italian-heritage-feminine/maps/italian-heritage-feminine-height.png",
+      normal: "/card-kits/_templates/layout-v1-masculine/maps/layout-v1-masculine-normal.png",
+      roughness: "/card-kits/_templates/layout-v1-masculine/maps/layout-v1-masculine-roughness.png",
+      height: "/card-kits/_templates/layout-v1-masculine/maps/layout-v1-masculine-height.png",
     },
   },
+  "template-feminine": {
+    src: "/card-kits/_templates/layout-v2-feminine/cards/layout-v2-feminine-frame.png",
+    aspect: "900 / 1500",
+    window: { left: 12.9, top: 18.0, width: 61.8, height: 43.7, shape: "oval" },
+    plaque: { left: 14.7, top: 69.7, width: 58.4, height: 13.9 },
+    maps: {
+      normal: "/card-kits/_templates/layout-v2-feminine/maps/layout-v2-feminine-normal.png",
+      roughness: "/card-kits/_templates/layout-v2-feminine/maps/layout-v2-feminine-roughness.png",
+      height: "/card-kits/_templates/layout-v2-feminine/maps/layout-v2-feminine-height.png",
+    },
+  },
+  /** diffui batch 638317a2 — golden-template geometry, canon slots */
+  "italian-masculine": masculineHeritageFrame("italian-heritage-masculine"),
+  "england-masculine": masculineHeritageFrame("england-heritage-masculine"),
+  "germany-masculine": masculineHeritageFrame("germany-heritage-masculine"),
+  "france-masculine": masculineHeritageFrame("france-heritage-masculine"),
+  "ireland-masculine": masculineHeritageFrame("ireland-heritage-masculine"),
+  "mexico-masculine": masculineHeritageFrame("mexico-heritage-masculine"),
+  "african-american-masculine": masculineHeritageFrame("african-american-heritage-masculine"),
+  /** diffui batch — feminine oval wireframe, canon slots */
+  "italian-feminine": feminineHeritageFrame("italian-heritage-feminine"),
+  "england-feminine": feminineHeritageFrame("england-heritage-feminine"),
+  "germany-feminine": feminineHeritageFrame("germany-heritage-feminine"),
+  "france-feminine": feminineHeritageFrame("france-heritage-feminine"),
+  "ireland-feminine": feminineHeritageFrame("ireland-heritage-feminine"),
+  "mexico-feminine": feminineHeritageFrame("mexico-heritage-feminine"),
+  "african-american-feminine": feminineHeritageFrame("african-american-heritage-feminine"),
 } as const;
 
 export type AncestorCardFrameVariant = keyof typeof FRAMES;

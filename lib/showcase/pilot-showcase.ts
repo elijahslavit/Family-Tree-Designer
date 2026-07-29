@@ -167,6 +167,10 @@ export async function getShowcaseCanvas(
   project: PilotProject,
   personId: string,
   depth: number,
+  options: {
+    orientation?: "horizontal" | "vertical";
+    lineageId?: string | null;
+  } = {},
 ): Promise<{
   nodes: Node[];
   edges: Edge[];
@@ -175,7 +179,10 @@ export async function getShowcaseCanvas(
   depth: number;
   maxDepth: number;
   availableLineages: ReturnType<typeof getAllowedLineages>;
+  orientation: "horizontal" | "vertical";
 } | null> {
+  const orientation = options.orientation ?? "vertical";
+  const lineageId = options.lineageId ?? null;
   const bundle = getTreeBundle(project.treeId);
   const allowedPersonIds = new Set(
     bundle.people
@@ -197,11 +204,12 @@ export async function getShowcaseCanvas(
     bundle,
     personId: safeFocusId,
     viewer: { mode: "creator", accountId: bundle.account.id },
-    depth: Math.min(2, Math.max(1, depth)),
-    lineageId: null,
+    depth: Math.min(3, Math.max(1, depth)),
+    lineageId,
     // Compact Italian heritage cards (900×1500 → ~168×280) — showcase tree only.
     nodeFootprint: { width: 168, height: 280 },
     nodeType: "heritage-person",
+    orientation,
   });
 
   if (!result) {
@@ -231,8 +239,9 @@ export async function getShowcaseCanvas(
     focusPerson: filterPersonView(project, result.focusPerson),
     relatedCount: nodes.filter((node) => (node.data as { kind?: string }).kind === "person").length - 1,
     depth: result.depth,
-    maxDepth: Math.min(2, result.maxDepth),
+    maxDepth: Math.min(3, result.maxDepth),
     availableLineages: getAllowedLineages(project),
+    orientation,
   };
 }
 

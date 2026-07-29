@@ -14,7 +14,7 @@ import {
   type Edge,
   type Node,
 } from "@xyflow/react";
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import { nodeTypes } from "@/components/canvas/canvas-nodes";
 import { CanvasToolbar } from "@/components/canvas/canvas-toolbar";
@@ -40,6 +40,8 @@ type CanvasStageProps = {
    * dark ground. Workspace canvases keep the tool-like dots.
    */
   presentation?: "workspace" | "showcase";
+  /** Rendered inside React Flow (e.g. NodeToolbar popouts). */
+  children?: ReactNode;
 };
 
 export function CanvasStage({
@@ -50,6 +52,7 @@ export function CanvasStage({
   onSearchShortcut,
   isPending,
   presentation = "workspace",
+  children,
 }: CanvasStageProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(incomingNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(incomingEdges);
@@ -94,6 +97,7 @@ export function CanvasStage({
         <CanvasAutoFit resetKey={incomingNodes} />
         <CanvasShortcuts onSearchShortcut={onSearchShortcut} />
         <CanvasToolbar />
+        {children}
         {isShowcase ? null : (
           <Background
             variant={BackgroundVariant.Dots}

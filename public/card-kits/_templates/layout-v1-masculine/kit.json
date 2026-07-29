@@ -1,0 +1,37 @@
+{
+  "name": "Golden Template — Layout V1 Masculine",
+  "slug": "layout-v1-masculine",
+  "palette": ["#E2D4B4", "#F4EBDD", "#3B2B1E", "#7A5A3A", "#B08A3E"],
+  "mode": "light",
+  "cardAspect": "900 / 1500",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-theme-frame.js _templates/layout-v1-masculine",
+  "cards": [
+    {
+      "name": "Layout V1 masculine frame",
+      "slug": "layout-v1-masculine-frame",
+      "front": "cards/layout-v1-masculine-frame.png",
+      "maps": {
+        "normal": "maps/layout-v1-masculine-normal.png",
+        "roughness": "maps/layout-v1-masculine-roughness.png",
+        "height": "maps/layout-v1-masculine-height.png"
+      },
+      "slots": {
+        "window": {
+          "left": 29.5,
+          "top": 14.9,
+          "width": 53.5,
+          "height": 54.3,
+          "archRadiusY": 26
+        },
+        "plaque": {
+          "left": 27.9,
+          "top": 76.8,
+          "width": 57.1,
+          "height": 10.4
+        }
+      }
+    }
+  ],
+  "notes": "CANONICAL golden template (arched window + rectangular nameplate). Every themed masculine/heritage kit must derive from this source-frame.webp — never invent a new window or plaque geometry. Slots frozen in ../canonical-slots.json."
+}

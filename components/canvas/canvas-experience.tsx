@@ -8,7 +8,9 @@ import type { Edge, Node } from "@xyflow/react";
 
 import { CanvasActionsContext } from "@/components/canvas/canvas-context";
 import { CanvasInspector, type CanvasSearchItem } from "@/components/canvas/canvas-inspector";
+import { CanvasPersonPopout } from "@/components/canvas/canvas-person-popout";
 import { CanvasStage } from "@/components/canvas/canvas-stage";
+import { CanvasTreeChrome } from "@/components/canvas/canvas-tree-chrome";
 import type { CanvasNodeData, Lineage, PersonViewModel } from "@/lib/types";
 import { cn } from "@/lib/utils/cn";
 
@@ -42,6 +44,8 @@ type CanvasExperienceProps = {
   className?: string;
   /** Client showcase trees use heritage cards + quiet ground; workspace keeps tool chrome. */
   presentation?: "workspace" | "showcase";
+  /** Layout direction; showcase defaults vertical via the page URL. */
+  orientation?: "horizontal" | "vertical";
 };
 
 export function CanvasExperience({
@@ -61,12 +65,15 @@ export function CanvasExperience({
   topBar,
   className,
   presentation = "workspace",
+  orientation = "horizontal",
 }: CanvasExperienceProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [panelOpen, setPanelOpen] = useState<boolean | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const stageShellRef = useRef<HTMLDivElement | null>(null);
+  const isShowcase = presentation === "showcase";
 
   const pushParams = useCallback(
     (mutate: (params: URLSearchParams) => void) => {
@@ -128,7 +135,9 @@ export function CanvasExperience({
   );
 
   const focusSearch = () => {
-    setPanelOpen(true);
+    if (!isShowcase) {
+      setPanelOpen(true);
+    }
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
         searchInputRef.current?.focus();
@@ -136,8 +145,31 @@ export function CanvasExperience({
     });
   };
 
+  const onDepthChange = (level: number) =>
+    pushParams((params) => {
+      if (level > 1) {
+        params.set("depth", String(level));
+      } else {
+        params.delete("depth");
+      }
+    });
+
+  const onLineageChange = (lineageId: string | null) =>
+    pushParams((params) => {
+      if (lineageId) {
+        params.set("lineage", lineageId);
+      } else {
+        params.delete("lineage");
+      }
+    });
+
+  const onOrientationChange = (next: "horizontal" | "vertical") =>
+    pushParams((params) => {
+      params.set("orient", next);
+    });
+
   const stage = (
-    <div className="relative min-h-0 flex-1 overflow-hidden">
+    <div ref={stageShellRef} className="relative min-h-0 flex-1 overflow-hidden">
       <CanvasStage
         nodes={nodes}
         edges={edges}
@@ -146,60 +178,84 @@ export function CanvasExperience({
         onSearchShortcut={focusSearch}
         isPending={isPending}
         presentation={presentation}
-      />
-
-      <div
-        className="pointer-events-none absolute left-3 top-3 z-20 flex max-w-[calc(100%-8rem)] items-center gap-2 rounded-full border border-[var(--creator-border)] px-3.5 py-2 shadow-[var(--shadow-md)] backdrop-blur-md"
-        style={{ background: "var(--canvas-controls-bg)" }}
       >
-        {isPending ? (
-          <Loader2
-            className="h-3.5 w-3.5 shrink-0 animate-spin text-[var(--creator-text-muted)]"
-            aria-label="Loading view"
+        {isShowcase ? (
+          <CanvasPersonPopout
+            person={focusPerson}
+            profileHref={profileHref}
+            nodeId={focusPerson.id}
+            orientation={orientation}
           />
         ) : null}
-        <p className="truncate text-xs text-[var(--creator-text)]">
-          <span className="font-semibold">{focusPerson.fullName}</span>
-          <span className="text-[var(--creator-text-muted)]">
-            {" "}
-            · {nodes.length} in view · {depth} step{depth === 1 ? "" : "s"} ·{" "}
-            {selectedLineageName ?? "All branches"}
-          </span>
-        </p>
-      </div>
+      </CanvasStage>
 
-      <CanvasInspector
-        person={focusPerson}
-        profileHref={profileHref}
-        depth={depth}
-        maxDepth={maxDepth}
-        visibleCount={nodes.length}
-        relatedCount={relatedCount}
-        lineages={lineages}
-        selectedLineageId={selectedLineageId}
-        onDepthChange={(level) =>
-          pushParams((params) => {
-            if (level > 1) {
-              params.set("depth", String(level));
-            } else {
-              params.delete("depth");
-            }
-          })
-        }
-        onLineageChange={(lineageId) =>
-          pushParams((params) => {
-            if (lineageId) {
-              params.set("lineage", lineageId);
-            } else {
-              params.delete("lineage");
-            }
-          })
-        }
-        searchItems={searchItems}
-        open={panelOpen}
-        onOpenChange={setPanelOpen}
-        searchInputRef={searchInputRef}
-      />
+      {isShowcase ? null : (
+        <div
+          className="pointer-events-none absolute left-3 top-3 z-20 flex max-w-[calc(100%-8rem)] items-center gap-2 rounded-full border border-[var(--creator-border)] px-3.5 py-2 shadow-[var(--shadow-md)] backdrop-blur-md"
+          style={{ background: "var(--canvas-controls-bg)" }}
+        >
+          {isPending ? (
+            <Loader2
+              className="h-3.5 w-3.5 shrink-0 animate-spin text-[var(--creator-text-muted)]"
+              aria-label="Loading view"
+            />
+          ) : null}
+          <p className="truncate text-xs text-[var(--creator-text)]">
+            <span className="font-semibold">{focusPerson.fullName}</span>
+            <span className="text-[var(--creator-text-muted)]">
+              {" "}
+              · {nodes.length} in view · {depth} step{depth === 1 ? "" : "s"} ·{" "}
+              {selectedLineageName ?? "All branches"}
+            </span>
+          </p>
+        </div>
+      )}
+
+      {isShowcase ? (
+        <>
+          {isPending ? (
+            <div
+              className="pointer-events-none absolute bottom-3 left-1/2 z-20 -translate-x-1/2 rounded-full border border-[var(--creator-border)] px-3 py-1.5 shadow-[var(--shadow-md)] backdrop-blur-md"
+              style={{ background: "var(--canvas-controls-bg)" }}
+            >
+              <Loader2
+                className="h-3.5 w-3.5 animate-spin text-[var(--creator-text-muted)]"
+                aria-label="Loading view"
+              />
+            </div>
+          ) : null}
+          <CanvasTreeChrome
+            depth={depth}
+            maxDepth={maxDepth}
+            lineages={lineages}
+            selectedLineageId={selectedLineageId}
+            orientation={orientation}
+            onDepthChange={onDepthChange}
+            onLineageChange={onLineageChange}
+            onOrientationChange={onOrientationChange}
+            searchItems={searchItems}
+            searchInputRef={searchInputRef}
+            fullscreenTargetRef={stageShellRef}
+          />
+        </>
+      ) : (
+        <CanvasInspector
+          person={focusPerson}
+          profileHref={profileHref}
+          depth={depth}
+          maxDepth={maxDepth}
+          visibleCount={nodes.length}
+          relatedCount={relatedCount}
+          lineages={lineages}
+          selectedLineageId={selectedLineageId}
+          onDepthChange={onDepthChange}
+          onLineageChange={onLineageChange}
+          searchItems={searchItems}
+          open={panelOpen}
+          onOpenChange={setPanelOpen}
+          searchInputRef={searchInputRef}
+        />
+      )}
     </div>
   );
 

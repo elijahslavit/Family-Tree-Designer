@@ -1,0 +1,214 @@
+{
+  "italian-heritage-masculine": {
+    "slug": "italian-heritage-masculine",
+    "window": {
+      "left": 22.8,
+      "top": 15.9,
+      "width": 54.6,
+      "height": 45.1,
+      "archRadiusY": 26
+    },
+    "plaque": {
+      "left": 17.1,
+      "top": 66.1,
+      "width": 65.8,
+      "height": 11.3
+    }
+  },
+  "england-heritage-masculine": {
+    "slug": "england-heritage-masculine",
+    "window": {
+      "left": 23.3,
+      "top": 16.1,
+      "width": 53.9,
+      "height": 45.7,
+      "archRadiusY": 26
+    },
+    "plaque": {
+      "left": 17,
+      "top": 66.7,
+      "width": 66.1,
+      "height": 11.5
+    }
+  },
+  "germany-heritage-masculine": {
+    "slug": "germany-heritage-masculine",
+    "window": {
+      "left": 21.9,
+      "top": 15.6,
+      "width": 55.9,
+      "height": 46.7,
+      "archRadiusY": 26
+    },
+    "plaque": {
+      "left": 16.6,
+      "top": 67.8,
+      "width": 66.9,
+      "height": 9.8
+    }
+  },
+  "france-heritage-masculine": {
+    "slug": "france-heritage-masculine",
+    "window": {
+      "left": 23.4,
+      "top": 16.3,
+      "width": 54,
+      "height": 45.5,
+      "archRadiusY": 26
+    },
+    "plaque": {
+      "left": 17.1,
+      "top": 67.1,
+      "width": 65.7,
+      "height": 11.5
+    }
+  },
+  "ireland-heritage-masculine": {
+    "slug": "ireland-heritage-masculine",
+    "window": {
+      "left": 24,
+      "top": 14.1,
+      "width": 53.1,
+      "height": 47.6,
+      "archRadiusY": 26
+    },
+    "plaque": {
+      "left": 16.3,
+      "top": 66.8,
+      "width": 67.3,
+      "height": 11.5
+    }
+  },
+  "mexico-heritage-masculine": {
+    "slug": "mexico-heritage-masculine",
+    "window": {
+      "left": 21.9,
+      "top": 16.9,
+      "width": 56.2,
+      "height": 45.4,
+      "archRadiusY": 26
+    },
+    "plaque": {
+      "left": 16,
+      "top": 67.3,
+      "width": 68.1,
+      "height": 9
+    }
+  },
+  "african-american-heritage-masculine": {
+    "slug": "african-american-heritage-masculine",
+    "window": {
+      "left": 22.8,
+      "top": 13.9,
+      "width": 54.6,
+      "height": 48.2,
+      "archRadiusY": 26
+    },
+    "plaque": {
+      "left": 17.1,
+      "top": 67.2,
+      "width": 66.1,
+      "height": 10.3
+    }
+  },
+  "italian-heritage-feminine": {
+    "slug": "italian-heritage-feminine",
+    "window": {
+      "left": 29.2,
+      "top": 26.5,
+      "width": 41.1,
+      "height": 30.6,
+      "shape": "oval"
+    },
+    "plaque": {
+      "left": 31.1,
+      "top": 57.7,
+      "width": 37.7,
+      "height": 11.4
+    }
+  },
+  "england-heritage-feminine": {
+    "slug": "england-heritage-feminine",
+    "window": {
+      "left": 31.7,
+      "top": 19.6,
+      "width": 34.8,
+      "height": 30,
+      "shape": "oval"
+    },
+    "plaque": {
+      "left": 34,
+      "top": 50.1,
+      "width": 31.4,
+      "height": 11.2
+    }
+  },
+  "germany-heritage-feminine": {
+    "slug": "germany-heritage-feminine",
+    "error": "slot detect failed"
+  },
+  "france-heritage-feminine": {
+    "slug": "france-heritage-feminine",
+    "window": {
+      "left": 0.2,
+      "top": 0.1,
+      "width": 99.6,
+      "height": 71.9,
+      "shape": "oval"
+    },
+    "plaque": {
+      "left": 14.3,
+      "top": 72.5,
+      "width": 26.2,
+      "height": 7.7
+    }
+  },
+  "ireland-heritage-feminine": {
+    "slug": "ireland-heritage-feminine",
+    "window": {
+      "left": 0.2,
+      "top": 0.1,
+      "width": 99.6,
+      "height": 71.9,
+      "shape": "oval"
+    },
+    "plaque": {
+      "left": 29.3,
+      "top": 72.5,
+      "width": 53.4,
+      "height": 18.5
+    }
+  },
+  "mexico-heritage-feminine": {
+    "slug": "mexico-heritage-feminine",
+    "window": {
+      "left": 0.2,
+      "top": 0.1,
+      "width": 99.6,
+      "height": 71.9,
+      "shape": "oval"
+    },
+    "plaque": {
+      "left": 62.6,
+      "top": 72.5,
+      "width": 7.8,
+      "height": 3
+    }
+  },
+  "african-american-heritage-feminine": {
+    "slug": "african-american-heritage-feminine",
+    "window": {
+      "left": 0.2,
+      "top": 0.1,
+      "width": 99.6,
+      "height": 71.9,
+      "shape": "oval"
+    },
+    "plaque": {
+      "left": 23.5,
+      "top": 72.5,
+      "width": 52.9,
+      "height": 3.2
+    }
+  }
+}

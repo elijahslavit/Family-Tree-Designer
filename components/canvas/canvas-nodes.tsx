@@ -6,7 +6,8 @@ import { ArrowUpRight, Crosshair } from "lucide-react";
 
 import { useCanvasActions } from "@/components/canvas/canvas-context";
 import { Badge } from "@/components/foundation/badge";
-import { AncestorCard } from "@/components/showcase/ancestor-card";
+import { AncestorCard, type AncestorCardFrameVariant } from "@/components/showcase/ancestor-card";
+import type { Gender } from "@/lib/types";
 import { cn } from "@/lib/utils/cn";
 
 type CanvasNodePayload = {
@@ -26,7 +27,21 @@ type CanvasNodePayload = {
   lineageNames?: string[];
   /** Portrait for this person, when one exists and privacy allows it. */
   portraitPath?: string | null;
+  orientation?: "horizontal" | "vertical";
+  gender?: Gender;
 };
+
+function heritageFrameVariant(gender?: Gender): AncestorCardFrameVariant {
+  return gender === "female" ? "template-feminine" : "template-masculine";
+}
+
+function flowHandles(orientation?: "horizontal" | "vertical") {
+  const vertical = orientation === "vertical";
+  return {
+    target: vertical ? Position.Top : Position.Left,
+    source: vertical ? Position.Bottom : Position.Right,
+  };
+}
 
 function initials(name: string) {
   return name
@@ -104,6 +119,7 @@ const PersonNode = memo(function PersonNode({ id, data, selected, dragging }: No
       : payload.summary;
   const tone = relationStyles(payload.relationGroup);
   const primaryLineage = payload.lineageNames?.[0] ?? null;
+  const handles = flowHandles(payload.orientation);
 
   return (
     <div
@@ -181,12 +197,12 @@ const PersonNode = memo(function PersonNode({ id, data, selected, dragging }: No
 
       <Handle
         type="target"
-        position={Position.Left}
+        position={handles.target}
         className="!h-2.5 !w-2.5 !border-0 !bg-[var(--accent-primary)]"
       />
       <Handle
         type="source"
-        position={Position.Right}
+        position={handles.source}
         className="!h-2.5 !w-2.5 !border-0 !bg-[var(--accent-primary)]"
       />
 
@@ -267,6 +283,7 @@ const HeritagePersonNode = memo(function HeritagePersonNode({
 }: NodeProps) {
   const payload = data as CanvasNodePayload;
   const { centerPerson, openProfile } = useCanvasActions();
+  const handles = flowHandles(payload.orientation);
 
   return (
     <div
@@ -278,12 +295,12 @@ const HeritagePersonNode = memo(function HeritagePersonNode({
     >
       <Handle
         type="target"
-        position={Position.Left}
+        position={handles.target}
         className="!h-2 !w-2 !border-0 !bg-[var(--accent-primary)]"
       />
       <Handle
         type="source"
-        position={Position.Right}
+        position={handles.source}
         className="!h-2 !w-2 !border-0 !bg-[var(--accent-primary)]"
       />
 
@@ -339,7 +356,7 @@ const HeritagePersonNode = memo(function HeritagePersonNode({
           lifespan={payload.subtitle ?? undefined}
           portraitSrc={payload.portraitPath ?? undefined}
           portraitTreatment="period"
-          frameVariant="italian"
+          frameVariant={heritageFrameVariant(payload.gender)}
           masked={Boolean(payload.isLiving)}
           lit={false}
           elevated={false}

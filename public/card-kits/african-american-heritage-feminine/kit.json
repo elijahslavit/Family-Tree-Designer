@@ -1,0 +1,44 @@
+{
+  "name": "African American Heritage — Feminine",
+  "slug": "african-american-heritage-feminine",
+  "palette": [
+    "#E2D4B4",
+    "#F4EBDD",
+    "#3B2B1E",
+    "#7A5A3A",
+    "#B08A3E"
+  ],
+  "mode": "light",
+  "cardAspect": "900 / 1500",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-theme-frame.js african-american-heritage-feminine",
+  "template": "heritage-feminine-shared",
+  "cards": [
+    {
+      "name": "African American Heritage Feminine frame",
+      "slug": "african-american-heritage-feminine-frame",
+      "front": "cards/african-american-heritage-feminine-frame.png",
+      "maps": {
+        "normal": "maps/african-american-heritage-feminine-normal.png",
+        "roughness": "maps/african-american-heritage-feminine-roughness.png",
+        "height": "maps/african-american-heritage-feminine-height.png"
+      },
+      "slots": {
+        "window": {
+          "left": 29.2,
+          "top": 26.5,
+          "width": 41.1,
+          "height": 30.6,
+          "shape": "oval"
+        },
+        "plaque": {
+          "left": 31.1,
+          "top": 57.7,
+          "width": 37.7,
+          "height": 11.4
+        }
+      }
+    }
+  ],
+  "notes": "Canonical slots from heritage-feminine-shared. Rebuild: node scripts/build-theme-frame.js african-american-heritage-feminine"
+}

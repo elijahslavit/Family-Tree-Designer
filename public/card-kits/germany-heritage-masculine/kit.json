@@ -1,0 +1,44 @@
+{
+  "name": "Germany Heritage — Masculine",
+  "slug": "germany-heritage-masculine",
+  "palette": [
+    "#E2D4B4",
+    "#F4EBDD",
+    "#3B2B1E",
+    "#7A5A3A",
+    "#B08A3E"
+  ],
+  "mode": "light",
+  "cardAspect": "900 / 1500",
+  "source": "source-frame.webp",
+  "build": "node scripts/build-theme-frame.js germany-heritage-masculine",
+  "template": "heritage-masculine-shared",
+  "cards": [
+    {
+      "name": "Germany Heritage Masculine frame",
+      "slug": "germany-heritage-masculine-frame",
+      "front": "cards/germany-heritage-masculine-frame.png",
+      "maps": {
+        "normal": "maps/germany-heritage-masculine-normal.png",
+        "roughness": "maps/germany-heritage-masculine-roughness.png",
+        "height": "maps/germany-heritage-masculine-height.png"
+      },
+      "slots": {
+        "window": {
+          "left": 22.8,
+          "top": 15.9,
+          "width": 54.6,
+          "height": 45.1,
+          "archRadiusY": 26
+        },
+        "plaque": {
+          "left": 17.1,
+          "top": 66.1,
+          "width": 65.8,
+          "height": 11.3
+        }
+      }
+    }
+  ],
+  "notes": "Canonical slots from heritage-masculine-shared. Rebuild: node scripts/build-theme-frame.js germany-heritage-masculine"
+}
