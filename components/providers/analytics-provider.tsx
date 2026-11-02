@@ -4,7 +4,13 @@ import posthog from "posthog-js";
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-const privateRoutePrefixes = ["/archive", "/invite", "/projects", "/review", "/s", "/t"];
+// Analytics never runs on private family or studio routes. Matching is by whole
+// path segment, so "/s" (private presentations) does not also match "/sign-in".
+const privateRoutePrefixes = ["/archive", "/handoff", "/invite", "/projects", "/review", "/s"];
+
+function isPrivateRoute(pathname: string) {
+  return privateRoutePrefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+}
 
 export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -16,7 +22,7 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     if (
       !apiKey ||
       !apiHost ||
-      privateRoutePrefixes.some((prefix) => pathname.startsWith(prefix))
+      isPrivateRoute(pathname)
     ) {
       return;
     }
