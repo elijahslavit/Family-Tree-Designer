@@ -1,100 +1,110 @@
 # Family Tree Designer
 
-Family Tree Designer turns a professional genealogist's completed GEDCOM, selected photographs, short stories, and source records into a private, branded, interactive client presentation. The current repository contains a complete synthetic founding-pilot experience; it is not approved for real client data or production deployment yet.
+Family Tree Designer is a professional delivery studio for genealogists. It turns a genealogist's finished research (the GEDCOM, selected photographs, short stories, and source records) into a private, branded presentation that their client explores with their family.
 
-The pilot UI includes:
+The repository contains a complete synthetic founding-pilot experience. It is not yet approved for real client data or production deployment (see [Production gates](#production-gates)).
 
-- a professional portfolio and ten-state delivery workspace;
-- intake, import review, private media quarantine, curation, review, publication, access, handoff, export, and deletion states;
-- a branded client welcome, focused tree, person profiles, stories, and source views;
-- single-use invitation redemption, purpose-scoped viewer sessions, revocation, client review, and verified-owner handoff simulations; and
-- responsive loading, empty, validation, error, expired, revoked, and authorization states.
+## What's in the product
 
-All included people, practices, media, records, invitations, and events are synthetic.
+**For the genealogist: the studio** (`/projects`)
 
-## Pilot source of truth
+- A portfolio of client projects, each moving through ten clear delivery steps from intake to the family's own archive.
+- GEDCOM import that is checked in the browser before anything is uploaded: people, families, living people, and every issue the import found, with nothing dropped silently.
+- Curation of the welcome page, stories, and starting point of the tree, with a live preview of the practice's brand colours.
+- Review rounds locked to a single version, recorded responses to every client request, private single-use invitations, and a handoff to the family's archive owner.
 
-Start with [`docs/pilot/README.md`](./docs/pilot/README.md). It links the implementation-ready product, commercial, operating, privacy-review, deployment, measurement, and execution artifacts. The earlier [`docs/Family Tree App Structure.md`](./docs/Family%20Tree%20App%20Structure.md) remains useful background but does not override the locked pilot scope.
+**For the client: the presentation** (`/s/[slug]`, previewed at `/projects/[id]/preview`)
 
-## Getting Started
+- An opening welcome in the practice's colours, shown once per visit.
+- A generational family tree with search, generation labels, branch highlighting, and a text outline for screen readers and phones.
+- People, stories, and source records, each linked to the others.
+- Invitation-only access, with no public links. Living relatives show only consented details, and living children never appear.
 
-From the repository directory (not `C:\Windows\System32`), install dependencies:
+**Public page** (`/`): what the product is, who it is for, and what the client receives.
+
+All people, practices, media, records, invitations, and events in the demo are fictional.
+
+## Getting started
+
+Install dependencies and create a local environment file. Keep `DEMO_MODE=true` for local synthetic work; demo mode needs no database or Supabase credentials.
 
 ```bash
 npm install
 ```
 
-Copy `.env.example` to `.env.local`. Keep `DEMO_MODE=true` for local synthetic work:
-
-```powershell
-Copy-Item .env.example .env.local
+```bash
+cp .env.example .env.local
 ```
-
-Start the app:
 
 ```bash
 npm run dev
 ```
 
-On Windows PowerShell, use `npm.cmd` if the PowerShell script policy blocks `npm.ps1`:
+Open `http://localhost:3000`. On Windows PowerShell, use `npm.cmd` if the script policy blocks `npm.ps1`, and `Copy-Item .env.example .env.local` to copy the environment file.
 
-```powershell
-npm.cmd install
-npm.cmd run dev
-```
+## Demo routes
 
-Open `http://localhost:3000`. Demo mode uses only the built-in synthetic workspaces and requires no Supabase credentials.
+| Route | What it shows |
+| --- | --- |
+| `/` | Public page |
+| `/projects` | Studio portfolio |
+| `/projects/pilot-hart-001` | A project overview, with every workflow step in the sidebar |
+| `/projects/pilot-hart-001/import` | GEDCOM check (try any `.ged` file; it never leaves the browser) |
+| `/projects/pilot-hart-001/preview` | The client presentation, exactly as an invited client sees it |
+| `/invite/pilot-review-invite` | A valid client-review invitation |
+| `/invite/pilot-owner-invite` | A valid archive-owner handoff invitation |
+| `/invite/pilot-expired-invite`, `/invite/pilot-revoked-invite` | Safe error states that reveal nothing about the family |
 
-## Useful synthetic routes
-
-- `/` — professional marketing page
-- `/projects` — creator portfolio
-- `/projects/pilot-hart-001` — pilot workspace
-- `/projects/pilot-hart-001/preview` — authorization-faithful professional preview
-- `/invite/pilot-review-invite` — valid client-review invitation
-- `/invite/pilot-owner-invite` — valid owner-handoff invitation
-- `/invite/pilot-expired-invite` and `/invite/pilot-revoked-invite` — safe terminal states
-
-Invitation fixtures are deliberately local and synthetic. Never reuse them in production.
+Invitation fixtures are local and synthetic. Each can be redeemed once per server start. Never reuse them in production. Addresses from the earlier hobbyist editor (`/dashboard`, `/directory`, `/t/…`, and others) redirect to the studio or the home page.
 
 ## Scripts
 
-- `npm run dev` starts the Next.js dev server.
-- `npm run build` creates a production build.
-- `npm run lint` runs ESLint.
-- `npm run typecheck` runs TypeScript in no-emit mode.
-- `npm run test` runs Vitest unit tests with coverage.
-- `npm run test:e2e` runs Playwright tests.
-- `npm run db:generate` generates Drizzle migrations.
-- `npm run db:push` pushes the schema to PostgreSQL.
-- `npm run db:seed` resets the demo seed script entrypoint.
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript, no emit |
+| `npm run test` | Vitest unit tests with coverage |
+| `npm run test:e2e` | Playwright end-to-end tests (starts its own server) |
+| `npm run check` | Lint, typecheck, and unit tests together |
+| `npm run db:generate` / `db:push` | Drizzle migrations and schema push |
 
-Run the full local verification sequence with:
+Continuous integration (`.github/workflows/ci.yml`) runs lint, typecheck, unit tests, and a production build, plus the Playwright suite against the production build, on every pull request.
 
-```powershell
-npm.cmd run lint
-npm.cmd run typecheck
-npm.cmd run test
-npm.cmd run build
-npm.cmd run test:e2e
-```
+## Architecture
 
-## Current Architecture
+| Path | Contents |
+| --- | --- |
+| `app/page.tsx` | Public page |
+| `app/(auth)/projects/` | Studio routes and the professional preview of the client presentation |
+| `app/(client)/` | Invitation, review, handoff, owner archive, and invited presentation routes |
+| `components/pilot/` | Studio and client UI, including the presentation (`showcase-*`), the welcome reveal, and shared tree and story views |
+| `components/canvas/` | Family tree canvas, search, text outline, and sidebar |
+| `components/foundation/` | Shared primitives (buttons, badges, inputs, toggles) |
+| `lib/pilot/` | Synthetic pilot domain store, workflow rules, and demo data |
+| `lib/showcase/` | Privacy-filtered presentation data, access checks, and the reveal's session state |
+| `lib/data/canvas-layout.ts` | Generational family-tree layout |
+| `lib/import/gedcom-parser.ts` | GEDCOM decoding and parsing, with review issues for anything not imported |
+| `lib/utils/brand-palette.ts` | Accessible palette derived from a practice's brand colours |
+| `lib/auth/` | Invitation and session credentials, and authorization |
+| `db/` | Drizzle schema and client |
+| `public/demo/pilot/` | Synthetic demonstration media |
+| `docs/pilot/` | Product, commercial, operations, privacy, security, and implementation plans |
 
-- `app/(auth)/projects/` contains the professional pilot workspace and preview.
-- `app/(client)/` contains invitation, review, handoff, owner-control, and private showcase routes.
-- `components/pilot/` contains reusable creator and client pilot UI.
-- `lib/pilot/` contains the deterministic synthetic domain store and workflow rules.
-- `lib/showcase/` creates privacy-filtered client presentation DTOs.
-- `lib/auth/pilot-*` contains local invitation/session and authorization utilities.
-- `components/foundation/` contains skin-aware primitives.
-- `components/domain/` contains genealogy-specific UI.
-- `components/layouts/` contains the three layout shells and shell selector.
-- `db/` contains Drizzle schema and client setup.
-- `public/demo/pilot/` contains clearly synthetic demonstration assets.
+## Pilot source of truth
+
+Start with [`docs/pilot/README.md`](./docs/pilot/README.md). It links the product, commercial, operating, privacy-review, deployment, measurement, and execution documents. The earlier [`docs/Family Tree App Structure.md`](./docs/Family%20Tree%20App%20Structure.md) is background only and does not override the pilot scope.
 
 ## Production gates
 
-Do not ingest real client data until the attorney-review record is complete, the founder has approved the go/no-go gate, a consented dataset is available, dedicated Vercel/Supabase/domain/email infrastructure is provisioned, provider backup retention is verified, secrets are configured, migrations and storage policies are deployed, and the deployment/security checklist passes. Those accounts are intentionally unprovisioned; no code in this repository creates, purchases, deploys, or exposes credentials.
+Do not ingest real client data until all of the following are true:
 
-The local invitation, review, export, and deletion behavior is a deterministic implementation of pilot rules, not a claim that production authentication, malware scanning, durable jobs, backups, or generated ZIP delivery are already provisioned.
+- the attorney-review record is complete and the founder has approved the go/no-go gate;
+- a consented dataset is available;
+- dedicated Vercel, Supabase, domain, and email infrastructure is provisioned, and provider backup retention is verified;
+- secrets are configured. `INVITE_TOKEN_PEPPER` is required: outside demo mode, invitation and session handling refuses to run without it;
+- the pilot workflow is persisted to the database. The `db/schema.ts` pilot tables exist, but the store in `lib/pilot/store.ts` is still in-memory and demo-only;
+- migrations and storage policies are deployed, and the deployment/security checklist passes.
+
+Those accounts are intentionally unprovisioned; no code in this repository creates, purchases, deploys, or exposes credentials. The local invitation, review, export, and deletion behaviour is a deterministic implementation of the pilot rules, not a claim that production authentication, malware scanning, durable jobs, backups, or generated ZIP delivery are already provisioned.
