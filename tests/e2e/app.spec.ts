@@ -1,141 +1,20 @@
 import { expect, test } from "@playwright/test";
 
-test("dashboard surfaces archive overview and quick actions", async ({ page }) => {
-  await page.goto("/dashboard");
+// The earlier hobbyist editor and public share links were retired in favour
+// of the professional studio and invitation-only client presentations. Old
+// bookmarks must land somewhere sensible rather than on a 404.
 
-  await expect(page.getByRole("heading", { name: "Welcome" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Select Theme" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Enter Family" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Archive summary" })).toBeVisible();
-});
-
-test("creator can add a person and continue in the workbench", async ({ page }) => {
-  await page.goto("/directory");
-  await page.getByRole("link", { name: "Add person" }).click();
-
-  await page.getByLabel("Given name").fill("Iris");
-  await page.getByLabel("Surname").fill("North");
-  await page.getByLabel("Summary").fill("Newly added for Playwright coverage.");
-  await page.getByRole("button", { name: "Create person" }).click();
-
-  await expect(page.getByText("Person created. Continue with relationships and events next.")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Edit person" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Parents" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Timeline events" })).toBeVisible();
-});
-
-test("public directory filtering preserves the share token", async ({ page }) => {
-  await page.goto("/t/hart-family-archive?share=share-hart-2026-demo");
-
-  await page.getByLabel("Search").fill("Walter");
-  await page.getByRole("button", { name: "Apply filters" }).click();
-
-  await expect(page).toHaveURL(/share=share-hart-2026-demo/);
-  await expect(page.getByText("Walter Hart")).toBeVisible();
-});
-
-test("living people stay masked in the public profile and can still open canvas", async ({ page }) => {
-  await page.goto("/t/hart-family-archive/person/p14?share=share-hart-2026-demo");
-
-  await expect(page.getByRole("heading", { name: "Details private" })).toBeVisible();
-  await expect(page.getByText("This person is marked as living")).toBeVisible();
-  await expect(page.getByText("Helen believes the archive should feel like an heirloom book")).toHaveCount(0);
-
-  await page.getByRole("link", { name: "Explore in canvas" }).click();
-  await expect(page).toHaveURL(/\/t\/hart-family-archive\/canvas\?share=share-hart-2026-demo&person=p14/);
-});
-
-test("canvas explorer can expand outward and preserve lineage highlighting in the URL", async ({ page }) => {
-  await page.goto("/canvas?person=p03");
-
-  await expect(page.getByText("George Vale")).toHaveCount(0);
-
-  await page.getByRole("button", { name: "Extended" }).click();
-  await expect(page).toHaveURL(/\/canvas\?person=p03&depth=2/);
-  await expect(page.getByText("George Vale").first()).toBeVisible();
-
-  await page.getByRole("button", { name: "West-Vale Branch" }).click();
-  await expect(page).toHaveURL(/lineage=l02/);
-});
-
-test("viewer can open the lineage view from the shared archive", async ({ page }) => {
-  await page.goto("/t/hart-family-archive?share=share-hart-2026-demo");
-
-  await page.getByRole("link", { name: "Browse lineages" }).click();
-
-  await expect(page).toHaveURL(/\/t\/hart-family-archive\/lineages\?share=share-hart-2026-demo/);
-  await expect(page.getByRole("heading", { name: "Follow named descent paths" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Direct Hart Line" })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Jonah Brooks/ })).toBeVisible();
-});
-
-test("lineage page can open a highlighted canvas view for the selected path", async ({ page }) => {
-  await page.goto("/t/hart-family-archive/lineages?share=share-hart-2026-demo");
-
-  await page.getByRole("link", { name: "Open highlighted canvas" }).first().click();
-
-  await expect(page).toHaveURL(/\/t\/hart-family-archive\/canvas\?share=share-hart-2026-demo/);
-  await expect(page).toHaveURL(/lineage=l01|lineage=l02/);
-});
-
-test("settings page is organized around tree, account, and danger-zone controls", async ({ page }) => {
-  await page.goto("/settings");
-
-  await expect(page.getByRole("heading", { name: "Configure how the archive is named, shared, and protected." })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Jump to the right control" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Sharing controls" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Identity and sign-in" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Destructive controls" })).toBeVisible();
-});
-
-test("theme studio previews curated family-tree combinations before saving", async ({ page }) => {
-  await page.goto("/theme");
-
-  await expect(page.getByRole("heading", { name: "Presentation preset" })).toBeVisible();
-  await expect(page.getByLabel("Background / preset")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Canvas changes based on selection" })).toBeVisible();
-
-  await page.getByLabel("Background / preset").selectOption("tree");
-
-  await expect(page.getByRole("heading", { name: "Canvas changes based on selection" })).toBeVisible();
-  await expect(page.getByText("Botanical canvas with branch-like structure.").first()).toBeVisible();
-  await expect(page.getByText("Preview canvas").first()).toBeVisible();
-});
-
-test("creator can parse and confirm a GEDCOM upload", async ({ page }) => {
-  await page.goto("/import");
-
-  await expect(page.getByRole("heading", { name: "Information" })).toBeVisible();
-  await expect(page.getByText("JSON / XML")).toBeVisible();
-
-  await page.locator('input[type="file"]').setInputFiles({
-    name: "playwright.ged",
-    mimeType: "text/plain",
-    buffer: Buffer.from(`0 HEAD
-1 SOUR PLAYWRIGHT
-0 @I1@ INDI
-1 NAME Ada /Walker/
-1 SEX F
-1 BIRT
-2 DATE 12 JAN 1901
-2 PLAC Dayton, Ohio
-0 TRLR`),
+for (const path of ["/dashboard", "/directory", "/canvas?person=p03", "/theme", "/settings", "/person/p03"]) {
+  test(`retired studio route ${path} redirects to the project portfolio`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page).toHaveURL(/\/projects$/);
+    await expect(page.getByRole("heading", { name: "Client delivery studio" })).toBeVisible();
   });
+}
 
-  await page.getByRole("button", { name: "Parse file" }).click();
-  await expect(page.getByRole("button", { name: "Confirm import" })).toBeVisible();
-  await expect(page.getByText("People")).toBeVisible();
-
-  await page.getByRole("button", { name: "Confirm import" }).click();
-  await expect(page.getByRole("button", { name: "Import confirmed" })).toBeVisible();
-});
-
-test("shared archive navigation collapses into a mobile drawer", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+test("retired public share links never expose a family and return home", async ({ page }) => {
   await page.goto("/t/hart-family-archive?share=share-hart-2026-demo");
-
-  await page.getByRole("button", { name: "Open navigation" }).click();
-  const drawer = page.getByRole("dialog", { name: "The Hart Family Archive navigation" });
-  await expect(drawer.getByRole("link", { name: "Canvas", exact: true })).toBeVisible();
-  await expect(drawer.getByRole("link", { name: "Lineages", exact: true })).toBeVisible();
+  await expect(page).toHaveURL(/\/$/);
+  expect(page.url()).not.toContain("share=");
+  await expect(page.getByRole("heading", { name: /Your research deserves a reveal/ })).toBeVisible();
 });
