@@ -75,7 +75,7 @@ export function ClientAccessShell({
           <div className="mt-5 flex flex-col gap-2 border-t border-black/10 pt-4 text-xs text-[#756d61] sm:flex-row sm:items-center sm:justify-between">
             <span>{practiceName ?? productConfig.name}</span>
             <span className="inline-flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5" /> Private, noindex, access checked on every action
+              <ShieldCheck className="h-3.5 w-3.5" /> Private and invitation-only
             </span>
           </div>
         </header>
@@ -132,7 +132,7 @@ const accessStateCopy: Record<
   identity_required: {
     title: "Verify your owner identity to continue.",
     detail:
-      "Passive family viewers remain accountless. Archive ownership requires an authenticated control-plane identity before access, export, or deletion powers transfer.",
+      "Family members can view without an account. To take ownership of the archive, sign in with the account your genealogist designated.",
     nextStep: "Sign in with the address designated for the archive owner, then return here.",
   },
   identity_mismatch: {

@@ -106,7 +106,7 @@ export function LocalDraftForm({ project }: { project: PilotProject }) {
         Internal delivery note
         <Textarea
           name="deliveryNote"
-          defaultValue="Concierge-assisted founding pilot. Client receives a private, branded showcase with one year of hosting."
+          defaultValue="Founding pilot, set up with our team. Your client receives a private, branded presentation with a year of hosting."
         />
       </label>
 
@@ -202,7 +202,7 @@ export function PilotUploadControl({ kind }: { kind: "gedcom" | "media" }) {
         </span>
         <span className="mt-1 max-w-lg text-xs leading-5 text-[#746b5e]">
           {kind === "gedcom"
-            ? "Synthetic files only until legal review is recorded complete."
+            ? "Use fictional files only until the legal review is complete."
             : "JPEG, PNG, WebP, or PDF · 20 MB each · 25 items / 500 MB per project"}
         </span>
       </button>
@@ -373,7 +373,7 @@ export function ReviewItemWorkbench({
   function disposition(item: PilotReviewItem, decision: "accepted" | "declined") {
     const note = notes[item.id]?.trim() ?? "";
     if (note.length < 8) {
-      setError("Add a disposition note of at least eight characters before deciding the request.");
+      setError("Add a short note (at least eight characters) before responding to this request.");
       return;
     }
 
@@ -389,7 +389,7 @@ export function ReviewItemWorkbench({
         });
         setDispositions((current) => ({ ...current, [item.id]: result.status }));
       } catch (caught) {
-        setError(caught instanceof Error ? caught.message : "The review disposition could not be recorded.");
+        setError(caught instanceof Error ? caught.message : "Your response could not be saved.");
       } finally {
         setPendingItemId(null);
       }
@@ -421,7 +421,7 @@ export function ReviewItemWorkbench({
               {item.disposition ? <p className="mt-1 text-xs leading-5 text-[#746b5e]">Disposition: {item.disposition}</p> : null}
               {state === "open" ? (
                 <label className="mt-3 block space-y-1 text-xs font-semibold text-[#665e53]">
-                  Professional disposition note
+                  Your response to the client
                   <Textarea
                     value={notes[item.id] ?? ""}
                     onChange={(event) =>
@@ -498,7 +498,7 @@ export function ReviewLifecycleControl({
   if (mode === "read_only") {
     return (
       <InlineNotice tone="warning">
-        No professional review transition is currently available. Open reviews await the client; approved or published versions are immutable.
+        Nothing to do here right now. Open reviews are waiting on the client, and approved versions can’t change.
       </InlineNotice>
     );
   }
@@ -510,12 +510,12 @@ export function ReviewLifecycleControl({
         if (mode === "open_round_1") {
           if (!revisionId) throw new Error("A draft revision is required to open round one.");
           const result = await openPilotReviewVersionAction({ projectRef, revisionId });
-          setNotice(`Round one opened and bound to ${result.contentFingerprint.slice(0, 16)}…`);
+          setNotice("Round one is open. Your client will review exactly this version.");
           return;
         }
 
         if (!previousReviewVersionId || !contentFingerprint) {
-          throw new Error("The resolved review version is missing its immutable identifiers.");
+          throw new Error("This review round is missing details needed to continue.");
         }
         const result = await createNextPilotReviewVersionAction({
           projectRef,
@@ -567,7 +567,7 @@ export function InviteIssuer({
   function issue(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (purpose === "client_review" && !reviewVersionId) {
-      setError("Open a frozen review version before issuing client-review access.");
+      setError("Open a review round before inviting a client reviewer.");
       return;
     }
 
@@ -636,7 +636,7 @@ export function InviteIssuer({
           <div className="flex items-start gap-2 text-sm leading-6 text-amber-950">
             <ShieldAlert className="mt-1 h-4 w-4 shrink-0" />
             <p>
-              This server-generated, single-use bearer token is shown once. Send it manually to {issuedRecipient}; only its cryptographic hash remains in the project store. It expires unused after seven days.
+              This link is shown only once. Send it to {issuedRecipient} yourself—we keep only a secure fingerprint of it. It expires after seven days if unused.
             </p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
@@ -770,7 +770,7 @@ export function InviteRowActions({
           </div>
         </div>
       ) : null}
-      {revokedNotice ? <InlineNotice>Outstanding links and active sessions for this recipient were revoked. Redeemed invitations remain immutable history.</InlineNotice> : null}
+      {revokedNotice ? <InlineNotice>Their links and sessions have been revoked. Past invitations stay in the history.</InlineNotice> : null}
       {error ? <InlineNotice tone="danger">{error}</InlineNotice> : null}
     </div>
   );
@@ -785,8 +785,8 @@ export function HandoffControl({ status }: { status: "pending" | "accepted" | "r
       </div>
       <InlineNotice tone={status === "accepted" ? "success" : "warning"}>
         {status === "accepted"
-          ? "The verified owner accepted in the owner control plane. Only that owner may extend support or run routine archive controls."
-          : "Acceptance is owner-only and must occur through the verified owner invitation. The professional studio cannot simulate or record it."}
+          ? "The family’s archive owner has accepted. Only they can extend your support or manage the archive."
+          : "Only the archive owner can accept, using their personal invitation. It can’t be done from the studio."}
       </InlineNotice>
     </div>
   );
@@ -844,7 +844,7 @@ export function DeletionControl({ existingStatus }: { existingStatus?: string })
     <InlineNotice tone={existingStatus ? "danger" : "warning"}>
       {existingStatus
         ? `Owner deletion status: ${existingStatus}. The professional studio is read-only for this operation.`
-        : "Deletion is owner-only. It requires the accepted owner identity and typed confirmation in the owner control plane; the professional studio cannot request or cancel it."}
+        : "Only the archive owner can request or cancel deletion, from their own account."}
     </InlineNotice>
   );
 }

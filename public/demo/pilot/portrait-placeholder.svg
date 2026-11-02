@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-labelledby="title">
+  <title id="title">No portrait available</title>
+  <defs>
+    <linearGradient id="bg-placeholder" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#E6DCCB"/><stop offset="1" stop-color="#CFC2AC"/></linearGradient>
+    <clipPath id="frame-placeholder"><rect x="30" y="28" width="340" height="444" rx="170"/></clipPath>
+  </defs>
+  <rect width="400" height="500" rx="24" fill="#F5EDDF"/>
+  <g clip-path="url(#frame-placeholder)">
+    <rect x="30" y="28" width="340" height="444" fill="url(#bg-placeholder)"/>
+    <ellipse cx="200" cy="200" rx="66" ry="78" fill="#B9AA92"/>
+    <path d="M58 472c14-118 69-180 142-180s128 62 142 180Z" fill="#B9AA92"/>
+  </g>
+  <rect x="30" y="28" width="340" height="444" rx="170" fill="none" stroke="#FFFFFF" stroke-width="12"/>
+</svg>

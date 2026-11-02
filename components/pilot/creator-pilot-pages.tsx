@@ -162,30 +162,30 @@ export function PilotPortfolioPage({ workspace }: { workspace: PilotWorkspace })
         <PilotPageHeader
           eyebrow={workspace.portfolio.practiceName}
           title="Client delivery studio"
-          description="Move completed genealogy research through a controlled, private workflow—from intake to a beautiful family showcase and accountable archive handoff."
+          description="Turn finished research into private, branded family presentations—from import to the family’s own archive."
           actions={
-            <span className="inline-flex cursor-not-allowed items-center rounded-lg border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-[#8a8175]" title="Operator-created during the founding pilots">
-              New pilot · operator only
+            <span className="inline-flex cursor-not-allowed items-center rounded-lg border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-[#8a8175]" title="During the founding pilot, new projects are set up with you">
+              New project · set up with us
             </span>
           }
         />
 
         <SyntheticCallout>
-          <strong>Safe demo environment.</strong> Every person, image, story, source, invitation, and audit event below is synthetic. Real client ingestion stays blocked until the legal-review gate is recorded complete.
+          <strong>Demo studio.</strong> Every family, photograph, story, and record here is fictional, so you can explore freely.
         </SyntheticCallout>
 
         <section aria-label="Portfolio summary" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <PilotStat label="Projects" value={workspace.projects.length} detail="Exactly two paid founding pilots are commercially available." />
-          <PilotStat label="In delivery" value={activeProjects.length} detail="Commissioned projects before archive handoff." />
-          <PilotStat label="Gate attention" value={blockedProjects.length} detail="Projects with at least one required publication blocker." />
-          <PilotStat label="Practice" value="Solo" detail="Concierge effort is measured separately from genealogist setup." />
+          <PilotStat label="Projects" value={workspace.projects.length} detail="Client projects in this studio." />
+          <PilotStat label="In progress" value={activeProjects.length} detail="Not yet handed to the family." />
+          <PilotStat label="Need attention" value={blockedProjects.length} detail="Something must be resolved before publishing." />
+          <PilotStat label="Practice" value="Solo" detail="One genealogist, supported by our team during the pilot." />
         </section>
 
         <section aria-labelledby="projects-heading" className="space-y-4">
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#746b5e]">Portfolio</p>
-              <h2 id="projects-heading" className="mt-1 text-2xl font-semibold">Pilot projects</h2>
+              <h2 id="projects-heading" className="mt-1 text-2xl font-semibold">Client projects</h2>
             </div>
             <span className="text-xs text-[#746b5e]">Updated {formatDate(new Date().toISOString(), true)}</span>
           </div>
@@ -253,7 +253,7 @@ export function PilotPortfolioPage({ workspace }: { workspace: PilotWorkspace })
           )}
         </section>
 
-        <PilotSection eyebrow="Locked scope" title="Founding-pilot guardrails" description="Commercial terms live in the operating plan, never in the client UI. These product limits prevent silent scope creep.">
+        <PilotSection eyebrow="Pilot scope" title="What each project includes" description="Clear limits keep every founding project focused and on schedule.">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {[
               ["500", "people"],
@@ -288,9 +288,9 @@ export function PilotProjectOverview({
   return (
     <>
       <PilotPageHeader
-        eyebrow="Project command center"
+        eyebrow="Project overview"
         title={project.title}
-        description={`A private, presentation-first archive prepared for ${project.clientLabel}. Follow the controlled workflow; completed client delivery is never altered silently.`}
+        description={`A private family presentation for ${project.clientLabel}. Work through each step below; anything already delivered to the client never changes without a new review.`}
         actions={
           <>
             <Link href={`/projects/${project.id}/preview`} className="inline-flex items-center gap-2 rounded-lg border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-[#302a23] hover:bg-[#f7f4ee]">
@@ -304,17 +304,17 @@ export function PilotProjectOverview({
       />
 
       <SyntheticCallout>
-        This showcase uses clearly synthetic family data. The missing legal review remains visible by design and blocks any real-data readiness claim.
+        This is a demo project with a fictional family. The legal-review item stays open on purpose: it must be complete before any real family’s data is used.
       </SyntheticCallout>
 
       <section aria-label="Project summary" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <PilotStat label="Imported people" value={`${project.counts.people}/${project.scope.maxPeople}`} detail={`${project.importSummary.familyCount} family groups in the confirmed structure.`} />
-        <PilotStat label="Safe media" value={`${project.media.filter((item) => item.quarantineStatus === "passed").length}/${project.scope.maxMediaItems}`} detail={`${formatBytes(project.counts.mediaBytes)} of ${formatBytes(project.scope.maxMediaBytes)} used.`} />
-        <PilotStat label="Featured stories" value={`${project.counts.featuredStories}/${project.scope.maxFeaturedStories}`} detail={`Minimum ${project.scope.minFeaturedStories} unless an operator records a reasoned override.`} />
-        <PilotStat label="Concierge time" value={`${Math.round(project.metrics.conciergeMinutes / 60 * 10) / 10}h`} detail={`${project.metrics.genealogistSetupMinutes} minutes of genealogist setup tracked.`} />
+        <PilotStat label="People" value={`${project.counts.people}/${project.scope.maxPeople}`} detail={`${project.importSummary.familyCount} family groups in the confirmed structure.`} />
+        <PilotStat label="Media" value={`${project.media.filter((item) => item.quarantineStatus === "passed").length}/${project.scope.maxMediaItems}`} detail={`${formatBytes(project.counts.mediaBytes)} of ${formatBytes(project.scope.maxMediaBytes)} used.`} />
+        <PilotStat label="Featured stories" value={`${project.counts.featuredStories}/${project.scope.maxFeaturedStories}`} detail={`At least ${project.scope.minFeaturedStories}, unless a reason is recorded.`} />
+        <PilotStat label="Support time" value={`${Math.round(project.metrics.conciergeMinutes / 60 * 10) / 10}h`} detail={`Plus ${project.metrics.genealogistSetupMinutes} minutes of your own setup.`} />
       </section>
 
-      <PilotSection eyebrow="Ten-state delivery" title="Workflow" description="Each state has one accountable output. Client review versions freeze before comments are accepted.">
+      <PilotSection eyebrow="Progress" title="Delivery steps" description="Ten steps from intake to the family’s own archive, each with a clear finish line.">
         <ol className="grid gap-2 md:grid-cols-2">
           {project.workflow.map((step, index) => {
             const Icon = step.state === "complete" ? Check : step.state === "current" ? CircleDashed : step.state === "blocked" ? LockKeyhole : Clock3;
@@ -335,7 +335,7 @@ export function PilotProjectOverview({
       </PilotSection>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <PilotSection eyebrow="Publication control" title={gate.allowed ? "Ready to publish privately" : `${gate.blockers.length} gate${gate.blockers.length === 1 ? "" : "s"} block publication`} description="Noindex is defense in depth. Recipient authorization—not obscurity—protects the showcase.">
+        <PilotSection eyebrow="Before publishing" title={gate.allowed ? "Ready to publish privately" : `${gate.blockers.length} ${gate.blockers.length === 1 ? "item" : "items"} left before publishing`} description="Everything here must be complete before the client is invited.">
           <div>
             {project.checklist.map((item) => (
               <GateRow
@@ -343,7 +343,7 @@ export function PilotProjectOverview({
                 label={item.label}
                 detail={
                   item.key === "legal_review" && item.status !== "complete"
-                    ? "Synthetic-demo bypass only. Attorney review is not recorded; real client data remains blocked."
+                    ? "Demo projects can continue without it. Real client data stays blocked until it is recorded."
                     : item.overrideReason ?? item.description
                 }
                 state={checklistState(item)}
@@ -352,7 +352,7 @@ export function PilotProjectOverview({
           </div>
         </PilotSection>
 
-        <PilotSection eyebrow="Audit trail" title="Recent accountable activity" description="Approvals, role changes, exports, access changes, and deletion operations are immutable production events.">
+        <PilotSection eyebrow="Activity" title="Recent activity" description="A permanent record of approvals, access changes, exports, and deletions.">
           {recentAudit.length ? (
             <ol className="space-y-4">
               {recentAudit.map((event) => (
@@ -360,7 +360,7 @@ export function PilotProjectOverview({
                   <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#eef2ed] text-[#4f6454]"><Activity className="h-3.5 w-3.5" /></span>
                   <div>
                     <p className="text-sm font-medium text-[#302a23]">{event.summary}</p>
-                    <p className="mt-0.5 text-xs text-[#82796d]">{formatDate(event.occurredAt, true)} · {event.actorId}</p>
+                    <p className="mt-0.5 text-xs text-[#82796d]">{formatDate(event.occurredAt, true)} · {project.roles.find((role) => role.actorId === event.actorId)?.displayName ?? "System"}</p>
                   </div>
                 </li>
               ))}
@@ -379,21 +379,21 @@ export function PilotIntakePage({ project }: { project: PilotProject }) {
 
   return (
     <>
-      <PilotPageHeader eyebrow="State 1 · Intake" title="Define the safe engagement" description="Record the client, delivery scope, authorization, and privacy boundary before any real family file is accepted." />
+      <PilotPageHeader eyebrow="Step 1 · Intake" title="Set up the engagement" description="Record who the client is, what’s included, and the permissions you hold—before any family files arrive." />
       <SyntheticCallout>
-        Synthetic material may move through the workflow now. Real client data is launch-blocked until a U.S. privacy/technology attorney review is recorded complete.
+        Fictional demo material can move through every step. Real family data waits until the legal review is complete.
       </SyntheticCallout>
 
-      <PilotSection eyebrow="Project record" title="Client and engagement" description="Founding pilots are concierge-assisted and operator-created. Commercial prices remain outside the product UI.">
+      <PilotSection eyebrow="Project" title="Client and scope" description="During the founding pilot, we set up each project together with you.">
         <LocalDraftForm project={project} />
       </PilotSection>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <PilotSection eyebrow="Required evidence" title="Legal, rights, and consent gates" description="A missing required record blocks publication; the product never infers consent from silence.">
+        <PilotSection eyebrow="Permissions" title="Rights and consent" description="Publishing waits until each item is recorded. Consent is never assumed.">
           <div>{legalItems.map((item) => <GateRow key={item.key} label={item.label} detail={item.overrideReason ?? item.description} state={checklistState(item)} />)}</div>
         </PilotSection>
 
-        <PilotSection eyebrow="Launch blocker" title="Attorney review" description="Planning reserve is not spending authority.">
+        <PilotSection eyebrow="Before real client data" title="Legal review" description="Required before any real family’s data is uploaded.">
           <div className="space-y-4">
             <div className="flex items-center justify-between rounded-xl bg-red-50 p-4">
               <div><p className="font-semibold text-red-900">Not completed</p><p className="mt-1 text-xs text-red-800">Target completion: day 35</p></div>
@@ -408,7 +408,7 @@ export function PilotIntakePage({ project }: { project: PilotProject }) {
         </PilotSection>
       </div>
 
-      <PilotSection eyebrow="Restricted founding scope" title="Cases this product may accept" description="The pilot is intentionally narrow while privacy operations are validated.">
+      <PilotSection eyebrow="Suitable projects" title="What the pilot can take on" description="The founding pilot is deliberately focused while our privacy processes are proven.">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
             <div className="flex items-center gap-2 font-semibold text-emerald-900"><CheckCircle2 className="h-4 w-4" />Allowed</div>
@@ -431,7 +431,7 @@ export function PilotIntakePage({ project }: { project: PilotProject }) {
         </div>
       </PilotSection>
 
-      <PilotSection eyebrow="Living-person controls" title="Consent register" description="Living adults can view, correct, hide, or remove their own profile. Living minors remain hidden by default.">
+      <PilotSection eyebrow="Living relatives" title="Consent" description="Living adults can view, correct, hide, or remove their own profile. Living children stay hidden.">
         {project.consents.length ? (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
@@ -454,16 +454,16 @@ export function PilotImportPage({ project }: { project: PilotProject }) {
 
   return (
     <>
-      <PilotPageHeader eyebrow="States 2–3 · Materials & import review" title="Bring the archive in safely" description="Confirm structure, resolve import ambiguity, and keep every media item private until signature validation and a named malware scan pass." />
+      <PilotPageHeader eyebrow="Steps 2–3 · Materials" title="Bring in the research" description="Import the family tree, review anything uncertain, and add photographs and records. New files stay private until they pass safety checks." />
       <PrivacyCallout>
         Unconfirmed import staging expires on <strong>{formatDate(summary.stagingExpiresAt, true)}</strong>. Originals remain private; failed files are isolated and never parsed.
       </PrivacyCallout>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <PilotSection eyebrow="GEDCOM structure" title="Import or replace the synthetic file" description="The browser check below never sends a selected file. It demonstrates validation states safely.">
+        <PilotSection eyebrow="Family tree file" title="Import a GEDCOM" description="In this demo, files are checked in your browser and never uploaded.">
           <PilotUploadControl kind="gedcom" />
         </PilotSection>
-        <PilotSection eyebrow="Media intake" title="Send files to quarantine" description="Accepted format does not mean safe. Nothing appears in a preview, derivative, export, or client presentation before quarantine passes.">
+        <PilotSection eyebrow="Photographs and records" title="Add media" description="New files are held privately and appear nowhere until they pass a safety scan.">
           <PilotUploadControl kind="media" />
         </PilotSection>
       </div>
@@ -475,11 +475,11 @@ export function PilotImportPage({ project }: { project: PilotProject }) {
         <PilotStat label="Review issues" value={summary.issues.filter((issue) => issue.status === "open").length} detail={`${summary.issues.filter((issue) => issue.severity === "blocking" && issue.status === "open").length} currently block confirmation.`} />
       </section>
 
-      <PilotSection eyebrow="Import reconciliation" title="Resolve or explicitly acknowledge every issue" description="Truth is preserved in the graph. Uncertain relationships remain labeled with context rather than being silently normalized.">
+      <PilotSection eyebrow="Import review" title="Check what needs attention" description="Resolve or acknowledge each item. Uncertain relationships stay labeled rather than being quietly changed.">
         <ImportIssueWorkbench issues={summary.issues} />
       </PilotSection>
 
-      <PilotSection eyebrow="Private quarantine" title="Media safety queue" description={`${safeMedia.length} passed · ${project.media.filter((asset) => asset.quarantineStatus === "pending").length} pending · ${failedMedia.length} isolated`}>
+      <PilotSection eyebrow="Safety checks" title="Media awaiting approval" description={`${safeMedia.length} passed · ${project.media.filter((asset) => asset.quarantineStatus === "pending").length} pending · ${failedMedia.length} isolated`}>
         {project.media.length ? (
           <div className="grid gap-4 lg:grid-cols-2">
             {project.media.map((asset) => {
@@ -505,7 +505,7 @@ export function PilotImportPage({ project }: { project: PilotProject }) {
       </PilotSection>
 
       <WarningCallout>
-        <strong>Unsupported files:</strong> HEIC and TIFF should be exported as a separate JPEG, PNG, or WebP copy; preserve the original outside this pilot. PDFs are authenticated attachment downloads and use only separately generated inert previews in the UI.
+        <strong>Unsupported files:</strong> Export HEIC and TIFF images as JPEG, PNG, or WebP and keep the original yourself. PDFs appear as a preview; the original file is available only to invited family.
       </WarningCallout>
     </>
   );
@@ -517,17 +517,17 @@ export function PilotCuratePage({ project, focalPersonName }: { project: PilotPr
 
   return (
     <>
-      <PilotPageHeader eyebrow="State 4 · Curation" title="Shape the client’s opening moment" description="Turn structure into recognition and curiosity: one warm welcome, one focused family branch, and a small number of well-sourced stories." actions={<Link href={`/projects/${project.id}/review`} style={{ color: "#ffffff" }} className="inline-flex items-center gap-2 rounded-lg bg-[#263a31] px-4 py-2 text-sm font-semibold text-white">Open professional preview <ArrowRight className="h-4 w-4" /></Link>} />
+      <PilotPageHeader eyebrow="Step 4 · Curation" title="Shape the client’s first impression" description="Write the welcome, choose where the tree begins, and pick a few well-sourced stories." actions={<Link href={`/projects/${project.id}/review`} style={{ color: "#ffffff" }} className="inline-flex items-center gap-2 rounded-lg bg-[#263a31] px-4 py-2 text-sm font-semibold text-white">Open professional preview <ArrowRight className="h-4 w-4" /></Link>} />
       <PrivacyCallout>
         Only media with passed quarantine status may be selected. Living minors are hidden; living adults expose only consented, minimized fields.
       </PrivacyCallout>
 
-      <PilotSection eyebrow="Welcome & brand" title="A curated book, not a database" description="Edits stay unpublished until a new revision is previewed, reviewed, explicitly approved, and published.">
+      <PilotSection eyebrow="Welcome" title="The opening page" description="Changes stay private until you preview them and the client approves.">
         <CurationEditor welcome={project.welcome} branding={project.branding} />
       </PilotSection>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-        <PilotSection eyebrow="Guided story path" title={`${featuredStories.length} featured stories`} description={`Founding-pilot qualification expects ${project.scope.minFeaturedStories}–${project.scope.maxFeaturedStories}; a reasoned operator override may allow a deliberately story-light project.`}>
+        <PilotSection eyebrow="Stories" title={`${featuredStories.length} featured stories`} description={`Aim for ${project.scope.minFeaturedStories}–${project.scope.maxFeaturedStories} short stories. A project with fewer needs a recorded reason.`}>
           {featuredStories.length ? (
             <ol className="space-y-4">
               {featuredStories.map((story, index) => {
@@ -547,13 +547,13 @@ export function PilotCuratePage({ project, focalPersonName }: { project: PilotPr
         </PilotSection>
 
         <div className="space-y-6">
-          <PilotSection eyebrow="Focused branch" title="Client-centered overview" description="The full graph remains truthful; the opening view is intentionally partial.">
+          <PilotSection eyebrow="Tree" title="Where the tree begins" description="The whole family is always there; the opening view simply starts close to home.">
             <div className="space-y-3 text-sm text-[#665e53]"><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Focal person</span><strong className="text-[#302a23]">{focalPersonName ?? (project.focalPersonId ? "Selected" : "Not selected")}</strong></div><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Initial depth</span><strong className="text-[#302a23]">Nearest generations</strong></div><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Expansion</span><strong className="text-[#302a23]">On demand</strong></div></div>
           </PilotSection>
-          <PilotSection eyebrow="Brand lock" title={project.branding.practiceName} description="One branded theme is included in the founding pilot.">
+          <PilotSection eyebrow="Your brand" title={project.branding.practiceName} description="Your colours appear throughout the client’s presentation.">
             <BrandPreview branding={project.branding} familyName={project.welcome.familyName} tagline={project.welcome.headline} />
           </PilotSection>
-          <PilotSection eyebrow="Media readiness" title={`${passedMedia.length} safe assets`} description="Every visible image requires meaningful alt text or an explicit decorative designation.">
+          <PilotSection eyebrow="Image descriptions" title={`${passedMedia.length} safe assets`} description="Every image needs a description for screen-reader users, or must be marked decorative.">
             <div className="space-y-2">{passedMedia.slice(0, 4).map((media) => <div key={media.id} className="flex items-center justify-between gap-3 rounded-lg border border-black/[0.06] px-3 py-2 text-xs"><span className="truncate">{media.caption || media.fileName}</span>{media.altText || media.decorative ? <Badge tone="success">Accessible</Badge> : <Badge tone="danger">Alt required</Badge>}</div>)}</div>
           </PilotSection>
         </div>
@@ -590,11 +590,11 @@ export function PilotReviewPage({ project, gate }: { project: PilotProject; gate
 
   return (
     <>
-      <PilotPageHeader eyebrow="States 5–8 · Preview, review & publication" title="Freeze feedback against a known version" description="The genealogist previews first. Each client round accepts one consolidated request against a frozen fingerprint, and every item receives an auditable disposition." actions={project.publication ? <CopyPrivatePath path={project.publication.privatePath} /> : undefined} />
+      <PilotPageHeader eyebrow="Steps 5–8 · Review" title="Review and approval" description="Preview the presentation yourself, then send it to your client. Each review round is locked to one version, so feedback never drifts, and every request gets a recorded response." actions={project.publication ? <CopyPrivatePath path={project.publication.privatePath} /> : undefined} />
 
-      {project.publication ? <PrivacyCallout>Private delivery published {formatDate(project.publication.publishedAt, true)}. Noindex is enabled, but content access still requires recipient authorization.</PrivacyCallout> : <WarningCallout>Publication remains blocked until the professional preview, structured reviews, explicit client approval, and every required safety gate are complete.</WarningCallout>}
+      {project.publication ? <PrivacyCallout>Published privately on {formatDate(project.publication.publishedAt, true)}. Only invited people can open it.</PrivacyCallout> : <WarningCallout>Publishing opens once you’ve previewed the presentation, your client has reviewed and approved it, and every safety check is complete.</WarningCallout>}
 
-      <PilotSection eyebrow="Version ledger" title="Revisions and frozen reviews" description="After approval, editing creates a new unpublished revision. The delivered version never changes underneath the client.">
+      <PilotSection eyebrow="Versions" title="Drafts and review rounds" description="Editing after approval starts a new draft. What the client approved never changes underneath them.">
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-3">
             <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#82796d]">Content revisions</p>
@@ -613,7 +613,7 @@ export function PilotReviewPage({ project, gate }: { project: PilotProject; gate
         </PilotSection>
 
         <div className="space-y-6">
-          <PilotSection eyebrow="Professional transition" title="Open only an immutable review snapshot" description="The server derives the canonical fingerprint and records the exact revision/version binding.">
+          <PilotSection eyebrow="Next round" title="Open a review round" description="Locks the current draft so your client comments on exactly what you see.">
             <ReviewLifecycleControl
               projectRef={project.id}
               mode={reviewLifecycleMode}
@@ -622,16 +622,16 @@ export function PilotReviewPage({ project, gate }: { project: PilotProject; gate
               contentFingerprint={nextReviewCandidate?.contentFingerprint}
             />
           </PilotSection>
-          <PilotSection eyebrow="Explicit approval" title={clientApproved ? "Delivery approved" : "Client sign-off required"} description="Approval freezes the delivery; it does not grant archive-owner powers.">
+          <PilotSection eyebrow="Approval" title={clientApproved ? "Delivery approved" : "Client sign-off required"} description="Approval locks the delivery. Ownership of the archive is handed over separately.">
             <ClientApprovalControl blocked={unresolved > 0} approved={clientApproved} />
           </PilotSection>
-          <PilotSection eyebrow="Publish gates" title={gate.allowed ? "All controls satisfied" : `${gate.blockers.length} blockers remain`} description="A story-light exception requires a documented operator reason; content is never invented to pass a gate.">
+          <PilotSection eyebrow="Before publishing" title={gate.allowed ? "Everything is in place" : `${gate.blockers.length} ${gate.blockers.length === 1 ? "item" : "items"} left before publishing`} description="A project with fewer stories needs a recorded reason—content is never invented to pass a check.">
             <div className="space-y-2">{gate.blockers.length ? gate.blockers.slice(0, 6).map((blocker) => <div key={`${blocker.code}-${blocker.message}`} className="flex items-start gap-2 rounded-lg bg-red-50 p-3 text-xs leading-5 text-red-900"><LockKeyhole className="mt-0.5 h-3.5 w-3.5 shrink-0" /><span>{blocker.message}</span></div>) : <div className="flex items-center gap-2 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800"><BadgeCheck className="h-4 w-4" />Ready for private publication</div>}</div>
           </PilotSection>
         </div>
       </div>
 
-      <PilotSection eyebrow="Professional preview" title="Authorization-faithful client view" description="Preview uses the same authorization and privacy rules as delivery; it is not a privileged bypass around hidden content.">
+      <PilotSection eyebrow="Preview" title="See exactly what your client sees" description="The preview follows the same privacy rules as the delivered presentation, so hidden details stay hidden here too.">
         <div className="grid gap-4 rounded-2xl border border-black/10 bg-[#263a31] p-5 text-white md:grid-cols-[1fr_auto] md:items-center"><div><p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/60">Pending private version</p><h3 className="mt-2 font-serif text-3xl text-white">{project.welcome.headline}</h3><p className="mt-2 max-w-2xl text-sm leading-6 text-white/70">Review the exact client permissions, hidden living-person details, story order, sources, responsive layout, and noindex response before opening round one.</p></div><Link href={`/projects/${project.id}/preview`} style={{ color: "#263a31" }} className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#263a31]">Open preview <Eye className="h-4 w-4" /></Link></div>
       </PilotSection>
     </>
@@ -653,13 +653,13 @@ export function PilotAccessPage({ project }: { project: PilotProject }) {
   const professionalCanManageAccess = project.handoff?.status !== "accepted";
   return (
     <>
-      <PilotPageHeader eyebrow="Private access" title="Invite people, not anonymous links" description="Every founding-pilot recipient receives a manually delivered, single-use bearer invitation. A valid exchange creates a revocable, secure client session." />
+      <PilotPageHeader eyebrow="Access" title="Invite people, not links" description="Each person gets their own single-use invitation. Opening it starts a private session you can revoke at any time." />
       <PrivacyCallout>
         Unused invites expire after seven days. Production stores only cryptographic token hashes; sessions use HTTP-only, Secure, SameSite cookies with a 30-day absolute lifetime and shorter idle timeout.
       </PrivacyCallout>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <PilotSection eyebrow="Manual delivery" title="Issue one recipient invitation" description="No automated email integration is used in the founding pilots. The raw bearer token is displayed once.">
+        <PilotSection eyebrow="New invitation" title="Invite someone" description="Copy the link and send it yourself—it’s shown only once.">
           <InviteIssuer
             projectRef={project.id}
             reviewVersions={project.reviewVersions.map((version) => ({
@@ -671,12 +671,12 @@ export function PilotAccessPage({ project }: { project: PilotProject }) {
             canManage={professionalCanManageAccess}
           />
         </PilotSection>
-        <PilotSection eyebrow="Authorization model" title="Role-scoped by purpose" description="Viewer, reviewer, and owner handoff links grant deliberately different capabilities.">
+        <PilotSection eyebrow="Roles" title="What each invitation allows" description="Viewers explore, reviewers comment, and the archive owner takes over the archive.">
           <div className="space-y-3 text-sm"><AccessRole icon={Eye} title="Family viewer" detail="View permitted archive content only; no account or control-plane access." /><AccessRole icon={FileCheck2} title="Client reviewer" detail="View one pending version and submit one consolidated request for the assigned round." /><AccessRole icon={BadgeCheck} title="Owner candidate" detail="Must accept through a verified identity before access, export, deletion, and invitation powers activate." /></div>
         </PilotSection>
       </div>
 
-      <PilotSection eyebrow="Recipient ledger" title="Outstanding and redeemed invitations" description="Revoking a recipient invalidates both their outstanding invitations and active sessions and records an audit event.">
+      <PilotSection eyebrow="Invitations" title="Sent and accepted invitations" description="Revoking someone cancels their invitations and signs them out everywhere.">
         {project.invites.length ? (
           <div className="overflow-x-auto"><table className="w-full min-w-[920px] text-left text-sm"><thead><tr className="border-b border-black/10 text-[10px] uppercase tracking-[0.14em] text-[#82796d]"><th className="pb-3 font-semibold">Recipient</th><th className="pb-3 font-semibold">Purpose / version</th><th className="pb-3 font-semibold">Issued / expires</th><th className="pb-3 font-semibold">Token hint</th><th className="pb-3 text-right font-semibold">Access</th></tr></thead><tbody>{project.invites.map((invite) => <tr key={invite.id} className="border-b border-black/[0.06] last:border-0"><td className="py-4"><p className="font-medium text-[#302a23]">{invite.recipientLabel}</p><p className="mt-0.5 text-xs text-[#82796d]">{invite.recipientEmail}</p></td><td className="py-4 capitalize text-[#665e53]">{invite.purpose.replaceAll("_", " ")}{invite.reviewRound ? <span className="mt-1 block text-xs normal-case text-[#82796d]">Round {invite.reviewRound} · {invite.reviewVersionId}</span> : null}</td><td className="py-4 text-xs leading-5 text-[#665e53]">{formatDate(invite.issuedAt, true)}<br />{formatDate(invite.expiresAt, true)}</td><td className="py-4"><code className="rounded bg-[#f2eee7] px-2 py-1 text-xs">{invite.tokenHint}</code></td><td className="py-4"><InviteRowActions projectRef={project.id} invite={invite} canManage={professionalCanManageAccess} /></td></tr>)}</tbody></table></div>
         ) : (
@@ -685,10 +685,10 @@ export function PilotAccessPage({ project }: { project: PilotProject }) {
       </PilotSection>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <PilotSection eyebrow="Active sessions" title={`${liveSessions.length} revocable session${liveSessions.length === 1 ? "" : "s"}`} description="Lost links are reissued; recipient access can be revoked without rotating every family member’s credentials.">
+        <PilotSection eyebrow="Active sessions" title={`${liveSessions.length} revocable session${liveSessions.length === 1 ? "" : "s"}`} description="Reissue a lost link, or revoke one person’s access without affecting anyone else.">
           {liveSessions.length ? <div className="space-y-3">{liveSessions.map((session) => { const invite = project.invites.find((item) => item.id === session.inviteId); return <div key={session.id} className="flex items-center gap-3 rounded-xl border border-black/[0.07] p-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-700"><ShieldCheck className="h-4 w-4" /></span><div className="min-w-0 flex-1"><p className="truncate font-medium">{invite?.recipientLabel ?? session.recipientId}</p><p className="mt-0.5 text-xs text-[#82796d]">Idle expiry {formatDate(session.idleExpiresAt, true)} · absolute {formatDate(session.absoluteExpiresAt, true)}</p></div><Badge tone="success">Active</Badge></div>; })}</div> : <p className="rounded-xl border border-dashed border-[#cbc3b8] p-6 text-center text-sm text-[#746b5e]">No active client sessions.</p>}
         </PilotSection>
-        <PilotSection eyebrow="Defense in depth" title="Private presentation controls" description="Search-engine directives reduce accidental discovery but never substitute for authorization.">
+        <PilotSection eyebrow="Privacy" title="How the presentation stays private" description="It’s hidden from search engines, and only invited people can ever open it.">
           <div className="space-y-3"><ControlRow icon={LockKeyhole} label="Unauthenticated content" value="Blocked" /><ControlRow icon={ScanSearch} label="Robots metadata / headers" value="Noindex" /><ControlRow icon={Eye} label="Genealogist preview" value="Same auth logic" /><ControlRow icon={Mail} label="Invitation delivery" value="Manual" /></div>
         </PilotSection>
       </div>
@@ -712,12 +712,12 @@ export function PilotHandoffPage({ project }: { project: PilotProject }) {
 
   return (
     <>
-      <PilotPageHeader eyebrow="States 9–10 · Handoff & active archive" title="Transfer authority without losing accountability" description="The client accepts archive ownership through a verified identity; professional support becomes revocable and expires automatically after 30 days." />
+      <PilotPageHeader eyebrow="Steps 9–10 · Handoff" title="Hand the archive to the family" description="Your client takes ownership with a verified account. Your support access then ends automatically after 30 days unless they extend it." />
 
       {!project.publication ? <WarningCallout>Handoff cannot complete before explicit client approval and private publication. Prepare the owner identity now, but do not transfer authority early.</WarningCallout> : <PrivacyCallout>The family owns and can export its content. The genealogist’s curated work remains governed by the service agreement; access powers transfer to the verified archive owner.</PrivacyCallout>}
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <PilotSection eyebrow="Authenticated control plane" title="Archive-owner acceptance" description="Passive viewers remain accountless. Invitation, export, deletion, and access management require a verified identity.">
+        <PilotSection eyebrow="Ownership" title="The archive owner" description="Family viewers never need an account. Managing invitations, exports, and deletion requires the owner’s verified account.">
           <div className="grid gap-4 sm:grid-cols-2">
             <ControlRow icon={Fingerprint} label="Owner candidate" value={ownerRole?.displayName ?? "Not assigned"} />
             <ControlRow icon={BadgeCheck} label="Identity verification" value={handoff?.identityVerifiedAt ? formatDate(handoff.identityVerifiedAt) : "Pending"} />
@@ -727,25 +727,25 @@ export function PilotHandoffPage({ project }: { project: PilotProject }) {
           <div className="mt-5"><HandoffControl status={handoff?.status ?? "not_started"} /></div>
         </PilotSection>
 
-        <PilotSection eyebrow="Professional access" title="Support expires by default" description="Owner-approved extensions are explicit 30-day increments; emergency platform access is least-privilege, disclosed, reason-recorded, and time-limited.">
+        <PilotSection eyebrow="Your access" title="Support access ends by default" description="The owner can extend it 30 days at a time. Emergency access is limited, disclosed, and time-boxed.">
           <div className="space-y-3"><ControlRow icon={Users} label="Genealogist" value={professionalRole?.displayName ?? project.branding.practiceName} /><ControlRow icon={Clock3} label="Support expiry" value={formatDate(handoff?.professionalSupportExpiresAt ?? professionalRole?.expiresAt)} /><ControlRow icon={CalendarClock} label="Extensions" value={`${handoff?.supportExtensionCount ?? 0} recorded`} /><ControlRow icon={ShieldQuestion} label="Platform routine access" value="None" /></div>
         </PilotSection>
       </div>
 
-      <PilotSection eyebrow="Owner capabilities" title="Access, export, deletion, and renewal" description="Authority changes and sensitive operations are recorded in the audit log.">
+      <PilotSection eyebrow="Owner controls" title="Access, export, deletion, and renewal" description="Every sensitive change is recorded in the activity log.">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[{ icon: KeyRound, title: "Manage invitations", detail: "Issue and revoke recipient access." },{ icon: FileArchive, title: "Export everything", detail: "Data, originals, stories, sources, and durable presentation." },{ icon: HardDrive, title: "Choose preservation", detail: "Renew active hosting or later select preservation-only service." },{ icon: ShieldCheck, title: "Request deletion", detail: "Typed confirmation and a clear cancellation window." }].map(({ icon: Icon, title, detail }) => <div key={title} className="rounded-xl border border-black/[0.07] bg-[#faf8f3] p-4"><Icon className="h-5 w-5 text-[#637b68]" /><p className="mt-3 font-semibold">{title}</p><p className="mt-1 text-xs leading-5 text-[#746b5e]">{detail}</p></div>)}</div>
       </PilotSection>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <PilotSection eyebrow="Portable by design" title="Complete authenticated export" description="Generated downloads are audit-logged, short-lived, and automatically deleted after 24 hours.">
+        <PilotSection eyebrow="Export" title="A complete copy of the archive" description="Downloads are logged and deleted automatically after 24 hours.">
           <div className="space-y-4"><ul className="grid gap-2 text-sm leading-6 text-[#665e53] sm:grid-cols-2"><li>✓ Original GEDCOM and normalized data</li><li>✓ Original media and provenance</li><li>✓ Stories and source references</li><li>✓ Durable static or printable presentation</li><li>✓ Privacy and opening instructions</li><li>✓ No secrets, tokens, or internal security logs</li></ul><ExportControl projectRef={project.id} existingStatus={latestExport?.status} professionalCanRequest={handoff?.status !== "accepted"} /></div>
         </PilotSection>
-        <PilotSection eyebrow="Owner-controlled deletion" title="A family’s history is never held hostage" description="The UI shows exact dates before an owner confirms anything.">
+        <PilotSection eyebrow="Deletion" title="A family’s history is never held hostage" description="Exact dates are shown before the owner confirms anything.">
           <DeletionControl existingStatus={project.deletion?.status} />
         </PilotSection>
       </div>
 
-      <PilotSection eyebrow="Retention schedule" title="What happens if nobody renews" description="Provider backup promises must be verified and documented before the public policy is finalized.">
+      <PilotSection eyebrow="Retention" title="What happens if nobody renews" description="The timeline if the archive’s hosting isn’t renewed.">
         <ol className="grid gap-3 md:grid-cols-2 xl:grid-cols-4"><TimelineCard index="01" title="Expiration" detail="Editing, contributions, and new invitations stop. Existing viewers keep access during a 30-day grace period." /><TimelineCard index="02" title="Grace ends" detail="Presentation goes offline. The private archive remains recoverable for 12 months." /><TimelineCard index="03" title="Recovery ends" detail="Primary data is queued for permanent deletion after the published recovery period." /><TimelineCard index="04" title="Backups age out" detail="Target no more than 35 days where the verified provider schedule permits." /></ol>
       </PilotSection>
 

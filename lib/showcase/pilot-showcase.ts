@@ -8,8 +8,8 @@ import { getCanvasNeighborhoodFromBundle, getPersonViewFromBundle } from "@/lib/
 import type { PilotMediaAsset, PilotProject, PilotStory } from "@/lib/pilot/types";
 import type { Person, PersonViewModel } from "@/lib/types";
 
-const genericMediaPlaceholder = "/demo/pilot/meridian-family-histories-logo.svg";
-const fallbackPortrait = genericMediaPlaceholder;
+const genericMediaPlaceholder = "/demo/pilot/record-placeholder.svg";
+const fallbackPortrait = "/demo/pilot/portrait-placeholder.svg";
 
 export type PilotShowcaseData = {
   project: PilotProject;
@@ -138,10 +138,27 @@ export function getShowcaseStory(project: PilotProject, storyId: string) {
     )
     .map((person) => personCard(project, person));
 
+  const sources = story.sourceIds
+    .map((sourceId) => bundle.sources.find((source) => source.id === sourceId))
+    .filter((source): source is NonNullable<typeof source> => Boolean(source))
+    .map((source) => ({
+      id: source.id,
+      title: source.title,
+      detail: [source.author, source.notes].filter(Boolean).join(" · "),
+    }));
+
+  const featured = project.stories
+    .filter((candidate) => candidate.featured && canShowStory(project, candidate))
+    .sort((left, right) => left.order - right.order);
+  const position = featured.findIndex((candidate) => candidate.id === story.id);
+  const next = featured.length > 1 && position >= 0 ? featured[(position + 1) % featured.length] : null;
+
   return {
     story,
     card: storyCard(project, story),
     people,
+    sources,
+    nextStory: next && next.id !== story.id ? storyCard(project, next) : null,
   };
 }
 
@@ -416,9 +433,10 @@ function storyCard(project: PilotProject, story: PilotStory): ShowcaseStoryCard 
     id: story.id,
     title: story.title,
     dek: story.dek,
-    period: story.order === 1 ? "1912–1987" : story.order === 2 ? "Summer 1968" : "1938–2014",
+    period: story.period ?? "",
     imagePath: safeDisplayPath(project, cover) ?? fallbackPortrait,
-    readMinutes: 2,
+    // About 200 words a minute, never less than one minute.
+    readMinutes: Math.max(1, Math.round(story.bodyMd.trim().split(/\s+/).length / 200)),
   };
 }
 

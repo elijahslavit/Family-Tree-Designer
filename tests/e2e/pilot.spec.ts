@@ -6,7 +6,7 @@ test("creator portfolio and professional preview are complete", async ({ page })
   await page.goto("/projects");
 
   await expect(page.getByRole("heading", { name: "Client delivery studio" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Pilot projects" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Client projects" })).toBeVisible();
   await expect(page.getByText("The Hart Family Legacy").first()).toBeVisible();
 
   await page.goto("/projects/pilot-hart-001/preview");

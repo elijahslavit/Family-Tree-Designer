@@ -1,14 +1,15 @@
 import { test, expect } from "@playwright/test";
 
-test("marketing page presents the professional pilot", async ({ page }) => {
+test("marketing page explains the product and links to a live example", async ({ page }) => {
   await page.goto("/");
 
-  await expect(
-    page.getByRole("heading", { name: /Your research deserves a reveal/ }),
-  ).toBeVisible();
-  await expect(page.getByRole("link", { name: "See a finished reveal" }).first()).toBeVisible();
-  await expect(page.getByRole("link", { name: "Open the pilot workspace" }).first()).toBeVisible();
-  await expect(page.getByText("synthetic data only")).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Your research deserves a reveal/ })).toBeVisible();
+  await expect(page.getByText("For professional genealogists", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "A family history they’ll actually open" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Keep your research tools. Upgrade the delivery." })).toBeVisible();
+
+  await page.getByRole("link", { name: "See an example presentation" }).first().click();
+  await expect(page).toHaveURL(/\/projects\/pilot-hart-001\/preview$/);
 });
 
 test("color mode can be changed and persists across reloads", async ({ page }) => {

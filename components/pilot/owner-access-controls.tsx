@@ -454,7 +454,7 @@ export function HandoffAcceptance({
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#81786a]">Authority transfer</p>
         <h2 className="mt-2 font-serif text-3xl font-semibold">Accept stewardship of {projectTitle}</h2>
         <p className="mt-3 text-sm leading-6 text-[#6c6459]">
-          {ownerLabel}, accepting records the role transfer from {practiceName} to your verified control-plane identity. Passive family viewers remain accountless.
+          {ownerLabel}, accepting makes you the owner of this archive, taking over from {practiceName}. Family members you invite can still view it without an account.
         </p>
         <ul className="mt-5 space-y-3">
           {responsibilities.map((responsibility) => (

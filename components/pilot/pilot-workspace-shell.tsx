@@ -159,7 +159,7 @@ export function PilotWorkspaceShell({
           <div className="mt-auto space-y-3 border-t border-black/10 p-4">
             <div className="flex items-start gap-3 rounded-lg bg-[#eef2ed] p-3 text-xs leading-5 text-[#4e6254]">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" />
-              <span>Private by default. Publication gates are enforced before client delivery.</span>
+              <span>Private by default. Nothing reaches your client until you publish.</span>
             </div>
             <div className="flex items-center justify-between gap-2">
               <Link

@@ -15,6 +15,11 @@ export type ShowcasePersonCard = {
   imagePath: string;
 };
 
+/** "Summer 1968 · 2 min read", omitting the period when a story has none. */
+export function storyMeta(story: Pick<ShowcaseStoryCard, "period" | "readMinutes">, unit: "min" | "minute" = "min") {
+  return [story.period, `${story.readMinutes} ${unit} read`].filter(Boolean).join(" · ");
+}
+
 export type ShowcaseStoryCard = {
   id: string;
   title: string;
@@ -184,7 +189,7 @@ export function ShowcaseHome({
                 <Image src={story.imagePath} alt="" fill sizes="(max-width: 1024px) 100vw, 33vw" className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.025]" />
               </div>
               <div className="space-y-3 p-5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#7b6d59]">{story.period} · {story.readMinutes} min read</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#7b6d59]">{storyMeta(story)}</p>
                 <h3 className="font-serif text-2xl font-semibold leading-tight">{story.title}</h3>
                 <p className="text-sm leading-6 text-[#6f6557]">{story.dek}</p>
               </div>
