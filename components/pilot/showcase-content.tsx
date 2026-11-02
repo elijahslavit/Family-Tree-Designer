@@ -17,7 +17,7 @@ export function ShowcaseIndexHeader({
   return (
     <header className="border-b border-[#3c3325]/10 bg-[#eee6d7]">
       <div className="mx-auto max-w-7xl space-y-4 px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#786b58]">{eyebrow}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#62574a]">{eyebrow}</p>
         <h1 className="max-w-4xl font-serif text-5xl font-semibold tracking-[-0.03em] sm:text-6xl">{title}</h1>
         <p className="max-w-2xl text-base leading-7 text-[#6f6557]">{description}</p>
       </div>
@@ -41,7 +41,7 @@ export function ShowcasePeopleIndex({ basePath, people }: { basePath: string; pe
             </div>
             <div className="space-y-2 p-3.5 sm:p-5">
               <p className="font-serif text-lg font-semibold leading-tight sm:text-2xl">{person.name}</p>
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#7a6f61]">{person.years}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#655b4f]">{person.years}</p>
               <p className="hidden text-sm leading-6 text-[#6e6456] sm:line-clamp-3">{person.summary}</p>
             </div>
           </Link>
@@ -66,7 +66,7 @@ export function ShowcaseStoriesIndex({ basePath, stories }: { basePath: string; 
               <Image src={story.imagePath} alt="" fill sizes="220px" className="object-cover transition-transform duration-500 group-hover:scale-[1.025]" />
             </div>
             <div className="flex flex-col p-6">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#7b6d59]">{storyMeta(story)}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#64584a]">{storyMeta(story)}</p>
               <h2 className="mt-3 font-serif text-3xl font-semibold leading-tight">{story.title}</h2>
               <p className="mt-3 text-sm leading-6 text-[#6f6557]">{story.dek}</p>
               <span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-semibold text-[var(--brand-primary-ink)]">Read story <ArrowRight className="h-4 w-4" /></span>
@@ -110,7 +110,7 @@ export function ShowcasePersonDetail({
               <ArrowLeft className="h-3.5 w-3.5" /> All people
             </Link>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#776a58]">{person.years}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#62574a]">{person.years}</p>
               <h1 className="mt-3 font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.035em] sm:text-7xl">{person.name}</h1>
             </div>
             <p className="max-w-2xl font-serif text-2xl leading-snug text-[#51493e]">{person.summary}</p>
@@ -125,7 +125,7 @@ export function ShowcasePersonDetail({
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-8 lg:py-16">
         <article className="space-y-8">
           <div className="space-y-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#776a58]">Life sketch</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#62574a]">Life sketch</p>
             {biography.map((paragraph) => <p key={paragraph.slice(0, 40)} className="font-serif text-xl leading-9 text-[#494137]">{paragraph}</p>)}
           </div>
           {stories.length ? (
@@ -142,10 +142,10 @@ export function ShowcasePersonDetail({
         </article>
         <aside className="space-y-5">
           <InfoPanel title="Recorded facts">
-            <dl className="space-y-4">{facts.map((fact) => <div key={fact.label}><dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#817667]">{fact.label}</dt><dd className="mt-1 text-sm leading-6">{fact.value}</dd></div>)}</dl>
+            <dl className="space-y-4">{facts.map((fact) => <div key={fact.label}><dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#665c50]">{fact.label}</dt><dd className="mt-1 text-sm leading-6">{fact.value}</dd></div>)}</dl>
           </InfoPanel>
           <InfoPanel title="Close family">
-            <div className="space-y-3">{relatives.map((relative) => <Link key={relative.id} href={`${basePath}/people/${relative.id}`} className="flex items-center gap-3"><span className="relative h-10 w-10 overflow-hidden rounded-full bg-[#ded5c5]"><Image src={relative.imagePath} alt="" fill sizes="40px" className="object-cover" /></span><span><span className="block text-sm font-semibold">{relative.name}</span><span className="block text-xs text-[#766c5e]">{relative.relation ? <span className="font-semibold uppercase tracking-[0.12em] text-[10px] text-[var(--brand-accent-ink)]">{relative.relation}</span> : null}{relative.relation ? " · " : null}{relative.years}</span></span></Link>)}</div>
+            <div className="space-y-3">{relatives.map((relative) => <Link key={relative.id} href={`${basePath}/people/${relative.id}`} className="flex items-center gap-3"><span className="relative h-10 w-10 overflow-hidden rounded-full bg-[#ded5c5]"><Image src={relative.imagePath} alt="" fill sizes="40px" className="object-cover" /></span><span><span className="block text-sm font-semibold">{relative.name}</span><span className="block text-xs text-[#63594d]">{relative.relation ? <span className="font-semibold uppercase tracking-[0.12em] text-[10px] text-[var(--brand-accent-ink)]">{relative.relation}</span> : null}{relative.relation ? " · " : null}{relative.years}</span></span></Link>)}</div>
           </InfoPanel>
           <InfoPanel title="Source note">
             <Link href={`${basePath}/sources/${source.id}`} className="block rounded-lg bg-[#f4efe5] p-3 text-sm leading-6 hover:bg-[#eee6d7]"><span className="font-semibold">{source.title}</span><span className="mt-1 block text-xs text-[#746b5e]">{source.detail}</span></Link>
@@ -208,7 +208,7 @@ export function ShowcaseStoryDetail({
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#d8cfbf] shadow-[0_24px_60px_-20px_rgba(47,42,34,0.45)] ring-1 ring-black/5">
               <Image src={story.imagePath} alt="" fill priority sizes="(max-width: 1024px) 300px, 340px" className="object-cover" />
             </div>
-            <figcaption className="mt-3 text-center text-[10px] uppercase tracking-[0.14em] text-[#817667]">Synthetic demonstration media</figcaption>
+            <figcaption className="mt-3 text-center text-[10px] uppercase tracking-[0.14em] text-[#665c50]">Synthetic demonstration media</figcaption>
           </figure>
         </div>
       </header>
@@ -233,7 +233,7 @@ export function ShowcaseStoryDetail({
 
         {sources.length ? (
           <section aria-labelledby="story-sources" className="mt-14 border-t border-[#3c3325]/10 pt-8">
-            <h2 id="story-sources" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#776a58]">
+            <h2 id="story-sources" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#62574a]">
               {sources.length === 1 ? "Source for this story" : "Sources for this story"}
             </h2>
             <ul className="mt-4 space-y-3">
@@ -245,7 +245,7 @@ export function ShowcaseStoryDetail({
                       <span className="block font-serif text-xl font-semibold">{source.title}</span>
                       {source.detail ? <span className="mt-1 block text-sm leading-6 text-[#6c6255]">{source.detail}</span> : null}
                     </span>
-                    <ArrowRight className="mt-1.5 h-4 w-4 shrink-0 text-[#817667] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                    <ArrowRight className="mt-1.5 h-4 w-4 shrink-0 text-[#665c50] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                   </Link>
                 </li>
               ))}
@@ -255,7 +255,7 @@ export function ShowcaseStoryDetail({
 
         {people.length ? (
           <section aria-labelledby="story-people" className="mt-12">
-            <h2 id="story-people" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#776a58]">People in this story</h2>
+            <h2 id="story-people" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#62574a]">People in this story</h2>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
               {people.map((person) => (
                 <li key={person.id}>
@@ -265,7 +265,7 @@ export function ShowcaseStoryDetail({
                     </span>
                     <span className="min-w-0">
                       <span className="block truncate font-semibold">{person.name}</span>
-                      <span className="block text-xs text-[#766c5e]">{person.years}</span>
+                      <span className="block text-xs text-[#63594d]">{person.years}</span>
                     </span>
                   </Link>
                 </li>
@@ -325,17 +325,17 @@ export function ShowcaseSourceDetail({
         </div>
         <aside className="space-y-6">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#776a58]">Record</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#62574a]">Record</p>
             <h1 className="mt-3 font-serif text-4xl font-semibold leading-tight">{title}</h1>
             <p className="mt-4 text-sm leading-7 text-[#6e6456]">{citation}</p>
           </div>
           <InfoPanel title="Record details">
-            <dl className="space-y-4"><div><dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#817667]">Repository</dt><dd className="mt-1 text-sm">{repository}</dd></div><div><dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#817667]">Date</dt><dd className="mt-1 flex items-center gap-2 text-sm"><CalendarDays className="h-4 w-4" />{date}</dd></div></dl>
+            <dl className="space-y-4"><div><dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#665c50]">Repository</dt><dd className="mt-1 text-sm">{repository}</dd></div><div><dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#665c50]">Date</dt><dd className="mt-1 flex items-center gap-2 text-sm"><CalendarDays className="h-4 w-4" />{date}</dd></div></dl>
           </InfoPanel>
           <InfoPanel title="About this record"><p className="text-sm leading-6 text-[#665d50]">{transcription}</p></InfoPanel>
           <InfoPanel title="Connected people"><div className="space-y-2">{connectedPeople.map((person) => <Link key={person.id} href={`${basePath}/people/${person.id}`} className="block text-sm font-semibold text-[var(--brand-primary-ink)]">{person.name}</Link>)}</div></InfoPanel>
           <button type="button" disabled={!downloadAvailable} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)] px-5 py-3 text-sm font-semibold text-[var(--brand-on-primary)] disabled:cursor-not-allowed disabled:opacity-50"><Download className="h-4 w-4" />{downloadAvailable ? "Download authenticated original" : "Original download unavailable in demo"}</button>
-          <p className="text-xs leading-5 text-[#786f62]">{downloadAvailable ? "The original file is available only to invited family members." : "This page shows a preview of the record. The original file isn't available in this demonstration."}</p>
+          <p className="text-xs leading-5 text-[#655c50]">{downloadAvailable ? "The original file is available only to invited family members." : "This page shows a preview of the record. The original file isn't available in this demonstration."}</p>
         </aside>
       </div>
     </div>

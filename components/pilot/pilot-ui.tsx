@@ -19,7 +19,7 @@ export function PilotPageHeader({
   return (
     <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="max-w-3xl space-y-2">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6f776f]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5c645c]">
           {eyebrow}
         </p>
         <h1 className="text-3xl font-semibold tracking-[-0.02em] text-[#241f18] sm:text-4xl">
@@ -45,7 +45,7 @@ export function PilotStat({
 }) {
   return (
     <Card className="space-y-2 border-black/10 bg-white">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#82796d]">{label}</p>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6b6255]">{label}</p>
       <p className="text-3xl font-semibold tracking-tight text-[#241f18]">{value}</p>
       <p className="text-xs leading-5 text-[#746b5e]">{detail}</p>
     </Card>
@@ -69,7 +69,7 @@ export function PilotSection({
     <Card className={cn("space-y-5 border-black/10 bg-white", className)}>
       <div className="space-y-1.5">
         {eyebrow ? (
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#82796d]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6b6255]">
             {eyebrow}
           </p>
         ) : null}

@@ -121,5 +121,5 @@ export function ClientReviewForm({
 }
 
 function ReviewDatum({ label, value, icon }: { label: string; value: string; icon?: React.ReactNode }) {
-  return <div><p className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#81786a]">{label}</p><p className="mt-1 flex items-center gap-2 text-sm font-semibold">{icon}{value}</p></div>;
+  return <div><p className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#675e52]">{label}</p><p className="mt-1 flex items-center gap-2 text-sm font-semibold">{icon}{value}</p></div>;
 }

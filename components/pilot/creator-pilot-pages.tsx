@@ -164,7 +164,7 @@ export function PilotPortfolioPage({ workspace }: { workspace: PilotWorkspace })
           title="Client delivery studio"
           description="Turn finished research into private, branded family presentations—from import to the family’s own archive."
           actions={
-            <span className="inline-flex cursor-not-allowed items-center rounded-lg border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-[#8a8175]" title="During the founding pilot, new projects are set up with you">
+            <span className="inline-flex cursor-not-allowed items-center rounded-lg border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-[#6f675b]" title="During the founding pilot, new projects are set up with you">
               New project · set up with us
             </span>
           }
@@ -224,14 +224,14 @@ export function PilotPortfolioPage({ workspace }: { workspace: PilotWorkspace })
                       </div>
 
                       <dl className="grid grid-cols-3 gap-3 text-center">
-                        <div className="rounded-xl bg-[#f7f4ee] p-3"><dt className="text-[10px] uppercase tracking-[0.14em] text-[#82796d]">People</dt><dd className="mt-1 text-lg font-semibold">{project.counts.people}</dd></div>
-                        <div className="rounded-xl bg-[#f7f4ee] p-3"><dt className="text-[10px] uppercase tracking-[0.14em] text-[#82796d]">Media</dt><dd className="mt-1 text-lg font-semibold">{project.counts.mediaItems}</dd></div>
-                        <div className="rounded-xl bg-[#f7f4ee] p-3"><dt className="text-[10px] uppercase tracking-[0.14em] text-[#82796d]">Stories</dt><dd className="mt-1 text-lg font-semibold">{project.counts.featuredStories}</dd></div>
+                        <div className="rounded-xl bg-[#f7f4ee] p-3"><dt className="text-[10px] uppercase tracking-[0.14em] text-[#6b6255]">People</dt><dd className="mt-1 text-lg font-semibold">{project.counts.people}</dd></div>
+                        <div className="rounded-xl bg-[#f7f4ee] p-3"><dt className="text-[10px] uppercase tracking-[0.14em] text-[#6b6255]">Media</dt><dd className="mt-1 text-lg font-semibold">{project.counts.mediaItems}</dd></div>
+                        <div className="rounded-xl bg-[#f7f4ee] p-3"><dt className="text-[10px] uppercase tracking-[0.14em] text-[#6b6255]">Stories</dt><dd className="mt-1 text-lg font-semibold">{project.counts.featuredStories}</dd></div>
                       </dl>
 
                       <div className="flex flex-col gap-3 rounded-xl border border-[#dce4dc] bg-[#f1f5f1] p-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#6f776f]">Next controlled step</p>
+                          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#5c645c]">Next controlled step</p>
                           <p className="mt-1 font-semibold text-[#2f4235]">{next ? cleanLabel(next.label) : "Archive active"}</p>
                         </div>
                         <Link href={`/projects/${project.id}/${statusRoute[next?.status ?? project.status]}`} style={{ color: "#ffffff" }} className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#263a31] px-4 py-2 text-sm font-semibold text-white hover:bg-[#334b3e]">
@@ -246,7 +246,7 @@ export function PilotPortfolioPage({ workspace }: { workspace: PilotWorkspace })
             </div>
           ) : (
             <Card className="border-dashed bg-white py-14 text-center">
-              <FolderKanban className="mx-auto h-8 w-8 text-[#82796d]" />
+              <FolderKanban className="mx-auto h-8 w-8 text-[#6b6255]" />
               <h3 className="mt-4 text-xl font-semibold">No pilot projects yet</h3>
               <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-[#746b5e]">An operator creates a project only after scope, authorization, and synthetic-or-legal-review status are recorded.</p>
             </Card>
@@ -325,7 +325,7 @@ export function PilotProjectOverview({
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium text-[#302a23]">{cleanLabel(step.label)}</p>
-                  <p className="mt-0.5 text-[11px] capitalize text-[#82796d]">{step.state.replace("_", " ")}{step.completedAt ? ` · ${formatDate(step.completedAt)}` : ""}</p>
+                  <p className="mt-0.5 text-[11px] capitalize text-[#6b6255]">{step.state.replace("_", " ")}{step.completedAt ? ` · ${formatDate(step.completedAt)}` : ""}</p>
                 </div>
                 {index === currentIndex ? <Badge tone="accent">Now</Badge> : null}
               </li>
@@ -360,7 +360,7 @@ export function PilotProjectOverview({
                   <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#eef2ed] text-[#4f6454]"><Activity className="h-3.5 w-3.5" /></span>
                   <div>
                     <p className="text-sm font-medium text-[#302a23]">{event.summary}</p>
-                    <p className="mt-0.5 text-xs text-[#82796d]">{formatDate(event.occurredAt, true)} · {project.roles.find((role) => role.actorId === event.actorId)?.displayName ?? "System"}</p>
+                    <p className="mt-0.5 text-xs text-[#6b6255]">{formatDate(event.occurredAt, true)} · {project.roles.find((role) => role.actorId === event.actorId)?.displayName ?? "System"}</p>
                   </div>
                 </li>
               ))}
@@ -435,8 +435,8 @@ export function PilotIntakePage({ project }: { project: PilotProject }) {
         {project.consents.length ? (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
-              <thead><tr className="border-b border-black/10 text-[10px] uppercase tracking-[0.14em] text-[#82796d]"><th className="pb-3 font-semibold">Subject</th><th className="pb-3 font-semibold">Kind</th><th className="pb-3 font-semibold">Status</th><th className="pb-3 font-semibold">Allowed fields</th><th className="pb-3 font-semibold">Evidence</th></tr></thead>
-              <tbody>{project.consents.map((consent) => <tr key={consent.id} className="border-b border-black/[0.06] last:border-0"><td className="py-4 font-medium text-[#302a23]">{consent.subjectLabel}</td><td className="py-4 capitalize text-[#665e53]">{consent.subjectKind.replaceAll("_", " ")}</td><td className="py-4"><Badge tone={consent.status === "granted" || consent.status === "not_required" ? "success" : consent.status === "declined" ? "danger" : "warning"}>{consent.status.replaceAll("_", " ")}</Badge></td><td className="py-4 text-[#665e53]">{consent.allowedFields.length ? consent.allowedFields.join(", ") : "None · hidden"}</td><td className="py-4 text-xs text-[#82796d]">{consent.evidenceReference ?? "Not recorded"}</td></tr>)}</tbody>
+              <thead><tr className="border-b border-black/10 text-[10px] uppercase tracking-[0.14em] text-[#6b6255]"><th className="pb-3 font-semibold">Subject</th><th className="pb-3 font-semibold">Kind</th><th className="pb-3 font-semibold">Status</th><th className="pb-3 font-semibold">Allowed fields</th><th className="pb-3 font-semibold">Evidence</th></tr></thead>
+              <tbody>{project.consents.map((consent) => <tr key={consent.id} className="border-b border-black/[0.06] last:border-0"><td className="py-4 font-medium text-[#302a23]">{consent.subjectLabel}</td><td className="py-4 capitalize text-[#665e53]">{consent.subjectKind.replaceAll("_", " ")}</td><td className="py-4"><Badge tone={consent.status === "granted" || consent.status === "not_required" ? "success" : consent.status === "declined" ? "danger" : "warning"}>{consent.status.replaceAll("_", " ")}</Badge></td><td className="py-4 text-[#665e53]">{consent.allowedFields.length ? consent.allowedFields.join(", ") : "None · hidden"}</td><td className="py-4 text-xs text-[#6b6255]">{consent.evidenceReference ?? "Not recorded"}</td></tr>)}</tbody>
             </table>
           </div>
         ) : (
@@ -487,7 +487,7 @@ export function PilotImportPage({ project }: { project: PilotProject }) {
               return (
                 <article key={asset.id} className="grid gap-4 rounded-xl border border-black/[0.07] bg-[#faf8f3] p-4 sm:grid-cols-[104px_minmax(0,1fr)]">
                   <div className="relative h-28 overflow-hidden rounded-lg bg-[#e8e3da]">
-                    {preview && asset.quarantineStatus === "passed" ? <Image src={preview} alt="" fill sizes="104px" className="object-cover" unoptimized /> : <span className="grid h-full place-items-center text-[#82796d]">{asset.kind === "pdf" ? <FileText className="h-6 w-6" /> : <ImageIcon className="h-6 w-6" />}</span>}
+                    {preview && asset.quarantineStatus === "passed" ? <Image src={preview} alt="" fill sizes="104px" className="object-cover" unoptimized /> : <span className="grid h-full place-items-center text-[#6b6255]">{asset.kind === "pdf" ? <FileText className="h-6 w-6" /> : <ImageIcon className="h-6 w-6" />}</span>}
                   </div>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2"><p className="truncate font-semibold text-[#302a23]">{asset.fileName}</p><Badge tone={asset.quarantineStatus === "passed" ? "success" : asset.quarantineStatus === "failed" ? "danger" : "warning"}>{asset.quarantineStatus}</Badge></div>
@@ -500,7 +500,7 @@ export function PilotImportPage({ project }: { project: PilotProject }) {
             })}
           </div>
         ) : (
-          <div className="rounded-xl border border-dashed border-[#cbc3b8] p-8 text-center"><ScanSearch className="mx-auto h-7 w-7 text-[#82796d]" /><p className="mt-3 font-semibold">No media in quarantine</p><p className="mt-1 text-sm text-[#746b5e]">Upload only permission-cleared synthetic material until legal review passes.</p></div>
+          <div className="rounded-xl border border-dashed border-[#cbc3b8] p-8 text-center"><ScanSearch className="mx-auto h-7 w-7 text-[#6b6255]" /><p className="mt-3 font-semibold">No media in quarantine</p><p className="mt-1 text-sm text-[#746b5e]">Upload only permission-cleared synthetic material until legal review passes.</p></div>
         )}
       </PilotSection>
 
@@ -535,14 +535,14 @@ export function PilotCuratePage({ project, focalPersonName }: { project: PilotPr
                 const preview = cover ? mediaPreviewPath(cover) : null;
                 return (
                   <li key={story.id} className="grid grid-cols-1 gap-4 rounded-xl border border-black/[0.07] p-4 sm:grid-cols-[120px_minmax(0,1fr)]">
-                    <div className="relative h-28 overflow-hidden rounded-lg bg-[#e8e3da]">{preview ? <Image src={preview} alt={cover?.altText ?? ""} fill sizes="120px" className="object-cover" unoptimized /> : <span className="grid h-full place-items-center"><BookOpenText className="h-6 w-6 text-[#82796d]" /></span>}</div>
-                    <div><div className="flex flex-wrap items-center gap-2"><span className="grid h-6 w-6 place-items-center rounded-full bg-[#263a31] text-[11px] font-semibold text-white">{index + 1}</span><Badge tone={story.status === "ready" || story.status === "published" ? "success" : "warning"}>{story.status}</Badge><Badge>{story.visibility.replaceAll("_", " ")}</Badge></div><h3 className="mt-2 text-lg font-semibold">{story.title}</h3><p className="mt-1 text-sm leading-6 text-[#746b5e]">{story.dek}</p><p className="mt-2 text-xs text-[#82796d]">{story.personIds.length} linked people · {story.sourceIds.length} sources</p></div>
+                    <div className="relative h-28 overflow-hidden rounded-lg bg-[#e8e3da]">{preview ? <Image src={preview} alt={cover?.altText ?? ""} fill sizes="120px" className="object-cover" unoptimized /> : <span className="grid h-full place-items-center"><BookOpenText className="h-6 w-6 text-[#6b6255]" /></span>}</div>
+                    <div><div className="flex flex-wrap items-center gap-2"><span className="grid h-6 w-6 place-items-center rounded-full bg-[#263a31] text-[11px] font-semibold text-white">{index + 1}</span><Badge tone={story.status === "ready" || story.status === "published" ? "success" : "warning"}>{story.status}</Badge><Badge>{story.visibility.replaceAll("_", " ")}</Badge></div><h3 className="mt-2 text-lg font-semibold">{story.title}</h3><p className="mt-1 text-sm leading-6 text-[#746b5e]">{story.dek}</p><p className="mt-2 text-xs text-[#6b6255]">{story.personIds.length} linked people · {story.sourceIds.length} sources</p></div>
                   </li>
                 );
               })}
             </ol>
           ) : (
-            <div className="rounded-xl border border-dashed border-[#cbc3b8] p-8 text-center"><BookOpenText className="mx-auto h-7 w-7 text-[#82796d]" /><p className="mt-3 font-semibold">No featured stories yet</p><p className="mt-1 text-sm text-[#746b5e]">Do not invent content. Add a real, sourced short story or record an operator override for a deliberately sparse project.</p></div>
+            <div className="rounded-xl border border-dashed border-[#cbc3b8] p-8 text-center"><BookOpenText className="mx-auto h-7 w-7 text-[#6b6255]" /><p className="mt-3 font-semibold">No featured stories yet</p><p className="mt-1 text-sm text-[#746b5e]">Do not invent content. Add a real, sourced short story or record an operator override for a deliberately sparse project.</p></div>
           )}
         </PilotSection>
 
@@ -597,11 +597,11 @@ export function PilotReviewPage({ project, gate }: { project: PilotProject; gate
       <PilotSection eyebrow="Versions" title="Drafts and review rounds" description="Editing after approval starts a new draft. What the client approved never changes underneath them.">
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#82796d]">Content revisions</p>
-            {project.revisions.map((revision) => <div key={revision.id} className="flex items-center gap-3 rounded-xl border border-black/[0.07] bg-[#faf8f3] p-3"><span className="grid h-8 w-8 place-items-center rounded-full bg-white text-xs font-semibold">v{revision.sequence}</span><div className="min-w-0 flex-1"><p className="font-medium capitalize">{revision.status}</p><p className="mt-0.5 text-xs text-[#82796d]">Created {formatDate(revision.createdAt, true)}</p></div><Badge tone={revision.status === "approved" || revision.status === "published" ? "success" : revision.status === "superseded" ? "default" : "warning"}>{revision.status}</Badge></div>)}
+            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#6b6255]">Content revisions</p>
+            {project.revisions.map((revision) => <div key={revision.id} className="flex items-center gap-3 rounded-xl border border-black/[0.07] bg-[#faf8f3] p-3"><span className="grid h-8 w-8 place-items-center rounded-full bg-white text-xs font-semibold">v{revision.sequence}</span><div className="min-w-0 flex-1"><p className="font-medium capitalize">{revision.status}</p><p className="mt-0.5 text-xs text-[#6b6255]">Created {formatDate(revision.createdAt, true)}</p></div><Badge tone={revision.status === "approved" || revision.status === "published" ? "success" : revision.status === "superseded" ? "default" : "warning"}>{revision.status}</Badge></div>)}
           </div>
           <div className="space-y-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#82796d]">Client review versions</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#6b6255]">Client review versions</p>
             {project.reviewVersions.length ? project.reviewVersions.map((version) => <ReviewVersionCard key={version.id} version={version} />) : <div className="rounded-xl border border-dashed border-[#cbc3b8] p-6 text-center text-sm text-[#746b5e]">No client review version has been opened. Complete professional preview first.</div>}
           </div>
         </div>
@@ -642,8 +642,8 @@ function ReviewVersionCard({ version }: { version: PilotReviewVersion }) {
   return (
     <div className="rounded-xl border border-black/[0.07] bg-[#faf8f3] p-3">
       <div className="flex items-center justify-between gap-3"><p className="font-medium">{cleanLabel(version.label)}</p><Badge tone={version.status === "approved" ? "success" : version.status === "submitted" ? "accent" : "warning"}>{version.status}</Badge></div>
-      <div className="mt-2 flex items-center gap-2 text-xs text-[#82796d]"><Fingerprint className="h-3.5 w-3.5" /><code>{version.contentFingerprint.slice(0, 18)}…</code></div>
-      <p className="mt-2 text-xs text-[#82796d]">Frozen {formatDate(version.frozenAt, true)}</p>
+      <div className="mt-2 flex items-center gap-2 text-xs text-[#6b6255]"><Fingerprint className="h-3.5 w-3.5" /><code>{version.contentFingerprint.slice(0, 18)}…</code></div>
+      <p className="mt-2 text-xs text-[#6b6255]">Frozen {formatDate(version.frozenAt, true)}</p>
     </div>
   );
 }
@@ -678,15 +678,15 @@ export function PilotAccessPage({ project }: { project: PilotProject }) {
 
       <PilotSection eyebrow="Invitations" title="Sent and accepted invitations" description="Revoking someone cancels their invitations and signs them out everywhere.">
         {project.invites.length ? (
-          <div className="overflow-x-auto"><table className="w-full min-w-[920px] text-left text-sm"><thead><tr className="border-b border-black/10 text-[10px] uppercase tracking-[0.14em] text-[#82796d]"><th className="pb-3 font-semibold">Recipient</th><th className="pb-3 font-semibold">Purpose / version</th><th className="pb-3 font-semibold">Issued / expires</th><th className="pb-3 font-semibold">Token hint</th><th className="pb-3 text-right font-semibold">Access</th></tr></thead><tbody>{project.invites.map((invite) => <tr key={invite.id} className="border-b border-black/[0.06] last:border-0"><td className="py-4"><p className="font-medium text-[#302a23]">{invite.recipientLabel}</p><p className="mt-0.5 text-xs text-[#82796d]">{invite.recipientEmail}</p></td><td className="py-4 capitalize text-[#665e53]">{invite.purpose.replaceAll("_", " ")}{invite.reviewRound ? <span className="mt-1 block text-xs normal-case text-[#82796d]">Round {invite.reviewRound} · {invite.reviewVersionId}</span> : null}</td><td className="py-4 text-xs leading-5 text-[#665e53]">{formatDate(invite.issuedAt, true)}<br />{formatDate(invite.expiresAt, true)}</td><td className="py-4"><code className="rounded bg-[#f2eee7] px-2 py-1 text-xs">{invite.tokenHint}</code></td><td className="py-4"><InviteRowActions projectRef={project.id} invite={invite} canManage={professionalCanManageAccess} /></td></tr>)}</tbody></table></div>
+          <div className="overflow-x-auto"><table className="w-full min-w-[920px] text-left text-sm"><thead><tr className="border-b border-black/10 text-[10px] uppercase tracking-[0.14em] text-[#6b6255]"><th className="pb-3 font-semibold">Recipient</th><th className="pb-3 font-semibold">Purpose / version</th><th className="pb-3 font-semibold">Issued / expires</th><th className="pb-3 font-semibold">Token hint</th><th className="pb-3 text-right font-semibold">Access</th></tr></thead><tbody>{project.invites.map((invite) => <tr key={invite.id} className="border-b border-black/[0.06] last:border-0"><td className="py-4"><p className="font-medium text-[#302a23]">{invite.recipientLabel}</p><p className="mt-0.5 text-xs text-[#6b6255]">{invite.recipientEmail}</p></td><td className="py-4 capitalize text-[#665e53]">{invite.purpose.replaceAll("_", " ")}{invite.reviewRound ? <span className="mt-1 block text-xs normal-case text-[#6b6255]">Round {invite.reviewRound} · {invite.reviewVersionId}</span> : null}</td><td className="py-4 text-xs leading-5 text-[#665e53]">{formatDate(invite.issuedAt, true)}<br />{formatDate(invite.expiresAt, true)}</td><td className="py-4"><code className="rounded bg-[#f2eee7] px-2 py-1 text-xs">{invite.tokenHint}</code></td><td className="py-4"><InviteRowActions projectRef={project.id} invite={invite} canManage={professionalCanManageAccess} /></td></tr>)}</tbody></table></div>
         ) : (
-          <div className="rounded-xl border border-dashed border-[#cbc3b8] p-8 text-center"><KeyRound className="mx-auto h-7 w-7 text-[#82796d]" /><p className="mt-3 font-semibold">No invitations issued</p><p className="mt-1 text-sm text-[#746b5e]">The showcase remains private and inaccessible until an operator issues the first link.</p></div>
+          <div className="rounded-xl border border-dashed border-[#cbc3b8] p-8 text-center"><KeyRound className="mx-auto h-7 w-7 text-[#6b6255]" /><p className="mt-3 font-semibold">No invitations issued</p><p className="mt-1 text-sm text-[#746b5e]">The showcase remains private and inaccessible until an operator issues the first link.</p></div>
         )}
       </PilotSection>
 
       <div className="grid gap-6 xl:grid-cols-2">
         <PilotSection eyebrow="Active sessions" title={`${liveSessions.length} revocable session${liveSessions.length === 1 ? "" : "s"}`} description="Reissue a lost link, or revoke one person’s access without affecting anyone else.">
-          {liveSessions.length ? <div className="space-y-3">{liveSessions.map((session) => { const invite = project.invites.find((item) => item.id === session.inviteId); return <div key={session.id} className="flex items-center gap-3 rounded-xl border border-black/[0.07] p-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-700"><ShieldCheck className="h-4 w-4" /></span><div className="min-w-0 flex-1"><p className="truncate font-medium">{invite?.recipientLabel ?? session.recipientId}</p><p className="mt-0.5 text-xs text-[#82796d]">Idle expiry {formatDate(session.idleExpiresAt, true)} · absolute {formatDate(session.absoluteExpiresAt, true)}</p></div><Badge tone="success">Active</Badge></div>; })}</div> : <p className="rounded-xl border border-dashed border-[#cbc3b8] p-6 text-center text-sm text-[#746b5e]">No active client sessions.</p>}
+          {liveSessions.length ? <div className="space-y-3">{liveSessions.map((session) => { const invite = project.invites.find((item) => item.id === session.inviteId); return <div key={session.id} className="flex items-center gap-3 rounded-xl border border-black/[0.07] p-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-700"><ShieldCheck className="h-4 w-4" /></span><div className="min-w-0 flex-1"><p className="truncate font-medium">{invite?.recipientLabel ?? session.recipientId}</p><p className="mt-0.5 text-xs text-[#6b6255]">Idle expiry {formatDate(session.idleExpiresAt, true)} · absolute {formatDate(session.absoluteExpiresAt, true)}</p></div><Badge tone="success">Active</Badge></div>; })}</div> : <p className="rounded-xl border border-dashed border-[#cbc3b8] p-6 text-center text-sm text-[#746b5e]">No active client sessions.</p>}
         </PilotSection>
         <PilotSection eyebrow="Privacy" title="How the presentation stays private" description="It’s hidden from search engines, and only invited people can ever open it.">
           <div className="space-y-3"><ControlRow icon={LockKeyhole} label="Unauthenticated content" value="Blocked" /><ControlRow icon={ScanSearch} label="Robots metadata / headers" value="Noindex" /><ControlRow icon={Eye} label="Genealogist preview" value="Same auth logic" /><ControlRow icon={Mail} label="Invitation delivery" value="Manual" /></div>
@@ -701,7 +701,7 @@ function AccessRole({ icon: Icon, title, detail }: { icon: typeof Eye; title: st
 }
 
 function ControlRow({ icon: Icon, label, value }: { icon: typeof Eye; label: string; value: string }) {
-  return <div className="flex items-center gap-3 rounded-xl bg-[#f7f4ee] p-3"><Icon className="h-4 w-4 text-[#637b68]" /><span className="min-w-0 flex-1 text-sm text-[#665e53]">{label}</span><strong className="text-sm text-[#302a23]">{value}</strong></div>;
+  return <div className="flex items-center gap-3 rounded-xl bg-[#f7f4ee] p-3"><Icon className="h-4 w-4 text-[#536a58]" /><span className="min-w-0 flex-1 text-sm text-[#665e53]">{label}</span><strong className="text-sm text-[#302a23]">{value}</strong></div>;
 }
 
 export function PilotHandoffPage({ project }: { project: PilotProject }) {
@@ -733,7 +733,7 @@ export function PilotHandoffPage({ project }: { project: PilotProject }) {
       </div>
 
       <PilotSection eyebrow="Owner controls" title="Access, export, deletion, and renewal" description="Every sensitive change is recorded in the activity log.">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[{ icon: KeyRound, title: "Manage invitations", detail: "Issue and revoke recipient access." },{ icon: FileArchive, title: "Export everything", detail: "Data, originals, stories, sources, and durable presentation." },{ icon: HardDrive, title: "Choose preservation", detail: "Renew active hosting or later select preservation-only service." },{ icon: ShieldCheck, title: "Request deletion", detail: "Typed confirmation and a clear cancellation window." }].map(({ icon: Icon, title, detail }) => <div key={title} className="rounded-xl border border-black/[0.07] bg-[#faf8f3] p-4"><Icon className="h-5 w-5 text-[#637b68]" /><p className="mt-3 font-semibold">{title}</p><p className="mt-1 text-xs leading-5 text-[#746b5e]">{detail}</p></div>)}</div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[{ icon: KeyRound, title: "Manage invitations", detail: "Issue and revoke recipient access." },{ icon: FileArchive, title: "Export everything", detail: "Data, originals, stories, sources, and durable presentation." },{ icon: HardDrive, title: "Choose preservation", detail: "Renew active hosting or later select preservation-only service." },{ icon: ShieldCheck, title: "Request deletion", detail: "Typed confirmation and a clear cancellation window." }].map(({ icon: Icon, title, detail }) => <div key={title} className="rounded-xl border border-black/[0.07] bg-[#faf8f3] p-4"><Icon className="h-5 w-5 text-[#536a58]" /><p className="mt-3 font-semibold">{title}</p><p className="mt-1 text-xs leading-5 text-[#746b5e]">{detail}</p></div>)}</div>
       </PilotSection>
 
       <div className="grid gap-6 xl:grid-cols-2">
@@ -755,7 +755,7 @@ export function PilotHandoffPage({ project }: { project: PilotProject }) {
 }
 
 function TimelineCard({ index, title, detail }: { index: string; title: string; detail: string }) {
-  return <li className="rounded-xl border border-black/[0.07] bg-[#faf8f3] p-4"><span className="text-xs font-semibold text-[#637b68]">{index}</span><p className="mt-2 font-semibold">{title}</p><p className="mt-1 text-xs leading-5 text-[#746b5e]">{detail}</p></li>;
+  return <li className="rounded-xl border border-black/[0.07] bg-[#faf8f3] p-4"><span className="text-xs font-semibold text-[#536a58]">{index}</span><p className="mt-2 font-semibold">{title}</p><p className="mt-1 text-xs leading-5 text-[#746b5e]">{detail}</p></li>;
 }
 
 function BrandPreview({
@@ -796,12 +796,10 @@ function BrandPreview({
           ["Primary", branding.primaryColor],
           ["Accent", branding.accentColor],
         ].map(([label, value]) => (
-          <div key={label} className="flex items-center gap-2 rounded-lg border border-black/[0.06] px-2.5 py-2">
-            <span className="h-5 w-5 shrink-0 rounded-full border border-black/10" style={{ backgroundColor: value }} />
-            <div className="min-w-0">
-              <dt className="text-[10px] uppercase tracking-[0.12em] text-[#82796d]">{label}</dt>
-              <dd className="font-mono text-[11px] text-[#302a23]">{value}</dd>
-            </div>
+          <div key={label} className="grid grid-cols-[1.25rem_minmax(0,1fr)] items-center gap-x-2 rounded-lg border border-black/[0.06] px-2.5 py-2">
+            <dt className="col-start-2 text-[10px] uppercase tracking-[0.12em] text-[#6b6255]">{label}</dt>
+            <dd className="col-start-1 row-span-2 row-start-1 h-5 w-5 rounded-full border border-black/10" style={{ backgroundColor: value }} aria-hidden="true" />
+            <dd className="col-start-2 font-mono text-[11px] text-[#302a23]">{value}</dd>
           </div>
         ))}
       </dl>

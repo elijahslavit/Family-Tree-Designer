@@ -60,7 +60,7 @@ export function OwnerAccessManager({
     <section className="space-y-5 rounded-[22px] border border-black/10 bg-[#fbf9f4] p-5 shadow-sm sm:p-7">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#81786a]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#675e52]">
             Access management
           </p>
           <h2 className="mt-1 font-serif text-2xl font-semibold">Family invitations</h2>
@@ -108,7 +108,7 @@ export function OwnerAccessManager({
           </div>
           <input type="hidden" name="purpose" value="viewer" />
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs leading-5 text-[#756d61]">
+            <p className="text-xs leading-5 text-[#635b50]">
               The unused link expires in seven days. Delivery is manual during the founding pilot.
             </p>
             <button
@@ -166,9 +166,9 @@ export function OwnerAccessManager({
         </div>
       ) : (
         <div className="rounded-2xl border border-dashed border-black/15 bg-white p-8 text-center">
-          <UserRoundCheck className="mx-auto h-6 w-6 text-[#81786a]" />
+          <UserRoundCheck className="mx-auto h-6 w-6 text-[#675e52]" />
           <p className="mt-3 font-semibold">No family invitations yet</p>
-          <p className="mt-1 text-sm text-[#756d61]">Invite the first relative when you are ready to share.</p>
+          <p className="mt-1 text-sm text-[#635b50]">Invite the first relative when you are ready to share.</p>
         </div>
       )}
     </section>
@@ -255,7 +255,7 @@ export function OwnerExportControl({
           <FileArchive className="h-5 w-5" />
         </span>
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#81786a]">Portability</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#675e52]">Portability</p>
           <h2 className="mt-1 font-serif text-2xl font-semibold">Export the family archive</h2>
           <p className="mt-2 text-sm leading-6 text-[#6c6459]">
             The owner export includes source data, original media, stories, provenance, and a durable static presentation. It excludes invitation tokens, sessions, secrets, and internal security logs.
@@ -268,7 +268,7 @@ export function OwnerExportControl({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="font-semibold capitalize">Export {currentExport.status}</p>
-              <p className="mt-1 text-xs leading-5 text-[#756d61]">
+              <p className="mt-1 text-xs leading-5 text-[#635b50]">
                 Requested {currentExport.requestedLabel}. {currentExport.status === "ready" ? `Download expires ${currentExport.expiresLabel}.` : ""}
               </p>
             </div>
@@ -294,7 +294,7 @@ export function OwnerExportControl({
           {currentExport ? "Generate a fresh export" : "Generate owner export"}
         </button>
       </form>
-      <p className="text-xs leading-5 text-[#756d61]">
+      <p className="text-xs leading-5 text-[#635b50]">
         Generated downloads require this authenticated owner session, are audit-logged, and are automatically unavailable after 24 hours.
       </p>
     </section>
@@ -405,7 +405,7 @@ export function OwnerSupportControl({
       <div className="flex items-start gap-3">
         <ShieldCheck className="mt-1 h-5 w-5 shrink-0 text-[#405447]" />
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#81786a]">Professional support access</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#675e52]">Professional support access</p>
           <h2 className="mt-1 font-serif text-2xl font-semibold">Time-limited by default</h2>
           <p className="mt-2 text-sm leading-6 text-[#6c6459]">
             {genealogistLabel} can support this delivery until {expiresLabel}. Access expires automatically unless you approve another explicit 30-day period.
@@ -413,7 +413,7 @@ export function OwnerSupportControl({
         </div>
       </div>
       <div className="flex flex-col gap-3 rounded-xl border border-black/10 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-[#756d61]">{extensionCount} owner-approved {extensionCount === 1 ? "extension" : "extensions"} recorded</p>
+        <p className="text-xs text-[#635b50]">{extensionCount} owner-approved {extensionCount === 1 ? "extension" : "extensions"} recorded</p>
         <form action={extendAction}>
           <input type="hidden" name="days" value="30" />
           <button type="submit" className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-black/15 px-4 py-2 text-xs font-semibold sm:w-auto">
@@ -451,7 +451,7 @@ export function HandoffAcceptance({
   return (
     <section className="grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)]">
       <div className="rounded-[22px] border border-black/10 bg-[#fbf9f4] p-5 shadow-sm sm:p-7">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#81786a]">Authority transfer</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#675e52]">Authority transfer</p>
         <h2 className="mt-2 font-serif text-3xl font-semibold">Accept stewardship of {projectTitle}</h2>
         <p className="mt-3 text-sm leading-6 text-[#6c6459]">
           {ownerLabel}, accepting makes you the owner of this archive, taking over from {practiceName}. Family members you invite can still view it without an account.
@@ -467,7 +467,7 @@ export function HandoffAcceptance({
       <div className="space-y-4 rounded-[22px] border border-[#bfcbbf] bg-[#edf2ed] p-5 shadow-sm sm:p-7">
         <ShieldCheck className="h-7 w-7 text-[#405447]" />
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#5f7565]">Verified identity</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#4b5f51]">Verified identity</p>
           <p className="mt-2 font-semibold text-[#27392d]">{identityLabel}</p>
           <p className="mt-2 text-xs leading-5 text-[#496050]">
             The acceptance, role transfer, professional support expiry, and future owner actions are written to the audit record.
@@ -486,7 +486,7 @@ export function HandoffAcceptance({
 function DateDatum({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#81786a]">{label}</dt>
+      <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#675e52]">{label}</dt>
       <dd className="mt-1 font-semibold">{value}</dd>
     </div>
   );

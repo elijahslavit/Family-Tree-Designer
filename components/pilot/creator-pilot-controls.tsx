@@ -21,6 +21,8 @@ import { useRef, useState, useTransition } from "react";
 import { Badge } from "@/components/foundation/badge";
 import { Button } from "@/components/foundation/button";
 import { Input, Select, Textarea } from "@/components/foundation/input";
+import { productConfig } from "@/lib/config/product";
+import { decodeGedcomFile, parseGedcomText } from "@/lib/import/gedcom-parser";
 import {
   createNextPilotReviewVersionAction,
   dispositionPilotReviewItemAction,
@@ -129,8 +131,30 @@ export function LocalDraftForm({ project }: { project: PilotProject }) {
 
 type UploadState =
   | { status: "idle" }
+  | { status: "checking"; message: string }
   | { status: "valid"; message: string }
-  | { status: "invalid"; message: string };
+  | { status: "invalid"; message: string }
+  | { status: "report"; report: GedcomPreflight };
+
+type GedcomPreflight = {
+  fileName: string;
+  encoding: string;
+  people: number;
+  families: number;
+  living: number;
+  maxPeople: number;
+  issues: Array<{ type: string; description: string }>;
+};
+
+const GEDCOM_MAX_BYTES = 25 * 1024 * 1024;
+
+const ISSUE_GROUPS: Array<{ type: string; label: string; tone: "danger" | "warning" | "default" }> = [
+  { type: "conflict", label: "Over the project limit", tone: "danger" },
+  { type: "parse_error", label: "Broken references", tone: "warning" },
+  { type: "missing_data", label: "Missing information", tone: "warning" },
+  { type: "duplicate", label: "Possible duplicates", tone: "warning" },
+  { type: "unsupported", label: "Not imported", tone: "default" },
+];
 
 export function PilotUploadControl({ kind }: { kind: "gedcom" | "media" }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -141,18 +165,16 @@ export function PilotUploadControl({ kind }: { kind: "gedcom" | "media" }) {
     if (!file) return;
 
     if (kind === "gedcom") {
-      const valid = /\.(ged|gedcom)$/i.test(file.name);
-      setUpload(
-        valid
-          ? {
-              status: "valid",
-              message: `${file.name} is ready for a synthetic import review. No real client data is uploaded in this demo.`,
-            }
-          : {
-              status: "invalid",
-              message: "Choose a GEDCOM file ending in .ged or .gedcom.",
-            },
-      );
+      if (!/\.(ged|gedcom)$/i.test(file.name)) {
+        setUpload({ status: "invalid", message: "Choose a GEDCOM file ending in .ged or .gedcom." });
+        return;
+      }
+      if (file.size > GEDCOM_MAX_BYTES) {
+        setUpload({ status: "invalid", message: "This file is larger than 25 MB, the limit for a founding project." });
+        return;
+      }
+      setUpload({ status: "checking", message: `Checking ${file.name}…` });
+      void runGedcomPreflight(file).then(setUpload);
       return;
     }
 
@@ -186,6 +208,7 @@ export function PilotUploadControl({ kind }: { kind: "gedcom" | "media" }) {
         ref={inputRef}
         type="file"
         accept={accept}
+        aria-label={kind === "gedcom" ? "Choose a GEDCOM file" : "Choose photographs or records"}
         className="sr-only"
         onChange={(event) => inspectFile(event.target.files?.[0])}
       />
@@ -202,17 +225,112 @@ export function PilotUploadControl({ kind }: { kind: "gedcom" | "media" }) {
         </span>
         <span className="mt-1 max-w-lg text-xs leading-5 text-[#746b5e]">
           {kind === "gedcom"
-            ? "Use fictional files only until the legal review is complete."
+            ? "GEDCOM 5.5 or 5.5.1 · up to 25 MB · checked privately in your browser"
             : "JPEG, PNG, WebP, or PDF · 20 MB each · 25 items / 500 MB per project"}
         </span>
       </button>
 
-      {upload.status !== "idle" ? (
+      {upload.status === "report" ? (
+        <GedcomPreflightReport report={upload.report} />
+      ) : upload.status === "checking" ? (
+        <p role="status" className="text-sm text-[#746b5e]">{upload.message}</p>
+      ) : upload.status !== "idle" ? (
         <InlineNotice tone={upload.status === "valid" ? "success" : "danger"}>
           {upload.message}
         </InlineNotice>
       ) : null}
     </div>
+  );
+}
+
+/** Reads and checks a GEDCOM entirely in the browser; nothing is uploaded. */
+async function runGedcomPreflight(file: File): Promise<UploadState> {
+  try {
+    const decoded = decodeGedcomFile(new Uint8Array(await file.arrayBuffer()));
+    if (!decoded.ok) return { status: "invalid", message: decoded.error };
+
+    const maxPeople = productConfig.foundingPilot.peopleCap;
+    const parsed = parseGedcomText({ treeId: "preflight", content: decoded.text, maxPeople });
+    if (!parsed.people.length) {
+      return { status: "invalid", message: "No people were found in this file. Check that it is a GEDCOM export." };
+    }
+    return {
+      status: "report",
+      report: {
+        fileName: file.name,
+        encoding: decoded.encoding,
+        people: parsed.people.length,
+        families: parsed.families.length,
+        living: parsed.people.filter((person) => person.isLiving).length,
+        maxPeople,
+        issues: parsed.issues.map((issue) => ({ type: issue.type, description: issue.description })),
+      },
+    };
+  } catch {
+    return { status: "invalid", message: "This file couldn't be read. Try exporting it again from your genealogy software." };
+  }
+}
+
+function GedcomPreflightReport({ report }: { report: GedcomPreflight }) {
+  const overCap = report.people > report.maxPeople;
+  const needsReview = report.issues.some((issue) => issue.type !== "unsupported");
+  const verdict = overCap
+    ? { tone: "danger" as const, text: "Too large for a founding project" }
+    : needsReview
+      ? { tone: "warning" as const, text: "Can be imported after review" }
+      : { tone: "success" as const, text: "Ready to import" };
+
+  return (
+    <section aria-label={`Check results for ${report.fileName}`} className="space-y-4 rounded-xl border border-black/10 bg-white p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="truncate font-semibold text-[#302a23]">{report.fileName}</p>
+          <p className="mt-0.5 text-xs text-[#746b5e]">Checked in your browser · {report.encoding} · nothing was uploaded</p>
+        </div>
+        <Badge tone={verdict.tone}>{verdict.text}</Badge>
+      </div>
+      <dl className="grid grid-cols-3 gap-2 text-center">
+        {[
+          ["People", `${report.people}`],
+          ["Families", `${report.families}`],
+          ["Treated as living", `${report.living}`],
+        ].map(([label, value]) => (
+          <div key={label} className="rounded-lg bg-[#f7f4ee] px-2 py-3">
+            <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6b6255]">{label}</dt>
+            <dd className="mt-1 text-xl font-semibold tabular-nums text-[#302a23]">{value}</dd>
+          </div>
+        ))}
+      </dl>
+      {report.living ? (
+        <p className="text-xs leading-5 text-[#746b5e]">
+          People with no death, burial, or cremation record are treated as living, so their details stay private until consent is recorded.
+        </p>
+      ) : null}
+      {report.issues.length ? (
+        <div className="space-y-3">
+          {ISSUE_GROUPS.map((group) => {
+            const items = report.issues.filter((issue) => issue.type === group.type);
+            if (!items.length) return null;
+            return (
+              <details key={group.type} className="group rounded-lg border border-black/[0.06] px-4 py-3">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-[#302a23]">
+                  <span>{group.label}</span>
+                  <Badge tone={group.tone}>{items.length}</Badge>
+                </summary>
+                <ul className="mt-3 space-y-1.5 text-xs leading-5 text-[#665e53]">
+                  {items.slice(0, 12).map((issue, index) => (
+                    <li key={`${group.type}-${index}`}>{issue.description}</li>
+                  ))}
+                  {items.length > 12 ? <li className="text-[#6b6255]">and {items.length - 12} more</li> : null}
+                </ul>
+              </details>
+            );
+          })}
+        </div>
+      ) : (
+        <p className="text-sm text-[#665e53]">No issues found.</p>
+      )}
+    </section>
   );
 }
 
@@ -241,11 +359,11 @@ export function ImportIssueWorkbench({ issues }: { issues: PilotImportIssue[] })
               </div>
               <p className="mt-1 text-sm leading-6 text-[#746b5e]">{issue.description}</p>
               {issue.disposition ? (
-                <p className="mt-1 text-xs text-[#82796d]">Recorded disposition: {issue.disposition}</p>
+                <p className="mt-1 text-xs text-[#6b6255]">Recorded disposition: {issue.disposition}</p>
               ) : null}
             </div>
-            <p className="max-w-xs text-xs leading-5 text-[#82796d]">
-              Read-only seeded import record. This synthetic build does not persist import dispositions.
+            <p className="max-w-xs text-xs leading-5 text-[#6b6255]">
+              Demo record. Responses aren’t saved in this demonstration.
             </p>
           </div>
         ))}
@@ -289,7 +407,7 @@ export function CurationEditor({
             required
             maxLength={90}
           />
-          <span className="block text-right text-[11px] font-normal text-[#82796d]">{draft.headline.length}/90</span>
+          <span className="block text-right text-[11px] font-normal text-[#6b6255]">{draft.headline.length}/90</span>
         </label>
         <label className="block space-y-2 text-sm font-medium text-[#40382f]">
           Introduction
@@ -757,7 +875,7 @@ export function InviteRowActions({
           </Button>
         ) : null}
       </div>
-      {!canManage ? <p className="text-right text-[11px] text-[#82796d]">Owner-managed after handoff</p> : null}
+      {!canManage ? <p className="text-right text-[11px] text-[#6b6255]">Owner-managed after handoff</p> : null}
       {rawToken ? (
         <div className="space-y-2 rounded-lg border border-amber-200 bg-amber-50 p-2 text-left">
           <p className="text-[11px] leading-4 text-amber-950">Replacement token · shown once</p>

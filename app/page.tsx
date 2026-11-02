@@ -72,7 +72,7 @@ function Hero() {
 
       <div className="relative mx-auto flex min-h-[560px] max-w-7xl items-center px-4 pb-28 pt-10 sm:px-6 sm:pt-14 lg:min-h-[700px] lg:px-8">
         <div className="max-w-xl space-y-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7b6c54]">For professional genealogists</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6b5d47]">For professional genealogists</p>
           <h1 className="font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
             Your research deserves a reveal—not another folder.
           </h1>
@@ -105,7 +105,7 @@ function Hero() {
 function SectionHeading({ id, eyebrow, title, intro }: { id: string; eyebrow: string; title: string; intro: string }) {
   return (
     <div className="mx-auto max-w-2xl text-center">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#7b6c54]">{eyebrow}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#6b5d47]">{eyebrow}</p>
       <h2 id={id} className="mt-3 font-serif text-4xl font-semibold tracking-tight sm:text-5xl">
         {title}
       </h2>
@@ -296,7 +296,7 @@ function PilotInvitation() {
 function SiteFooter() {
   return (
     <footer className="border-t border-black/10 bg-[#ebe5d9]">
-      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-sm text-[#6e675d] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-sm text-[#5f584e] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <p className="flex items-center gap-2 font-semibold text-[#3d352b]">
           <FileArchive className="h-4 w-4" aria-hidden="true" />
           {productConfig.name}

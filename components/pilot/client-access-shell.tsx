@@ -50,7 +50,7 @@ export function ClientAccessShell({
                 </Link>
               ) : null}
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#81786a]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#675e52]">
                   {eyebrow}
                 </p>
                 <h1 className="mt-2 max-w-3xl font-serif text-3xl font-semibold leading-tight sm:text-5xl">
@@ -72,7 +72,7 @@ export function ClientAccessShell({
               ) : null}
             </div>
           </div>
-          <div className="mt-5 flex flex-col gap-2 border-t border-black/10 pt-4 text-xs text-[#756d61] sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-5 flex flex-col gap-2 border-t border-black/10 pt-4 text-xs text-[#635b50] sm:flex-row sm:items-center sm:justify-between">
             <span>{practiceName ?? productConfig.name}</span>
             <span className="inline-flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5" /> Private and invitation-only

@@ -27,11 +27,11 @@ export default async function PilotPreviewLayout({
 
   return (
     <div>
-      <div className="flex flex-col gap-2 border-b border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-950 sm:flex-row sm:items-center sm:justify-center">
+      <aside aria-label="Professional preview" className="flex flex-col gap-2 border-b border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-950 sm:flex-row sm:items-center sm:justify-center">
         <strong>Authorized professional preview</strong>
         <span>Exactly what invited clients see, with the same privacy rules. Synthetic data only.</span>
         <ReplayRevealButton revealKey={revealKeyFor(basePath)} homePath={basePath} />
-      </div>
+      </aside>
       <ShowcaseShell
         brand={showcase.brand}
         basePath={basePath}

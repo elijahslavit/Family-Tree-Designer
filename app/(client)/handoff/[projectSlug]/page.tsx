@@ -176,7 +176,7 @@ function HandoffDatum({
   return (
     <div className="rounded-[20px] border border-black/10 bg-[#fbf9f4] p-5 shadow-sm">
       <span className="grid h-9 w-9 place-items-center rounded-full bg-[#e8ede8] text-[#405447]">{icon}</span>
-      <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#81786a]">{label}</p>
+      <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#675e52]">{label}</p>
       <p className="mt-1 font-serif text-xl font-semibold">{value}</p>
     </div>
   );

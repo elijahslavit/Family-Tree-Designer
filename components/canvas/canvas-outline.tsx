@@ -63,12 +63,12 @@ export function CanvasOutline({
           const headingId = `outline-generation-${generation}`;
           return (
             <section key={generation} aria-labelledby={headingId}>
-              <h3
+              <h2
                 id={headingId}
                 className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--creator-text-muted)]"
               >
                 {generationLabel(generation, focusLabel)}
-              </h3>
+              </h2>
               <ul className="space-y-2">
                 {row.map((node) => {
                   const relations = connectionsFor(node.id, edges, names);

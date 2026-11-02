@@ -75,6 +75,25 @@ test("family tree supports search, a text outline, and branch highlighting", asy
   await expect(page.getByText("Lineage", { exact: true }).first()).toBeVisible();
 });
 
+test("a GEDCOM is checked in the browser with a clear report", async ({ page }) => {
+  // Wait for hydration so the file input's change handler is attached.
+  await page.goto("/projects/pilot-hart-001/import", { waitUntil: "networkidle" });
+  await page.locator('input[type="file"][accept=".ged,.gedcom"]').setInputFiles("tests/e2e/fixtures/sample-family.ged");
+
+  const report = page.getByRole("region", { name: "Check results for sample-family.ged" });
+  await expect(report).toBeVisible();
+  await expect(report.getByText("nothing was uploaded")).toBeVisible();
+  await expect(report.getByText("Can be imported after review")).toBeVisible();
+  // Three people; only Alice lacks death evidence (Clara has a burial record).
+  await expect(report.getByRole("definition").first()).toHaveText("3");
+  await expect(report.getByRole("definition").nth(2)).toHaveText("1");
+
+  await report.getByText("Broken references", { exact: true }).click();
+  await expect(report.getByText("Family @F1@ references unresolved child @I9@.")).toBeVisible();
+  await report.getByText("Not imported", { exact: true }).click();
+  await expect(report.getByText("1 occupation (OCCU) person entry was not imported.")).toBeVisible();
+});
+
 test("invitation errors disclose no family content", async ({ page }) => {
   await page.goto("/invite/pilot-expired-invite");
   await expect(page.getByRole("heading", { name: "This invitation has expired." })).toBeVisible();

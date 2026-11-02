@@ -93,7 +93,7 @@ export function ShowcaseHome({
           </TiltCard>
 
           <div className="max-w-xl space-y-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#7b6c54]">{eyebrow}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#6b5d47]">{eyebrow}</p>
             <div className="space-y-3">
               <h1 className="font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.035em] sm:text-6xl">
                 {familyName}
@@ -153,7 +153,7 @@ export function ShowcaseHome({
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="mb-9 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#776a58]">Featured ancestors</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#62574a]">Featured ancestors</p>
               <h2 className="mt-2 font-serif text-4xl font-semibold tracking-tight sm:text-5xl">People behind the names</h2>
             </div>
             <Link href={`${basePath}/people`} className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-primary-ink)]">
@@ -168,7 +168,7 @@ export function ShowcaseHome({
                 </div>
                 <div className="space-y-1 p-3 sm:p-4">
                   <p className="font-serif text-base font-semibold leading-tight sm:text-xl">{person.name}</p>
-                  <p className="text-xs text-[#776d5f]">{person.years}</p>
+                  <p className="text-xs text-[#645a4e]">{person.years}</p>
                 </div>
               </Link>
             ))}
@@ -178,7 +178,7 @@ export function ShowcaseHome({
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mb-9 max-w-2xl space-y-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#776a58]">Curated stories</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#62574a]">Curated stories</p>
           <h2 className="font-serif text-4xl font-semibold tracking-tight sm:text-5xl">A few moments worth carrying forward</h2>
           <p className="leading-7 text-[#6d6253]">Short, sourced narratives make the structure of a tree feel personal without overwhelming the reader.</p>
         </div>
@@ -189,7 +189,7 @@ export function ShowcaseHome({
                 <Image src={story.imagePath} alt="" fill sizes="(max-width: 1024px) 100vw, 33vw" className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.025]" />
               </div>
               <div className="space-y-3 p-5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#7b6d59]">{storyMeta(story)}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#64584a]">{storyMeta(story)}</p>
                 <h3 className="font-serif text-2xl font-semibold leading-tight">{story.title}</h3>
                 <p className="text-sm leading-6 text-[#6f6557]">{story.dek}</p>
               </div>

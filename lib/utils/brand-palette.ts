@@ -23,7 +23,9 @@ export type BrandPalette = {
 
 type Rgb = [number, number, number];
 
-const PAPER = "#f8f4ea";
+// Ink colours are checked against the darkest parchment surface the showcase
+// uses, so they stay legible on every lighter paper tone as well.
+const PAPER = "#ebe3d3";
 const LIGHT_TEXT = "#fbf7ee";
 const DARK_TEXT = "#1f1b16";
 const FALLBACK_PRIMARY = "#3f4f45";

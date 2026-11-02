@@ -36,7 +36,7 @@ export function InvitationGate({
             {state === "expired" ? <Clock3 className="h-6 w-6" /> : <Link2Off className="h-6 w-6" />}
           </span>
           <div className="space-y-2">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#81786a]">Private invitation</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#675e52]">Private invitation</p>
             <h1 className="font-serif text-4xl font-semibold">{invitationStateCopy[state].title}</h1>
             <p className="text-sm leading-6 text-[#6f675c]">{invitationStateCopy[state].detail}</p>
           </div>
@@ -65,7 +65,7 @@ export function InvitationGate({
           <KeyRound className="h-6 w-6" />
         </span>
         <div className="space-y-3">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#81786a]">Private invitation</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#675e52]">Private invitation</p>
           <h1 className="font-serif text-4xl font-semibold leading-tight">Welcome{recipientLabel ? `, ${recipientLabel}` : ""}.</h1>
           <p className="text-base leading-7 text-[#665e52]">
             {practiceName ?? "Your genealogist"} has invited you to {purposeLabel ?? "view"} <strong>{projectTitle ?? "a private family archive"}</strong>.
@@ -73,8 +73,8 @@ export function InvitationGate({
         </div>
 
         <dl className="grid gap-3 rounded-2xl border border-black/10 bg-[#f6f2e9] p-5 sm:grid-cols-2">
-          <div><dt className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#81786a]">Access</dt><dd className="mt-1 text-sm font-semibold">Recipient-specific</dd></div>
-          <div><dt className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#81786a]">Unused link expires</dt><dd className="mt-1 text-sm font-semibold">{expiresLabel ?? "Within seven days"}</dd></div>
+          <div><dt className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#675e52]">Access</dt><dd className="mt-1 text-sm font-semibold">Recipient-specific</dd></div>
+          <div><dt className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#675e52]">Unused link expires</dt><dd className="mt-1 text-sm font-semibold">{expiresLabel ?? "Within seven days"}</dd></div>
         </dl>
 
         <div className="space-y-3 text-sm leading-6 text-[#665e52]">
@@ -103,7 +103,7 @@ function GateFrame({ children, style }: { children: React.ReactNode; style?: Rea
     <main style={style} className="grid min-h-screen place-items-center bg-[#e9e3d7] px-4 py-10 text-[#28241f]">
       <section className="w-full max-w-2xl rounded-[28px] border border-black/10 bg-[#fbf9f4] p-6 shadow-2xl sm:p-10">
         {children}
-        <p className="mt-8 border-t border-black/10 pt-5 text-center text-[10px] uppercase tracking-[0.14em] text-[#8a8174]">
+        <p className="mt-8 border-t border-black/10 pt-5 text-center text-[10px] uppercase tracking-[0.14em] text-[#6a6256]">
           Powered by Family Tree Designer · Never forward private invitation links
         </p>
       </section>
