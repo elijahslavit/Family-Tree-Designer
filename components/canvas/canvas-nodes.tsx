@@ -184,6 +184,22 @@ const PersonNode = memo(function PersonNode({ data, selected }: NodeProps) {
   );
 });
 
+export const GENERATION_LABEL_WIDTH = 176;
+
+const GenerationLabelNode = memo(function GenerationLabelNode({ data }: NodeProps) {
+  return (
+    <div
+      className="pointer-events-none flex h-[7.75rem] items-center justify-end text-right"
+      style={{ width: GENERATION_LABEL_WIDTH }}
+    >
+      <p className="text-[0.66rem] font-semibold uppercase leading-4 tracking-[0.16em] text-[var(--text-muted)]">
+        {String((data as { label?: string }).label ?? "")}
+      </p>
+    </div>
+  );
+});
+
 export const nodeTypes = {
   person: PersonNode,
+  generationLabel: GenerationLabelNode,
 };

@@ -243,6 +243,8 @@ export interface CanvasNodeData extends Record<string, unknown> {
   summary?: string | null;
   isLiving: boolean;
   kind: "person" | "family";
+  /** Rows relative to the focus person: -1 parents, 0 focus, 1 children. */
+  generation?: number;
   isFocus?: boolean;
   isHighlighted?: boolean;
   relationGroup?:

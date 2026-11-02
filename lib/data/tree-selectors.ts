@@ -420,6 +420,7 @@ export async function getCanvasNeighborhoodFromBundle({
 
   nodes.forEach((node) => {
     node.position = layout.positions.get(node.id) ?? node.position;
+    node.data = { ...node.data, generation: layout.generations.get(node.id) ?? 0 };
   });
 
   const edges: Edge[] = layout.links.map((link) => {

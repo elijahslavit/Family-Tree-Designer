@@ -192,11 +192,16 @@ export function getShowcaseSource(project: PilotProject, sourceId: string) {
   };
 }
 
+export type ShowcaseSearchPerson = { id: string; name: string; years: string };
+
 export async function getShowcaseCanvas(
   project: PilotProject,
   personId: string,
   depth: number,
+  lineageId: string | null = null,
 ): Promise<{
+  searchablePeople: ShowcaseSearchPerson[];
+  selectedLineage: ReturnType<typeof getAllowedLineages>[number] | null;
   nodes: Node[];
   edges: Edge[];
   focusPerson: PersonViewModel;
@@ -221,12 +226,17 @@ export async function getShowcaseCanvas(
     throw new Error("No privacy-cleared person is available for the family tree.");
   }
 
+  const availableLineages = getAllowedLineages(project);
+  const selectedLineage = lineageId
+    ? availableLineages.find((lineage) => lineage.id === lineageId) ?? null
+    : null;
+
   const result = await getCanvasNeighborhoodFromBundle({
     bundle,
     personId: safeFocusId,
     viewer: { mode: "creator", accountId: bundle.account.id },
     depth: Math.min(2, Math.max(1, depth)),
-    lineageId: null,
+    lineageId: selectedLineage?.id ?? null,
     includePerson: (candidate) => allowedPersonIds.has(candidate.id),
   });
 
@@ -258,7 +268,15 @@ export async function getShowcaseCanvas(
     relatedCount: nodes.filter((node) => (node.data as { kind?: string }).kind === "person").length - 1,
     depth: result.depth,
     maxDepth: Math.min(2, result.maxDepth),
-    availableLineages: getAllowedLineages(project),
+    availableLineages,
+    selectedLineage,
+    searchablePeople: bundle.people
+      .filter((person) => allowedPersonIds.has(person.id))
+      .map((person) => {
+        const card = personCard(project, person);
+        return { id: card.id, name: card.name, years: card.years };
+      })
+      .sort((left, right) => left.name.localeCompare(right.name)),
   };
 }
 

@@ -48,6 +48,33 @@ test("private presentation uses the practice brand colours", async ({ page }) =>
   );
 });
 
+test("family tree supports search, a text outline, and branch highlighting", async ({ page }) => {
+  await page.goto("/projects/pilot-hart-001/preview/tree");
+
+  await expect(page.getByText("Parents' generation")).toBeVisible();
+
+  const search = page.getByRole("combobox", { name: "Find a person in the family tree" });
+  await search.fill("walter");
+  await expect(page.getByRole("option", { name: /Walter Hart/ })).toBeVisible();
+  await search.press("Enter");
+  await expect(page).toHaveURL(/person=p01/);
+  await expect(page.getByRole("heading", { name: "Walter Hart", level: 2 })).toBeVisible();
+
+  await page.getByRole("button", { name: "List" }).click();
+  await expect(page).toHaveURL(/view=list/);
+  const outline = page.getByRole("region", { name: "Walter's generation" });
+  await expect(outline.getByText("Walter Hart", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Centre here on Eleanor Hart West" }).click();
+  await expect(page).toHaveURL(/person=p03/);
+  await expect(page).toHaveURL(/view=list/);
+
+  await page.getByRole("button", { name: "Tree" }).click();
+  await page.getByRole("button", { name: "Direct Hart Line" }).click();
+  await expect(page).toHaveURL(/lineage=l01/);
+  await expect(page.getByText("Direct Hart Line").first()).toBeVisible();
+  await expect(page.getByText("Lineage", { exact: true }).first()).toBeVisible();
+});
+
 test("invitation errors disclose no family content", async ({ page }) => {
   await page.goto("/invite/pilot-expired-invite");
   await expect(page.getByRole("heading", { name: "This invitation has expired." })).toBeVisible();

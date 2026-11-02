@@ -260,3 +260,32 @@ function invert(relation: CanvasRelation): CanvasRelation {
   if (relation === "child") return "parent";
   return relation;
 }
+
+/**
+ * Names a canvas row relative to the focus person. Rows are generations, not
+ * strict relationships (a parent's sibling shares the parents' row), so the
+ * labels describe the generation rather than a kinship term.
+ */
+export function generationLabel(generation: number, focusName: string) {
+  const firstName = focusName.trim().split(/\s+/)[0] || "Their";
+  switch (generation) {
+    case 0:
+      return `${firstName}'s generation`;
+    case -1:
+      return "Parents' generation";
+    case -2:
+      return "Grandparents' generation";
+    case -3:
+      return "Great-grandparents' generation";
+    case 1:
+      return "Children's generation";
+    case 2:
+      return "Grandchildren's generation";
+    case 3:
+      return "Great-grandchildren's generation";
+    default:
+      return generation < 0
+        ? `${-generation} generations earlier`
+        : `${generation} generations later`;
+  }
+}
