@@ -9,7 +9,8 @@ import {
   normalizeHex,
 } from "@/lib/utils/brand-palette";
 
-const PAPER = "#f8f4ea";
+// The darkest parchment surface the presentation uses; lighter tones only gain contrast.
+const PAPER = "#ebe3d3";
 
 const brands: Array<[string, string]> = [
   ["#163a35", "#b9874f"], // demo practice: deep green + gold
