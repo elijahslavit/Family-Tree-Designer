@@ -2,6 +2,7 @@ import { createHash, randomBytes, randomUUID } from "node:crypto";
 
 import { z } from "zod";
 
+import { hashPilotCredential } from "@/lib/auth/credential-hash";
 import { createPilotDemoWorkspace } from "@/lib/pilot/demo";
 import { isDemoMode } from "@/lib/runtime";
 import {
@@ -290,9 +291,12 @@ function syncWorkflow(project: PilotProject, status: PilotWorkflowStatus, at: st
 }
 
 function hashToken(rawToken: string) {
-  const pepper = process.env.INVITE_TOKEN_PEPPER;
-  const value = pepper ? `${pepper}:${rawToken}` : rawToken;
-  return createHash("sha256").update(value, "utf8").digest("hex");
+  try {
+    return hashPilotCredential(rawToken);
+  } catch (error) {
+    // A missing pepper means real credentials cannot be handled safely yet.
+    throw new PilotDomainError("NOT_READY", error instanceof Error ? error.message : "Credential hashing is not configured.");
+  }
 }
 
 function safeInvite(invite: PilotInviteRecord) {
