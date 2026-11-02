@@ -18,7 +18,8 @@ export type ReviewIssueType =
   | "duplicate"
   | "conflict"
   | "missing_data"
-  | "parse_error";
+  | "parse_error"
+  | "unsupported";
 export type ReviewIssueStatus = "open" | "resolved" | "dismissed";
 export type ClaimConfidence = "accepted" | "probable" | "uncertain" | "disputed";
 
