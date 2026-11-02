@@ -93,7 +93,7 @@ export function ShowcasePersonDetail({
   birthPlace: string;
   biography: string[];
   facts: Array<{ label: string; value: string }>;
-  relatives: ShowcasePersonCard[];
+  relatives: Array<ShowcasePersonCard & { relation?: string }>;
   stories: ShowcaseStoryCard[];
   source: { id: string; title: string; detail: string };
 }) {
@@ -145,7 +145,7 @@ export function ShowcasePersonDetail({
             <dl className="space-y-4">{facts.map((fact) => <div key={fact.label}><dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#817667]">{fact.label}</dt><dd className="mt-1 text-sm leading-6">{fact.value}</dd></div>)}</dl>
           </InfoPanel>
           <InfoPanel title="Close family">
-            <div className="space-y-3">{relatives.map((relative) => <Link key={relative.id} href={`${basePath}/people/${relative.id}`} className="flex items-center gap-3"><span className="relative h-10 w-10 overflow-hidden rounded-full bg-[#ded5c5]"><Image src={relative.imagePath} alt="" fill sizes="40px" className="object-cover" /></span><span><span className="block text-sm font-semibold">{relative.name}</span><span className="block text-xs text-[#766c5e]">{relative.years}</span></span></Link>)}</div>
+            <div className="space-y-3">{relatives.map((relative) => <Link key={relative.id} href={`${basePath}/people/${relative.id}`} className="flex items-center gap-3"><span className="relative h-10 w-10 overflow-hidden rounded-full bg-[#ded5c5]"><Image src={relative.imagePath} alt="" fill sizes="40px" className="object-cover" /></span><span><span className="block text-sm font-semibold">{relative.name}</span><span className="block text-xs text-[#766c5e]">{relative.relation ? <span className="font-semibold uppercase tracking-[0.12em] text-[10px] text-[#8a6a43]">{relative.relation}</span> : null}{relative.relation ? " · " : null}{relative.years}</span></span></Link>)}</div>
           </InfoPanel>
           <InfoPanel title="Source note">
             <Link href={`${basePath}/sources/${source.id}`} className="block rounded-lg bg-[#f4efe5] p-3 text-sm leading-6 hover:bg-[#eee6d7]"><span className="font-semibold">{source.title}</span><span className="mt-1 block text-xs text-[#746b5e]">{source.detail}</span></Link>

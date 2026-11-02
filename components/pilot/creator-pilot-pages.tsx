@@ -66,6 +66,7 @@ import {
   type PilotWorkflowStatus,
   type PilotWorkspace,
 } from "@/lib/pilot/types";
+import { ColorModeToggle } from "@/components/foundation/color-mode-toggle";
 import { cn } from "@/lib/utils/cn";
 
 const statusRoute: Record<PilotWorkflowStatus, string> = {
@@ -151,6 +152,7 @@ export function PilotPortfolioPage({ workspace }: { workspace: PilotWorkspace })
           <div className="flex items-center gap-3 text-sm">
             <span className="hidden text-[#746b5e] sm:inline">{workspace.portfolio.practitionerName}</span>
             <Badge tone="accent">Founding-pilot workspace</Badge>
+            <ColorModeToggle />
           </div>
         </div>
       </header>
@@ -508,7 +510,7 @@ export function PilotImportPage({ project }: { project: PilotProject }) {
   );
 }
 
-export function PilotCuratePage({ project }: { project: PilotProject }) {
+export function PilotCuratePage({ project, focalPersonName }: { project: PilotProject; focalPersonName?: string | null }) {
   const featuredStories = project.stories.filter((story) => story.featured).sort((a, b) => a.order - b.order);
   const passedMedia = project.media.filter((media) => media.quarantineStatus === "passed");
 
@@ -523,7 +525,7 @@ export function PilotCuratePage({ project }: { project: PilotProject }) {
         <CurationEditor welcome={project.welcome} branding={project.branding} />
       </PilotSection>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <PilotSection eyebrow="Guided story path" title={`${featuredStories.length} featured stories`} description={`Founding-pilot qualification expects ${project.scope.minFeaturedStories}–${project.scope.maxFeaturedStories}; a reasoned operator override may allow a deliberately story-light project.`}>
           {featuredStories.length ? (
             <ol className="space-y-4">
@@ -531,7 +533,7 @@ export function PilotCuratePage({ project }: { project: PilotProject }) {
                 const cover = passedMedia.find((media) => media.id === story.coverMediaId);
                 const preview = cover ? mediaPreviewPath(cover) : null;
                 return (
-                  <li key={story.id} className="grid gap-4 rounded-xl border border-black/[0.07] p-4 sm:grid-cols-[120px_minmax(0,1fr)]">
+                  <li key={story.id} className="grid grid-cols-1 gap-4 rounded-xl border border-black/[0.07] p-4 sm:grid-cols-[120px_minmax(0,1fr)]">
                     <div className="relative h-28 overflow-hidden rounded-lg bg-[#e8e3da]">{preview ? <Image src={preview} alt={cover?.altText ?? ""} fill sizes="120px" className="object-cover" unoptimized /> : <span className="grid h-full place-items-center"><BookOpenText className="h-6 w-6 text-[#82796d]" /></span>}</div>
                     <div><div className="flex flex-wrap items-center gap-2"><span className="grid h-6 w-6 place-items-center rounded-full bg-[#263a31] text-[11px] font-semibold text-white">{index + 1}</span><Badge tone={story.status === "ready" || story.status === "published" ? "success" : "warning"}>{story.status}</Badge><Badge>{story.visibility.replaceAll("_", " ")}</Badge></div><h3 className="mt-2 text-lg font-semibold">{story.title}</h3><p className="mt-1 text-sm leading-6 text-[#746b5e]">{story.dek}</p><p className="mt-2 text-xs text-[#82796d]">{story.personIds.length} linked people · {story.sourceIds.length} sources</p></div>
                   </li>
@@ -545,7 +547,7 @@ export function PilotCuratePage({ project }: { project: PilotProject }) {
 
         <div className="space-y-6">
           <PilotSection eyebrow="Focused branch" title="Client-centered overview" description="The full graph remains truthful; the opening view is intentionally partial.">
-            <div className="space-y-3 text-sm text-[#665e53]"><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Focal person</span><strong className="text-[#302a23]">{project.focalPersonId ?? "Not selected"}</strong></div><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Initial depth</span><strong className="text-[#302a23]">Nearest generations</strong></div><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Expansion</span><strong className="text-[#302a23]">On demand</strong></div></div>
+            <div className="space-y-3 text-sm text-[#665e53]"><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Focal person</span><strong className="text-[#302a23]">{focalPersonName ?? (project.focalPersonId ? "Selected" : "Not selected")}</strong></div><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Initial depth</span><strong className="text-[#302a23]">Nearest generations</strong></div><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Expansion</span><strong className="text-[#302a23]">On demand</strong></div></div>
           </PilotSection>
           <PilotSection eyebrow="Brand lock" title={project.branding.practiceName} description="One branded theme is included in the founding pilot.">
             <div className="flex items-center gap-4"><span className="grid h-12 w-12 place-items-center rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: project.branding.primaryColor }}>{project.branding.mark}</span><div><p className="font-semibold">{project.branding.themeId}</p><p className="mt-1 text-xs text-[#746b5e]">{project.branding.byline}</p></div></div>

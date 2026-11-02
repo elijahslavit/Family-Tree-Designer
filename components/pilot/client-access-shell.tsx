@@ -31,7 +31,7 @@ export function ClientAccessShell({
   synthetic?: boolean;
 }) {
   return (
-    <main className="min-h-screen bg-[#e9e3d7] px-4 py-6 text-[#28241f] sm:px-6 sm:py-10">
+    <main data-light-only className="min-h-screen bg-[#e9e3d7] px-4 py-6 text-[#28241f] sm:px-6 sm:py-10">
       <div className="mx-auto max-w-6xl space-y-5">
         <header className="rounded-[28px] border border-black/10 bg-[#fbf9f4] px-5 py-5 shadow-sm sm:px-8">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
@@ -191,7 +191,7 @@ export function ClientAccessNotice({
 
 export function ClientPageSkeleton() {
   return (
-    <main className="min-h-screen animate-pulse bg-[#e9e3d7] px-4 py-8 sm:px-6">
+    <main data-light-only className="min-h-screen animate-pulse bg-[#e9e3d7] px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-6xl space-y-5">
         <div className="h-64 rounded-[28px] border border-black/5 bg-[#fbf9f4]" />
         <div className="grid gap-5 lg:grid-cols-3">

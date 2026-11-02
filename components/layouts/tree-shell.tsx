@@ -5,6 +5,7 @@ import { ClassicShell } from "@/components/layouts/classic-shell";
 import { EditorialShell } from "@/components/layouts/editorial-shell";
 import { ExplorerShell } from "@/components/layouts/explorer-shell";
 import type { Tree } from "@/lib/types";
+import { ColorModeToggle } from "@/components/foundation/color-mode-toggle";
 import { cn } from "@/lib/utils/cn";
 
 type ShellProps = {
@@ -41,6 +42,7 @@ export function CreatorTreeShell({
             <h1 className="text-lg font-semibold text-[var(--creator-text)]">{tree.name}</h1>
           </div>
           <nav className="flex items-center gap-5">
+            <ColorModeToggle className="order-last" />
             {creatorNavItems.map((item) => (
               <Link
                 key={item.href}

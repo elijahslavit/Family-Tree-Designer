@@ -141,14 +141,14 @@ export function ShowcaseHome({
               Meet the family <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
             {people.slice(0, 4).map((person) => (
               <Link key={person.id} href={`${basePath}/people/${person.id}`} className="group overflow-hidden rounded-2xl bg-[#fbf8f0] shadow-sm">
                 <div className="relative aspect-[4/5] overflow-hidden bg-[#d8cfbf]">
-                  <Image src={person.imagePath} alt={`Synthetic portrait for ${person.name}`} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                  <Image src={person.imagePath} alt={`Synthetic portrait for ${person.name}`} fill sizes="(max-width: 1024px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                 </div>
-                <div className="space-y-1 p-4">
-                  <p className="font-serif text-xl font-semibold">{person.name}</p>
+                <div className="space-y-1 p-3 sm:p-4">
+                  <p className="font-serif text-base font-semibold leading-tight sm:text-xl">{person.name}</p>
                   <p className="text-xs text-[#776d5f]">{person.years}</p>
                 </div>
               </Link>
@@ -167,7 +167,7 @@ export function ShowcaseHome({
           {stories.slice(0, 3).map((story) => (
             <Link key={story.id} href={`${basePath}/stories/${story.id}`} className="group overflow-hidden rounded-2xl border border-[#3c3325]/10 bg-white">
               <div className="relative aspect-[16/10] overflow-hidden bg-[#ded5c5]">
-                <Image src={story.imagePath} alt="" fill sizes="(max-width: 1024px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.025]" />
+                <Image src={story.imagePath} alt="" fill sizes="(max-width: 1024px) 100vw, 33vw" className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.025]" />
               </div>
               <div className="space-y-3 p-5">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#7b6d59]">{story.period} · {story.readMinutes} min read</p>
@@ -186,7 +186,7 @@ export function ShowcaseHome({
           </div>
           <div className="max-w-2xl space-y-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#dac69e]">Research you can trace</p>
-            <h2 className="font-serif text-4xl font-semibold tracking-tight sm:text-5xl">Every story keeps its connection to the record.</h2>
+            <h2 className="font-serif text-4xl font-semibold tracking-tight text-[#f6efe0] sm:text-5xl">Every story keeps its connection to the record.</h2>
             <p className="leading-7 text-white/75">Dates, memories, and narrative details stay linked to source references, so relatives can enjoy the story and still understand where it came from.</p>
             <Link href={`${basePath}/sources/src01`} className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-3 text-sm font-semibold hover:bg-white/10">
               <FileText className="h-4 w-4" /> View a source

@@ -13,6 +13,7 @@ import {
 } from "@/components/layouts/shell-nav";
 import type { Tree } from "@/lib/types";
 import { cn } from "@/lib/utils/cn";
+import { ColorModeToggle } from "@/components/foundation/color-mode-toggle";
 
 type ExplorerShellProps = PropsWithChildren<{
   tree: Tree;
@@ -41,6 +42,7 @@ export function ExplorerShell({
           </div>
           <div className="hidden items-center gap-2 lg:flex">
             <ShellNavLinks items={navItems} className="text-sm" />
+            <ColorModeToggle />
             {drawer ? (
               <Button
                 type="button"

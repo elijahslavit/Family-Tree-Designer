@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function CardPreviewPage() {
   return (
-    <main className="min-h-screen bg-[#efe6d4] px-6 py-12 text-[#26231e]">
+    <main data-light-only className="min-h-screen bg-[#efe6d4] px-6 py-12 text-[#26231e]">
       <div className="mx-auto max-w-6xl space-y-10">
         <header className="space-y-2">
           <h1 className="font-serif text-3xl font-semibold">Ancestor Card — component preview</h1>

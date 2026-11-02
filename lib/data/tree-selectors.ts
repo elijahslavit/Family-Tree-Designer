@@ -1,5 +1,10 @@
 import type { Edge, Node } from "@xyflow/react";
 
+import {
+  layoutFamilyCanvas,
+  type CanvasConnection,
+  type CanvasLink,
+} from "@/lib/data/canvas-layout";
 import { pageSize } from "@/lib/utils/constants";
 import { compareNormalizedDates } from "@/lib/utils/dates";
 import { isViewerSuppressed, maskPersonForViewer } from "@/lib/utils/privacy";
@@ -265,12 +270,18 @@ export async function getCanvasNeighborhoodFromBundle({
   viewer,
   depth = 1,
   lineageId = null,
+  includePerson,
 }: {
   bundle: TreeBundle;
   personId: string;
   viewer: ViewerContext;
   depth?: number;
   lineageId?: string | null;
+  /**
+   * Optional presentation filter applied before layout, so hidden people never
+   * leave gaps or skew the placement of the people who remain visible.
+   */
+  includePerson?: (person: Person) => boolean;
 }) {
   const person = getPersonViewFromBundle(bundle, personId, viewer);
 
@@ -282,7 +293,7 @@ export async function getCanvasNeighborhoodFromBundle({
   const safeDepth = Math.max(1, Math.min(depth, maxDepth));
   const visiblePeople = new Map<string, Person>();
   const nodeDepths = new Map<string, number>();
-  const edgeMap = new Map<string, Edge>();
+  const connectionMap = new Map<string, CanvasConnection>();
   const relationGroups = new Map<string, CanvasRelationGroup>([[person.id, "focus"]]);
   const queue = [{ personId: person.id, level: 0, group: "focus" as CanvasRelationGroup }];
   const visited = new Set<string>([person.id]);
@@ -298,6 +309,10 @@ export async function getCanvasNeighborhoodFromBundle({
     }
 
     getRelativeConnections(bundle, current.personId, viewer).forEach(({ person: relative, relation }) => {
+      if (includePerson && !includePerson(relative)) {
+        return;
+      }
+
       const relationGroup = getCanvasRelationGroup({
         currentGroup: current.group,
         relation,
@@ -317,13 +332,11 @@ export async function getCanvasNeighborhoodFromBundle({
 
       const edgeKey = [current.personId, relative.id].sort().join(":");
 
-      if (!edgeMap.has(edgeKey)) {
-        edgeMap.set(edgeKey, {
-          id: `${edgeKey}:${relation}`,
-          source: current.personId,
-          target: relative.id,
-          label: relation,
-          type: "smoothstep",
+      if (!connectionMap.has(edgeKey)) {
+        connectionMap.set(edgeKey, {
+          from: current.personId,
+          to: relative.id,
+          relation,
         });
       }
 
@@ -334,6 +347,21 @@ export async function getCanvasNeighborhoodFromBundle({
           level: current.level + 1,
           group: relationGroup,
         });
+      }
+    });
+  }
+
+  // Draw every true relationship among the people in view, not only the links
+  // discovered while expanding outward (for example a sibling's parents).
+  for (const visiblePerson of visiblePeople.values()) {
+    getRelativeConnections(bundle, visiblePerson.id, viewer).forEach(({ person: relative, relation }) => {
+      if (!visiblePeople.has(relative.id)) {
+        return;
+      }
+
+      const edgeKey = [visiblePerson.id, relative.id].sort().join(":");
+      if (!connectionMap.has(edgeKey)) {
+        connectionMap.set(edgeKey, { from: visiblePerson.id, to: relative.id, relation });
       }
     });
   }
@@ -381,90 +409,43 @@ export async function getCanvasNeighborhoodFromBundle({
     };
   });
 
-  const edges = [...edgeMap.values()].map((edge) => {
-    const isHighlighted = highlightedIds.has(edge.source) && highlightedIds.has(edge.target);
-    const relation = (edge.label as RelativeRelation | undefined) ?? "child";
-
-    return {
-      ...edge,
-      animated: isHighlighted,
-      style: getCanvasEdgeStyle(relation, isHighlighted),
-    };
+  const labelById = new Map(nodes.map((node) => [node.id, String(node.data.label)]));
+  const layout = layoutFamilyCanvas({
+    focusId: person.id,
+    nodeIds: nodes.map((node) => node.id),
+    connections: [...connectionMap.values()],
+    compareNodes: (left, right) =>
+      (labelById.get(left) ?? left).localeCompare(labelById.get(right) ?? right),
   });
-
-  const layeredNodes = new Map<number, Node[]>();
 
   nodes.forEach((node) => {
-    const level = nodeDepths.get(node.id) ?? 0;
-    const current = layeredNodes.get(level) ?? [];
-    current.push(node);
-    layeredNodes.set(level, current);
+    node.position = layout.positions.get(node.id) ?? node.position;
   });
 
-  [...layeredNodes.entries()].forEach(([level, layerNodes]) => {
-    const sortedNodes = [...layerNodes].sort((left, right) => {
-      const leftFocus = left.id === person.id ? -1 : 0;
-      const rightFocus = right.id === person.id ? -1 : 0;
+  const edges: Edge[] = layout.links.map((link) => {
+    const isHighlighted = highlightedIds.has(link.source) && highlightedIds.has(link.target);
+    const sourceName = labelById.get(link.source) ?? link.source;
+    const targetName = labelById.get(link.target) ?? link.target;
+    const description =
+      link.kind === "parent-child"
+        ? `${sourceName} is a parent of ${targetName}`
+        : link.kind === "partner"
+          ? `${sourceName} and ${targetName} are partners`
+          : `${sourceName} and ${targetName} are siblings`;
 
-      if (leftFocus !== rightFocus) {
-        return leftFocus - rightFocus;
-      }
-
-      return String(left.data.label).localeCompare(String(right.data.label));
-    });
-    const layerHeight = Math.max((sortedNodes.length - 1) * 190, 0);
-
-    sortedNodes.forEach((node, index) => {
-      node.position = {
-        x: level * 320,
-        y: index * 190 - layerHeight / 2,
-      };
-    });
+    return {
+      id: `${link.kind}:${link.source}:${link.target}`,
+      source: link.source,
+      target: link.target,
+      sourceHandle: link.sourceHandle,
+      targetHandle: link.targetHandle,
+      type: link.kind === "partner" ? "straight" : "smoothstep",
+      ariaLabel: description,
+      animated: isHighlighted,
+      style: getCanvasEdgeStyle(link.kind, isHighlighted),
+      data: { kind: link.kind },
+    };
   });
-
-  try {
-    const ELKModule = await import("elkjs/lib/elk.bundled.js");
-    const ELKConstructor = ELKModule.default;
-    const elk = new ELKConstructor();
-    const layout = await elk.layout({
-      id: "family-tree",
-      layoutOptions: {
-        "elk.algorithm": "layered",
-        "elk.direction": "RIGHT",
-        "elk.edgeRouting": "ORTHOGONAL",
-        "elk.layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
-        "elk.layered.spacing.nodeNodeBetweenLayers": "170",
-        "elk.spacing.nodeNode": "120",
-      },
-      children: nodes.map((node) => ({
-        id: node.id,
-        width: 252,
-        height: 150,
-      })),
-      edges: edges.map((edge) => ({
-        id: edge.id,
-        sources: [edge.source],
-        targets: [edge.target],
-      })),
-    });
-
-    const layoutByNodeId = new Map(layout.children?.map((node) => [node.id, node]) ?? []);
-
-    nodes.forEach((node) => {
-      const positionedNode = layoutByNodeId.get(node.id);
-
-      if (!positionedNode) {
-        return;
-      }
-
-      node.position = {
-        x: positionedNode.x ?? node.position.x,
-        y: positionedNode.y ?? node.position.y,
-      };
-    });
-  } catch {
-    // Fall back to the coarse manual grouping when ELK layout is unavailable.
-  }
 
   return {
     focusPerson: person,
@@ -569,40 +550,31 @@ function getCanvasRelationGroup({
   return currentGroup === "relative" ? "relative" : currentGroup;
 }
 
-function getCanvasEdgeStyle(relation: RelativeRelation, isHighlighted: boolean) {
+function getCanvasEdgeStyle(kind: CanvasLink["kind"], isHighlighted: boolean) {
   if (isHighlighted) {
     return {
       stroke: "var(--accent-primary)",
-      strokeWidth: 2.7,
+      strokeWidth: 2.6,
     };
   }
 
-  switch (relation) {
-    case "parent":
+  switch (kind) {
+    case "partner":
       return {
-        stroke: "var(--rel-parent-border)",
-        strokeWidth: 2.1,
+        stroke: "var(--canvas-link)",
+        strokeWidth: 1.8,
+        strokeDasharray: "6 5",
       };
     case "sibling":
       return {
-        stroke: "var(--rel-sibling-border)",
-        strokeWidth: 2,
-      };
-    case "spouse":
-      return {
-        stroke: "var(--rel-spouse-border)",
-        strokeWidth: 1.9,
-        strokeDasharray: "7 5",
-      };
-    case "child":
-      return {
-        stroke: "var(--rel-child-border)",
-        strokeWidth: 2.1,
+        stroke: "var(--canvas-link-soft)",
+        strokeWidth: 1.6,
+        strokeDasharray: "2 5",
       };
     default:
       return {
-        stroke: "var(--canvas-edge)",
-        strokeWidth: 1.9,
+        stroke: "var(--canvas-link)",
+        strokeWidth: 1.8,
       };
   }
 }

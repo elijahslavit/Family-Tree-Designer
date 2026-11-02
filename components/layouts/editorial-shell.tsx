@@ -3,6 +3,7 @@ import type { PropsWithChildren, ReactNode } from "react";
 import { MobileNavDrawer, ShellNavLinks, type ShellNavItem } from "@/components/layouts/shell-nav";
 import type { Tree } from "@/lib/types";
 import { cn } from "@/lib/utils/cn";
+import { ColorModeToggle } from "@/components/foundation/color-mode-toggle";
 
 type EditorialShellProps = PropsWithChildren<{
   tree: Tree;
@@ -26,11 +27,14 @@ export function EditorialShell({
             <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">{eyebrow}</p>
             <h1 className="text-2xl font-semibold text-[var(--text-primary)]">{tree.name}</h1>
           </div>
-          <div className="hidden md:block">
-            <ShellNavLinks items={navItems} className="justify-end" />
-          </div>
-          <div className="md:hidden">
-            <MobileNavDrawer title={`${tree.name} navigation`} items={navItems} />
+          <div className="flex items-center gap-2">
+            <div className="hidden md:block">
+              <ShellNavLinks items={navItems} className="justify-end" />
+            </div>
+            <div className="md:hidden">
+              <MobileNavDrawer title={`${tree.name} navigation`} items={navItems} />
+            </div>
+            <ColorModeToggle />
           </div>
         </div>
       </header>

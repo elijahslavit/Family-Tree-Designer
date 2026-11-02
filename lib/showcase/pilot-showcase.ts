@@ -1,6 +1,8 @@
 import type { Edge, Node } from "@xyflow/react";
 
 import type { ShowcasePersonCard, ShowcaseStoryCard } from "@/components/pilot/showcase-home";
+
+export type ShowcaseRelativeCard = ShowcasePersonCard & { relation: string };
 import { getDemoStore } from "@/lib/data/demo-store";
 import { getCanvasNeighborhoodFromBundle, getPersonViewFromBundle } from "@/lib/data/tree-selectors";
 import type { PilotMediaAsset, PilotProject, PilotStory } from "@/lib/pilot/types";
@@ -61,6 +63,37 @@ export function buildPilotShowcase(project: PilotProject, basePath: string): Pil
         project.media.find((asset) => asset.id === "media-reunion-circular"),
       ) ?? genericMediaPlaceholder,
   };
+}
+
+/**
+ * Close relatives in a stable reading order (parents, siblings, partners,
+ * children), each labelled with its relationship to the person being viewed.
+ * Only people already cleared for the showcase are returned.
+ */
+export function getShowcaseRelatives(
+  view: PersonViewModel,
+  showcasePeople: ShowcasePersonCard[],
+  limit = 8,
+): ShowcaseRelativeCard[] {
+  const groups: Array<[string, Person[]]> = [
+    ["Parent", view.relatives.parents],
+    ["Sibling", view.relatives.siblings],
+    ["Partner", view.relatives.spouses],
+    ["Child", view.relatives.children],
+  ];
+  const seen = new Set<string>();
+  const result: ShowcaseRelativeCard[] = [];
+
+  for (const [relation, relatives] of groups) {
+    for (const relative of relatives) {
+      if (seen.has(relative.id)) continue;
+      seen.add(relative.id);
+      const card = showcasePeople.find((candidate) => candidate.id === relative.id);
+      if (card) result.push({ ...card, relation });
+    }
+  }
+
+  return result.slice(0, limit);
 }
 
 export function getShowcasePerson(project: PilotProject, personId: string) {
@@ -192,6 +225,7 @@ export async function getShowcaseCanvas(
     viewer: { mode: "creator", accountId: bundle.account.id },
     depth: Math.min(2, Math.max(1, depth)),
     lineageId: null,
+    includePerson: (candidate) => allowedPersonIds.has(candidate.id),
   });
 
   if (!result) {

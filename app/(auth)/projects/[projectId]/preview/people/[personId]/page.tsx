@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { ShowcasePersonDetail } from "@/components/pilot/showcase-content";
-import { buildPilotShowcase, getShowcasePerson } from "@/lib/showcase/pilot-showcase";
+import { buildPilotShowcase, getShowcasePerson, getShowcaseRelatives } from "@/lib/showcase/pilot-showcase";
 import { getSyntheticPilotProject } from "@/lib/showcase/project";
 
 export default async function PilotPreviewPersonPage({ params }: { params: Promise<{ projectId: string; personId: string }> }) {
@@ -11,15 +11,7 @@ export default async function PilotPreviewPersonPage({ params }: { params: Promi
   if (!person) notFound();
   const basePath = `/projects/${project.id}/preview`;
   const showcase = buildPilotShowcase(project, basePath);
-  const relatives = [
-    ...person.view.relatives.parents,
-    ...person.view.relatives.siblings,
-    ...person.view.relatives.spouses,
-    ...person.view.relatives.children,
-  ]
-    .filter((relative, index, all) => all.findIndex((candidate) => candidate.id === relative.id) === index)
-    .map((relative) => showcase.people.find((candidate) => candidate.id === relative.id))
-    .filter((relative): relative is NonNullable<typeof relative> => Boolean(relative));
+  const relatives = getShowcaseRelatives(person.view, showcase.people);
   const stories = showcase.stories.filter((story) => project.stories.find((candidate) => candidate.id === story.id)?.personIds.includes(personId));
 
   return (
@@ -32,7 +24,7 @@ export default async function PilotPreviewPersonPage({ params }: { params: Promi
         { label: "Born", value: [person.raw.birthDateText, person.raw.birthPlace].filter(Boolean).join(" · ") },
         { label: "Died", value: [person.raw.deathDateText, person.raw.deathPlace].filter(Boolean).join(" · ") || "Living details minimized" },
       ]}
-      relatives={relatives.slice(0, 5)}
+      relatives={relatives}
       stories={stories}
       source={{ id: "src01", title: "Hart Reunion Circular", detail: "A synthetic, cited demonstration source." }}
     />

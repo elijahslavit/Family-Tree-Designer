@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Script from "next/script";
 
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
-import { ColorModeToggle } from "@/components/foundation/color-mode-toggle";
 import { ToastProvider } from "@/components/foundation/toast";
 import { productConfig } from "@/lib/config/product";
 import "./globals.css";
@@ -44,7 +43,6 @@ export default function RootLayout({
         <AnalyticsProvider>
           <ToastProvider>{children}</ToastProvider>
         </AnalyticsProvider>
-        <ColorModeToggle />
         <Script id="color-mode" strategy="beforeInteractive">
           {colorModeScript}
         </Script>

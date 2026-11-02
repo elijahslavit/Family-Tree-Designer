@@ -6,7 +6,7 @@ import { productConfig } from "@/lib/config/product";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[#f5f1e8] text-[#26231e]">
+    <main data-light-only className="min-h-screen bg-[#f5f1e8] text-[#26231e]">
       <section className="relative isolate overflow-hidden">
         <Image
           src="/landing/hero-atlas.webp"
@@ -59,9 +59,6 @@ export default function HomePage() {
                 Open the pilot workspace <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-            <p className="inline-block rounded bg-[#f2e9d8]/70 px-1.5 py-0.5 text-sm font-medium leading-6 text-[#4c4234]">
-              Keep the research tools you trust. Upgrade what your clients receive.
-            </p>
           </div>
         </div>
       </section>
@@ -87,8 +84,26 @@ export default function HomePage() {
       <section className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-24">
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#746b5e]">Built around the professional handoff</p>
         <h2 className="mt-4 font-serif text-4xl font-semibold tracking-tight sm:text-5xl">Keep the tools you trust. Upgrade what your client receives.</h2>
-        <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#655e54]">Family Tree Designer complements research software and narrative reports with a presentation layer clients can understand, revisit, and safely share.</p>
+        <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#655e54]">{productConfig.name} complements research software and narrative reports with a presentation layer clients can understand, revisit, and safely share.</p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <Link href="/projects/pilot-hart-001/preview" className="inline-flex items-center gap-2 rounded-lg bg-[#6b3e36] px-6 py-3.5 text-sm font-semibold text-[#f3ead8] shadow-md transition-colors hover:bg-[#5a332c]">
+            See a finished reveal <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link href="/projects" className="inline-flex items-center gap-2 rounded-lg border border-black/15 bg-white/60 px-6 py-3.5 text-sm font-semibold text-[#3d352b] transition-colors hover:bg-white">
+            Open the pilot workspace
+          </Link>
+        </div>
       </section>
+
+      <footer className="border-t border-black/10 bg-[#ebe5d9]">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-sm text-[#6e675d] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <p className="flex items-center gap-2 font-semibold text-[#3d352b]">
+            <FileArchive className="h-4 w-4" aria-hidden="true" />
+            {productConfig.name}
+          </p>
+          <p>Private family presentations for professional genealogists.</p>
+        </div>
+      </footer>
     </main>
   );
 }

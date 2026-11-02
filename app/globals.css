@@ -79,15 +79,17 @@
   --site-shadow: 0 4px 8px rgba(40, 36, 31, 0.12);
 }
 
-* {
-  box-sizing: border-box;
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    color-scheme: light;
+  }
 }
 
-html {
-  color-scheme: light;
-}
-
-html[data-color-mode="dark"] {
+html[data-color-mode="dark"]:not(:has([data-light-only])) {
   color-scheme: dark;
   --bg-primary: oklch(0.17 0.012 120);
   --bg-surface: oklch(0.205 0.012 120);
@@ -139,25 +141,31 @@ html[data-color-mode="dark"] {
   --site-shadow: 0 4px 8px rgb(0 0 0 / 0.32);
 }
 
+/* Surfaces that are designed as fixed light, printed-archive compositions (the
+   marketing page and the private client showcase) mark a wrapper with
+   [data-light-only]; the dark-mode rules above and below are scoped with
+   :not(:has([data-light-only])) so those pages always render as designed. */
 .color-mode-icon-dark {
   display: none;
 }
 
-html[data-color-mode="dark"] .color-mode-icon-dark {
+html[data-color-mode="dark"]:not(:has([data-light-only])) .color-mode-icon-dark {
   display: block;
 }
 
-html[data-color-mode="dark"] .color-mode-icon-light {
+html[data-color-mode="dark"]:not(:has([data-light-only])) .color-mode-icon-light {
   display: none;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: var(--creator-bg);
-  color: var(--creator-text);
-  font-family: var(--font-body);
-  transition: background-color var(--transition-normal) ease-out, color var(--transition-normal) ease-out;
+@layer base {
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--creator-bg);
+    color: var(--creator-text);
+    font-family: var(--font-body);
+    transition: background-color var(--transition-normal) ease-out, color var(--transition-normal) ease-out;
+  }
 }
 
 [data-skin="dark-gold"] {
@@ -168,7 +176,7 @@ body {
   color-scheme: light;
 }
 
-html[data-color-mode="dark"] [data-skin]:not([data-skin="dark-gold"]) {
+html[data-color-mode="dark"]:not(:has([data-light-only])) [data-skin]:not([data-skin="dark-gold"]) {
   color-scheme: dark;
   --bg-primary: oklch(0.16 0.012 100);
   --bg-surface: oklch(0.2 0.014 100);
@@ -202,7 +210,7 @@ html[data-color-mode="dark"] [data-skin]:not([data-skin="dark-gold"]) {
 
 /* The pilot predates the semantic token layer. These compatibility selectors
    keep its existing utility markup readable until those screens are migrated. */
-html[data-color-mode="dark"] :is(
+html[data-color-mode="dark"]:not(:has([data-light-only])) :is(
   [class*="bg-[#f5f1e8]"],
   [class*="bg-[#f8f4ea]"],
   [class*="bg-[#f1eee7]"]
@@ -210,7 +218,7 @@ html[data-color-mode="dark"] :is(
   background-color: var(--site-bg) !important;
 }
 
-html[data-color-mode="dark"] :is(
+html[data-color-mode="dark"]:not(:has([data-light-only])) :is(
   [class*="bg-[#e9e3d7]"],
   [class*="bg-[#ebe5d9]"],
   [class*="bg-[#f1eadc]"]
@@ -218,7 +226,7 @@ html[data-color-mode="dark"] :is(
   background-color: var(--site-bg-strong) !important;
 }
 
-html[data-color-mode="dark"] :is(
+html[data-color-mode="dark"]:not(:has([data-light-only])) :is(
   [class*="bg-white"],
   [class*="bg-[#faf8f2]"],
   [class*="bg-[#faf8f3]"],
@@ -230,7 +238,7 @@ html[data-color-mode="dark"] :is(
   background-color: var(--site-surface) !important;
 }
 
-html[data-color-mode="dark"] :is(
+html[data-color-mode="dark"]:not(:has([data-light-only])) :is(
   [class*="bg-[#d"],
   [class*="bg-[#e"],
   [class*="bg-[#f0"],
@@ -243,7 +251,7 @@ html[data-color-mode="dark"] :is(
   background-color: var(--site-surface-muted) !important;
 }
 
-html[data-color-mode="dark"] :is(
+html[data-color-mode="dark"]:not(:has([data-light-only])) :is(
   [class*="text-[#2"],
   [class*="text-[#3"],
   [class*="text-[#4"],
@@ -252,15 +260,15 @@ html[data-color-mode="dark"] :is(
   color: var(--site-text) !important;
 }
 
-html[data-color-mode="dark"] [class*="text-[#6"] {
+html[data-color-mode="dark"]:not(:has([data-light-only])) [class*="text-[#6"] {
   color: var(--site-text-soft) !important;
 }
 
-html[data-color-mode="dark"] :is([class*="text-[#7"], [class*="text-[#8"]) {
+html[data-color-mode="dark"]:not(:has([data-light-only])) :is([class*="text-[#7"], [class*="text-[#8"]) {
   color: var(--site-text-muted) !important;
 }
 
-html[data-color-mode="dark"] :is(
+html[data-color-mode="dark"]:not(:has([data-light-only])) :is(
   [class*="border-black"],
   [class*="border-[#3c3325]"],
   [class*="border-[#b"],
@@ -270,22 +278,22 @@ html[data-color-mode="dark"] :is(
   border-color: var(--site-border) !important;
 }
 
-html[data-color-mode="dark"] [class*="hover:bg-black"]:hover,
-html[data-color-mode="dark"] [class*="hover:bg-white"]:hover,
-html[data-color-mode="dark"] [class*="hover:bg-[#f"]:hover,
-html[data-color-mode="dark"] [class*="hover:bg-[#e"]:hover {
+html[data-color-mode="dark"]:not(:has([data-light-only])) [class*="hover:bg-black"]:hover,
+html[data-color-mode="dark"]:not(:has([data-light-only])) [class*="hover:bg-white"]:hover,
+html[data-color-mode="dark"]:not(:has([data-light-only])) [class*="hover:bg-[#f"]:hover,
+html[data-color-mode="dark"]:not(:has([data-light-only])) [class*="hover:bg-[#e"]:hover {
   background-color: var(--site-surface-muted) !important;
 }
 
-html[data-color-mode="dark"] :is([class*="bg-amber-50"], [class*="bg-red-50"], [class*="bg-emerald-50"], [class*="bg-stone-100"]) {
+html[data-color-mode="dark"]:not(:has([data-light-only])) :is([class*="bg-amber-50"], [class*="bg-red-50"], [class*="bg-emerald-50"], [class*="bg-stone-100"]) {
   background-color: var(--site-surface-muted) !important;
 }
 
-html[data-color-mode="dark"] :is([class*="text-amber-900"], [class*="text-red-900"], [class*="text-emerald-700"], [class*="text-red-700"], [class*="text-stone-500"]) {
+html[data-color-mode="dark"]:not(:has([data-light-only])) :is([class*="text-amber-900"], [class*="text-red-900"], [class*="text-emerald-700"], [class*="text-red-700"], [class*="text-stone-500"]) {
   color: var(--site-text) !important;
 }
 
-html[data-color-mode="dark"] :is([class*="border-amber-200"], [class*="border-red-200"]) {
+html[data-color-mode="dark"]:not(:has([data-light-only])) :is([class*="border-amber-200"], [class*="border-red-200"]) {
   border-color: var(--site-border-strong) !important;
 }
 
@@ -300,6 +308,20 @@ html[data-color-mode="dark"] :is([class*="border-amber-200"], [class*="border-re
   --minimap-bg: color-mix(in oklab, var(--bg-elevated) 92%, transparent);
   --minimap-mask: color-mix(in oklab, var(--bg-primary) 45%, transparent);
   --minimap-node: color-mix(in oklab, var(--text-muted) 35%, transparent);
+  /* Fallback relation tones for surfaces rendered outside a [data-skin]
+     wrapper (for example the private client showcase). Skins override them. */
+  --rel-parent-border: rgba(59, 104, 150, 0.32);
+  --rel-parent-text: #3b5f86;
+  --rel-parent-bg: rgba(59, 104, 150, 0.09);
+  --rel-spouse-border: rgba(58, 122, 84, 0.32);
+  --rel-spouse-text: #2f6a47;
+  --rel-spouse-bg: rgba(58, 122, 84, 0.09);
+  --rel-child-border: rgba(166, 116, 36, 0.34);
+  --rel-child-text: #85590f;
+  --rel-child-bg: rgba(166, 116, 36, 0.1);
+  --rel-sibling-border: rgba(112, 92, 160, 0.3);
+  --rel-sibling-text: #5f4f96;
+  --rel-sibling-bg: rgba(112, 92, 160, 0.09);
   --rel-focus-border: color-mix(in oklab, var(--accent-primary) 52%, transparent);
   --rel-focus-text: var(--accent-text);
   --rel-focus-bg: color-mix(in oklab, var(--accent-primary) 16%, transparent);
@@ -314,41 +336,46 @@ html[data-color-mode="dark"] :is([class*="border-amber-200"], [class*="border-re
   --rel-default-bg: color-mix(in oklab, var(--bg-elevated) 72%, transparent);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Family-canvas connector colours derive from each skin's muted text so lines
+   stay legible in every theme and colour mode. Declared on [data-skin] too so
+   the value is recomputed wherever a skin redefines --text-muted. */
+:root,
+[data-skin] {
+  --canvas-link: color-mix(in oklab, var(--text-muted) 78%, transparent);
+  --canvas-link-soft: color-mix(in oklab, var(--text-muted) 52%, transparent);
 }
 
-/* The global anchor reset intentionally inherits surrounding copy color. Keep
-   explicit high-contrast link utilities authoritative on dark action surfaces. */
-a.text-white {
-  color: #ffffff;
-}
+/* Element defaults live in the base layer. Tailwind v4 emits utilities in a
+   cascade layer, and unlayered rules beat every layered rule regardless of
+   specificity, so unlayered element styles would silently override color and
+   margin utilities (for example text-white headings or mt-2 paragraphs). */
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-.pilot-cream-cta {
-  color: #2e322d;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    margin: 0;
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: var(--text-primary);
-  font-family: var(--font-heading);
-  margin: 0;
-}
+  p {
+    margin: 0;
+  }
 
-p {
-  margin: 0;
-}
-
-button,
-input,
-select,
-textarea {
-  font: inherit;
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
 }
 
 ::selection {
