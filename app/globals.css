@@ -452,6 +452,7 @@ html[data-color-mode="dark"]:not(:has([data-light-only])) :is([class*="border-am
   *::before,
   *::after {
     animation-duration: 0ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0ms !important;
@@ -459,7 +460,8 @@ html[data-color-mode="dark"]:not(:has([data-light-only])) :is([class*="border-am
 }
 
 /* Client showcase opening reveal. Every step ends fully visible, so the global
-   reduced-motion rule (zero-length animations) simply shows the final frame. */
+   reduced-motion rule (zero-length, undelayed animations) shows the final frame
+   immediately. */
 @keyframes reveal-rise {
   from {
     opacity: 0;

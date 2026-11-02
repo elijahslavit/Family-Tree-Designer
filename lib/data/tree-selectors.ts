@@ -330,7 +330,7 @@ export async function getCanvasNeighborhoodFromBundle({
         relationGroups.set(relative.id, relationGroup);
       }
 
-      const edgeKey = [current.personId, relative.id].sort().join(":");
+      const edgeKey = connectionKey(current.personId, relative.id, relation);
 
       if (!connectionMap.has(edgeKey)) {
         connectionMap.set(edgeKey, {
@@ -359,7 +359,7 @@ export async function getCanvasNeighborhoodFromBundle({
         return;
       }
 
-      const edgeKey = [visiblePerson.id, relative.id].sort().join(":");
+      const edgeKey = connectionKey(visiblePerson.id, relative.id, relation);
       if (!connectionMap.has(edgeKey)) {
         connectionMap.set(edgeKey, { from: visiblePerson.id, to: relative.id, relation });
       }
@@ -429,7 +429,7 @@ export async function getCanvasNeighborhoodFromBundle({
     const targetName = labelById.get(link.target) ?? link.target;
     const description =
       link.kind === "parent-child"
-        ? `${sourceName} is a parent of ${targetName}`
+        ? `${labelById.get(link.parentId ?? link.source) ?? sourceName} is a parent of ${labelById.get(link.childId ?? link.target) ?? targetName}`
         : link.kind === "partner"
           ? `${sourceName} and ${targetName} are partners`
           : `${sourceName} and ${targetName} are siblings`;
@@ -551,11 +551,22 @@ function getCanvasRelationGroup({
   return currentGroup === "relative" ? "relative" : currentGroup;
 }
 
+/**
+ * One connection per person pair and relationship type: a pair can be both
+ * siblings and partners, while parent and child describe the same link.
+ */
+function connectionKey(left: string, right: string, relation: RelativeRelation) {
+  const type = relation === "parent" || relation === "child" ? "parent-child" : relation;
+  return `${[left, right].sort().join(":")}:${type}`;
+}
+
 function getCanvasEdgeStyle(kind: CanvasLink["kind"], isHighlighted: boolean) {
   if (isHighlighted) {
     return {
       stroke: "var(--accent-primary)",
       strokeWidth: 2.6,
+      // Keep the legend's dash patterns so highlighted edges stay identifiable.
+      strokeDasharray: kind === "partner" ? "6 5" : kind === "sibling" ? "2 5" : undefined,
     };
   }
 

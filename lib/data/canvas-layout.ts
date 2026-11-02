@@ -22,6 +22,9 @@ export type CanvasLink = {
   target: string;
   sourceHandle: string;
   targetHandle: string;
+  /** Parent-child links only: who is the parent and who the child, whatever the drawing direction. */
+  parentId?: string;
+  childId?: string;
 };
 
 export type CanvasLayout = {
@@ -117,13 +120,19 @@ export function layoutFamilyCanvas({
     rows.set(generation, [...(rows.get(generation) ?? []), id]);
   }
 
-  // Seed the focus row: siblings to the left, focus, then partners.
+  // Seed the focus row: siblings to the left, then the focus person with
+  // partners alternating right and left so every partner sits beside them
+  // and no partner connector passes behind another card.
   const focusRow = rows.get(0) ?? [focusId];
   const isPartnerOfFocus = (id: string) => partners.has(pairKey(id, focusId));
+  const focusPartners = focusRow.filter((id) => isPartnerOfFocus(id)).sort(compare);
+  const rightPartners = focusPartners.filter((_, index) => index % 2 === 0);
+  const leftPartners = focusPartners.filter((_, index) => index % 2 === 1).reverse();
   rows.set(0, [
     ...focusRow.filter((id) => id !== focusId && !isPartnerOfFocus(id)).sort(compare),
+    ...leftPartners,
     focusId,
-    ...focusRow.filter((id) => isPartnerOfFocus(id)).sort(compare),
+    ...rightPartners,
   ]);
 
   const orderedGenerations = [...rows.keys()].sort((left, right) => left - right);
@@ -230,11 +239,11 @@ export function layoutFamilyCanvas({
     const parentGeneration = generations.get(parent)!;
     const childGeneration = generations.get(child)!;
     if (parentGeneration < childGeneration) {
-      links.push({ kind: "parent-child", source: parent, target: child, sourceHandle: "bottom", targetHandle: "top" });
+      links.push({ kind: "parent-child", source: parent, target: child, sourceHandle: "bottom", targetHandle: "top", parentId: parent, childId: child });
     } else {
       // Rare when breadth-first placement put both on one row; draw side to side.
       const [a, b] = left(parent, child);
-      links.push({ kind: "parent-child", source: a, target: b, sourceHandle: "right", targetHandle: "left" });
+      links.push({ kind: "parent-child", source: a, target: b, sourceHandle: "right", targetHandle: "left", parentId: parent, childId: child });
     }
   }
 

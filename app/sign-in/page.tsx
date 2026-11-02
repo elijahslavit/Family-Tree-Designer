@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AuthForm } from "@/components/domain/auth-form";
+import { ColorModeToggle } from "@/components/foundation/color-mode-toggle";
 import { isPlaceholderSupportEmail, productConfig } from "@/lib/config/product";
 import { hasConfiguredBackend, isDemoMode } from "@/lib/runtime";
 
@@ -23,17 +24,22 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const params = await searchParams;
   const nextPath = safeNextPath(params.next);
   const demoAccess = isDemoMode() || !hasConfiguredBackend();
-  const backendUnavailable = params.reason === "backend-not-configured";
+  // Derived from configuration, never from the URL, so a crafted link cannot
+  // show the notice above a working sign-in form.
+  const backendUnavailable = !isDemoMode() && !hasConfiguredBackend();
 
   return (
     <main className="grid min-h-screen bg-[var(--site-bg)] text-[var(--site-text)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <section className="flex flex-col px-4 py-6 sm:px-8 lg:px-12">
-        <Link href="/" className="flex w-fit items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#293a31] text-white">
-            <FileArchive className="h-4 w-4" aria-hidden="true" />
-          </span>
-          <span className="font-semibold">{productConfig.name}</span>
-        </Link>
+        <div className="flex items-center justify-between gap-3">
+          <Link href="/" className="flex w-fit items-center gap-3">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#293a31] text-white">
+              <FileArchive className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <span className="font-semibold">{productConfig.name}</span>
+          </Link>
+          <ColorModeToggle />
+        </div>
 
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 py-12">
           <div className="space-y-3">

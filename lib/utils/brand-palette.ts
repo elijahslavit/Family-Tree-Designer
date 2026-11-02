@@ -75,7 +75,9 @@ export function contrastRatio(foreground: string, background: string) {
 /** Moves `color` toward black or white in small steps until it reaches `minimum` contrast. */
 export function ensureContrast(color: string, background: string, minimum: number) {
   if (contrastRatio(color, background) >= minimum) return color;
-  const target = relativeLuminance(background) > 0.4 ? "#000000" : "#ffffff";
+  // Head toward whichever extreme can reach the higher contrast; for mid
+  // greys a luminance threshold can pick the side that never reaches AA.
+  const target = contrastRatio("#000000", background) >= contrastRatio("#ffffff", background) ? "#000000" : "#ffffff";
   for (let step = 1; step <= 20; step += 1) {
     const candidate = mixHex(color, target, step * 0.05);
     if (contrastRatio(candidate, background) >= minimum) return candidate;

@@ -90,6 +90,47 @@ describe("layoutFamilyCanvas", () => {
   });
 });
 
+describe("layoutFamilyCanvas with more than one partner", () => {
+  it("places every partner directly beside the focus person", () => {
+    const layout = layoutFamilyCanvas({
+      focusId: "focus",
+      nodeIds: ["focus", "first", "second", "brother"],
+      connections: [
+        { from: "focus", to: "first", relation: "spouse" },
+        { from: "focus", to: "second", relation: "spouse" },
+        { from: "focus", to: "brother", relation: "sibling" },
+      ],
+    });
+    const row = ["brother", "first", "second", "focus"].sort(
+      (left, right) => layout.positions.get(left)!.x - layout.positions.get(right)!.x,
+    );
+    const focusIndex = row.indexOf("focus");
+    expect(Math.abs(row.indexOf("first") - focusIndex)).toBe(1);
+    expect(Math.abs(row.indexOf("second") - focusIndex)).toBe(1);
+  });
+
+  it("keeps both links when a pair is related in two ways", () => {
+    const layout = layoutFamilyCanvas({
+      focusId: "a",
+      nodeIds: ["a", "b"],
+      connections: [
+        { from: "a", to: "b", relation: "sibling" },
+        { from: "a", to: "b", relation: "spouse" },
+      ],
+    });
+    expect(layout.links.map((link) => link.kind).sort()).toEqual(["partner", "sibling"]);
+  });
+
+  it("records parent and child identity on every parent-child link", () => {
+    const layout = layoutFamilyCanvas({
+      focusId: "child",
+      nodeIds: ["child", "parent"],
+      connections: [{ from: "child", to: "parent", relation: "parent" }],
+    });
+    expect(layout.links[0]).toMatchObject({ kind: "parent-child", parentId: "parent", childId: "child" });
+  });
+});
+
 describe("getCanvasNeighborhoodFromBundle", () => {
   it("excludes filtered people before layout so no gaps remain", async () => {
     const bundle = getDemoStore();

@@ -25,7 +25,10 @@ test("the client welcome reveal opens once per session and can be replayed", asy
   const reveal = page.getByRole("dialog", { name: "The Hart Family" });
   await expect(reveal).toBeVisible();
   await expect(reveal.getByText("Prepared by Meridian Family Histories")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Explore your family" })).toBeFocused();
+  // The dialog itself takes focus so its title and tagline are announced.
+  await expect(reveal).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Skip" })).toBeFocused();
 
   await page.keyboard.press("Escape");
   await expect(reveal).toHaveCount(0);

@@ -52,9 +52,18 @@ export function ShowcaseReveal({
     () => false,
   );
   const [leaving, setLeaving] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const exploreRef = useRef<HTMLButtonElement>(null);
   const skipRef = useRef<HTMLButtonElement>(null);
+  const mountedRef = useRef(true);
   const open = !seen;
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const dismiss = useCallback(() => {
     if (leaving) return;
@@ -62,6 +71,8 @@ export function ShowcaseReveal({
     window.setTimeout(
       () => {
         markRevealSeen(revealKey, true);
+        // The visitor may have navigated away during the exit transition.
+        if (!mountedRef.current) return;
         setLeaving(false);
         document.getElementById("showcase-content")?.focus({ preventScroll: true });
       },
@@ -70,12 +81,33 @@ export function ShowcaseReveal({
   }, [leaving, revealKey]);
 
   useEffect(() => {
-    if (!open) return;
+    const dialog = dialogRef.current;
+    if (!open || !dialog) return;
+
     const { overflow } = document.body.style;
     document.body.style.overflow = "hidden";
-    exploreRef.current?.focus({ preventScroll: true });
+
+    // Everything outside the dialog becomes inert, so neither keyboard nor
+    // screen-reader browsing can reach the page behind it.
+    const inerted: HTMLElement[] = [];
+    for (let node: HTMLElement | null = dialog; node && node !== document.body; node = node.parentElement) {
+      const parent: HTMLElement | null = node.parentElement;
+      if (!parent) break;
+      for (const sibling of Array.from(parent.children)) {
+        if (sibling !== node && sibling instanceof HTMLElement && !sibling.inert) {
+          sibling.inert = true;
+          inerted.push(sibling);
+        }
+      }
+    }
+
+    // Focus the dialog itself: it announces the family name and tagline, and
+    // the actions are one Tab away even while they are still fading in.
+    dialog.focus({ preventScroll: true });
+
     return () => {
       document.body.style.overflow = overflow;
+      for (const element of inerted) element.inert = false;
     };
   }, [open]);
 
@@ -83,12 +115,14 @@ export function ShowcaseReveal({
 
   return (
     <div
+      ref={dialogRef}
+      tabIndex={-1}
       data-showcase-reveal={revealKey}
       role="dialog"
       aria-modal="true"
       aria-labelledby={`${revealKey}-title`}
       aria-describedby={`${revealKey}-tagline`}
-      className={`showcase-reveal fixed inset-0 z-50 flex flex-col overflow-y-auto bg-[var(--brand-deep)] text-[var(--brand-on-deep)] ${leaving ? "is-leaving" : ""}`}
+      className={`showcase-reveal fixed inset-0 z-50 flex flex-col overflow-y-auto bg-[var(--brand-deep)] focus:outline-none text-[var(--brand-on-deep)] ${leaving ? "is-leaving" : ""}`}
       onKeyDown={(event) => {
         if (event.key === "Escape") {
           event.preventDefault();
@@ -98,7 +132,7 @@ export function ShowcaseReveal({
           // Keep focus inside the two actions while the reveal is open.
           const first = skipRef.current;
           const last = exploreRef.current;
-          if (event.shiftKey && document.activeElement === first) {
+          if (event.shiftKey && (document.activeElement === first || document.activeElement === dialogRef.current)) {
             event.preventDefault();
             last?.focus();
           } else if (!event.shiftKey && document.activeElement === last) {

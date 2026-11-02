@@ -1,17 +1,20 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const isCI = Boolean(process.env.CI);
+const isCI = Boolean(process.env.CI) && process.env.CI !== "false";
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 
 export default defineConfig({
   testDir: "./tests/e2e",
   workers: 1,
   forbidOnly: isCI,
-  retries: isCI ? 1 : 0,
+  // No retries: the synthetic pilot store lives in server memory, so a retry
+  // would run against state the failed attempt already changed (for example a
+  // consumed single-use invitation) and could not pass or fail honestly.
+  retries: 0,
   reporter: isCI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL: "http://127.0.0.1:3100",
-    trace: "on-first-retry",
+    trace: "retain-on-failure",
   },
   webServer: {
     // CI tests the production build (built in an earlier step); locally the

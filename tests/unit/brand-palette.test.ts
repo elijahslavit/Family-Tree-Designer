@@ -5,6 +5,7 @@ import {
   brandStyle,
   buildBrandPalette,
   contrastRatio,
+  ensureContrast,
   normalizeHex,
 } from "@/lib/utils/brand-palette";
 
@@ -49,6 +50,14 @@ describe("buildBrandPalette", () => {
     expect(normalizeHex("#ABC")).toBe("#aabbcc");
     expect(normalizeHex("163A35")).toBe("#163a35");
     expect(normalizeHex("rgb(0,0,0)")).toBeNull();
+  });
+});
+
+describe("ensureContrast", () => {
+  it("moves toward whichever extreme can actually reach the target on mid-grey backgrounds", () => {
+    // White reaches only ~4.48:1 on #777777; black reaches ~4.69:1.
+    const result = ensureContrast("#777777", "#777777", 4.5);
+    expect(contrastRatio(result, "#777777")).toBeGreaterThanOrEqual(4.5);
   });
 });
 

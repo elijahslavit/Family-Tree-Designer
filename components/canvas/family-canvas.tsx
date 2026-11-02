@@ -171,6 +171,7 @@ function TreeStage({
       >
         <CanvasAutoFit
           nodeCount={nodesWithLabels.length}
+          layoutKey={nodesWithLabels.map((node) => `${node.id}:${node.position.x},${node.position.y}`).join("|")}
           focusNodeId={nodes.find((node) => node.data?.isFocus)?.id ?? null}
           onFitted={markFitted}
         />
@@ -260,13 +261,18 @@ function LegendItem({ label, dash, soft = false }: { label: string; dash?: strin
 
 const MIN_READABLE_ZOOM = 0.62;
 const FIT_PADDING = 0.16;
+/** Screen space kept above the top row so its hover summaries are not clipped. */
+const TOP_ROW_HEADROOM = 96;
 
 function CanvasAutoFit({
   nodeCount,
+  layoutKey,
   focusNodeId,
   onFitted,
 }: {
   nodeCount: number;
+  /** Changes whenever any card moves, so a re-laid-out tree is refitted. */
+  layoutKey: string;
   focusNodeId: string | null;
   onFitted: () => void;
 }) {
@@ -298,9 +304,12 @@ function CanvasAutoFit({
       // On narrow screens the whole family may only fit at an unreadable
       // scale; keep cards legible and centre the focus person instead.
       if (focusNode && fitted.zoom < MIN_READABLE_ZOOM) {
+        const centredY = height / 2 - (focusNode.position.y + CANVAS_NODE_HEIGHT / 2) * MIN_READABLE_ZOOM;
+        // Leave room above the top row for its hover summaries.
+        const topRowScreenY = bounds.y * MIN_READABLE_ZOOM + centredY;
         void setViewport({
           x: width / 2 - (focusNode.position.x + CANVAS_NODE_WIDTH / 2) * MIN_READABLE_ZOOM,
-          y: height / 2 - (focusNode.position.y + CANVAS_NODE_HEIGHT / 2) * MIN_READABLE_ZOOM,
+          y: centredY + Math.max(0, TOP_ROW_HEADROOM - topRowScreenY),
           zoom: MIN_READABLE_ZOOM,
         });
       } else {
@@ -310,7 +319,7 @@ function CanvasAutoFit({
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [focusNodeId, getNodes, height, nodeCount, onFitted, setViewport, width]);
+  }, [focusNodeId, getNodes, height, layoutKey, nodeCount, onFitted, setViewport, width]);
 
   return null;
 }
