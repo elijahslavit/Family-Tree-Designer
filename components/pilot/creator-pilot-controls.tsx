@@ -509,7 +509,7 @@ export function ReviewLifecycleControl({
       try {
         if (mode === "open_round_1") {
           if (!revisionId) throw new Error("A draft revision is required to open round one.");
-          const result = await openPilotReviewVersionAction({ projectRef, revisionId });
+          await openPilotReviewVersionAction({ projectRef, revisionId });
           setNotice("Round one is open. Your client will review exactly this version.");
           return;
         }
