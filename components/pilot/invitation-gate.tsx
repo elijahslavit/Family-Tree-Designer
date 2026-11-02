@@ -2,6 +2,7 @@ import { ArrowRight, Clock3, KeyRound, Link2Off, LockKeyhole, RefreshCw, ShieldC
 import Link from "next/link";
 
 import { productConfig } from "@/lib/config/product";
+import { brandStyle } from "@/lib/utils/brand-palette";
 
 export type InvitationGateState = "valid" | "expired" | "revoked" | "redeemed" | "invalid";
 
@@ -14,6 +15,7 @@ export function InvitationGate({
   expiresLabel,
   acceptAction,
   reissueHref,
+  brand,
 }: {
   state: InvitationGateState;
   recipientLabel?: string;
@@ -23,6 +25,8 @@ export function InvitationGate({
   expiresLabel?: string;
   acceptAction?: (formData: FormData) => Promise<void>;
   reissueHref?: string;
+  /** Practice colours, applied only to a valid invitation (never to error states). */
+  brand?: { primaryColor: string; accentColor: string } | null;
 }) {
   if (state !== "valid") {
     return (
@@ -41,7 +45,7 @@ export function InvitationGate({
           </div>
           <div className="flex flex-col justify-center gap-2 sm:flex-row">
             {reissueHref ? (
-              <Link href={reissueHref} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#293a31] px-5 py-3 text-sm font-semibold text-white">
+              <Link href={reissueHref} className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary,#293a31)] px-5 py-3 text-sm font-semibold text-[var(--brand-on-primary,#fff)]">
                 <RefreshCw className="h-4 w-4" /> Request a new link
               </Link>
             ) : null}
@@ -55,9 +59,9 @@ export function InvitationGate({
   }
 
   return (
-    <GateFrame>
+    <GateFrame style={brandStyle(brand)}>
       <div className="mx-auto max-w-lg space-y-7">
-        <span className="grid h-14 w-14 place-items-center rounded-full bg-[#e4ece5] text-[#385141]">
+        <span className="grid h-14 w-14 place-items-center rounded-full bg-[var(--brand-accent-soft,#e4ece5)] text-[var(--brand-primary-ink,#385141)]">
           <KeyRound className="h-6 w-6" />
         </span>
         <div className="space-y-3">
@@ -74,18 +78,18 @@ export function InvitationGate({
         </dl>
 
         <div className="space-y-3 text-sm leading-6 text-[#665e52]">
-          <p className="flex items-start gap-3"><ShieldCheck className="mt-1 h-4 w-4 shrink-0 text-[#486250]" />The archive is invite-only and excluded from search indexing.</p>
-          <p className="flex items-start gap-3"><LockKeyhole className="mt-1 h-4 w-4 shrink-0 text-[#486250]" />Continuing exchanges this single-use link for a secure browser session. The link cannot be used again.</p>
+          <p className="flex items-start gap-3"><ShieldCheck className="mt-1 h-4 w-4 shrink-0 text-[var(--brand-primary-ink,#486250)]" />The archive is invite-only and excluded from search indexing.</p>
+          <p className="flex items-start gap-3"><LockKeyhole className="mt-1 h-4 w-4 shrink-0 text-[var(--brand-primary-ink,#486250)]" />Continuing exchanges this single-use link for a secure browser session. The link cannot be used again.</p>
         </div>
 
         {acceptAction ? (
           <form action={acceptAction}>
-            <button type="submit" className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#293a31] px-5 py-3 text-sm font-semibold text-white">
+            <button type="submit" className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--brand-primary,#293a31)] px-5 py-3 text-sm font-semibold text-[var(--brand-on-primary,#fff)]">
               Continue securely <ArrowRight className="h-4 w-4" />
             </button>
           </form>
         ) : (
-          <button type="button" disabled className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#293a31] px-5 py-3 text-sm font-semibold text-white opacity-50">
+          <button type="button" disabled className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--brand-primary,#293a31)] px-5 py-3 text-sm font-semibold text-[var(--brand-on-primary,#fff)] opacity-50">
             Continue securely <ArrowRight className="h-4 w-4" />
           </button>
         )}
@@ -94,9 +98,9 @@ export function InvitationGate({
   );
 }
 
-function GateFrame({ children }: { children: React.ReactNode }) {
+function GateFrame({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
-    <main className="grid min-h-screen place-items-center bg-[#e9e3d7] px-4 py-10 text-[#28241f]">
+    <main style={style} className="grid min-h-screen place-items-center bg-[#e9e3d7] px-4 py-10 text-[#28241f]">
       <section className="w-full max-w-2xl rounded-[28px] border border-black/10 bg-[#fbf9f4] p-6 shadow-2xl sm:p-10">
         {children}
         <p className="mt-8 border-t border-black/10 pt-5 text-center text-[10px] uppercase tracking-[0.14em] text-[#8a8174]">

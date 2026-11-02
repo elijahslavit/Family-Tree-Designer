@@ -74,6 +74,7 @@ export default async function ArchiveOwnerPage({
         title={project.title}
         description="Owner controls become available only after the verified recipient explicitly accepts handoff."
         practiceName={project.branding.practiceName}
+        brand={project.branding}
       >
         <ClientAccessNotice state="not_ready" />
       </ClientAccessShell>
@@ -156,6 +157,7 @@ export default async function ArchiveOwnerPage({
       title={project.title}
       description="Manage who can enter this private family archive, preserve a complete copy, and control professional support and deletion."
       practiceName={project.branding.practiceName}
+      brand={project.branding}
       backHref={`/s/${project.slug}`}
       backLabel="Open the family showcase"
     >

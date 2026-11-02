@@ -457,3 +457,87 @@ html[data-color-mode="dark"]:not(:has([data-light-only])) :is([class*="border-am
     transition-duration: 0ms !important;
   }
 }
+
+/* Client showcase opening reveal. Every step ends fully visible, so the global
+   reduced-motion rule (zero-length animations) simply shows the final frame. */
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reveal-portrait {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+    filter: sepia(0.6) blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes reveal-title {
+  from {
+    opacity: 0;
+    letter-spacing: 0.08em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: -0.025em;
+  }
+}
+
+@keyframes reveal-rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes reveal-backdrop {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.showcase-reveal {
+  transition: opacity 650ms ease, transform 650ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.showcase-reveal.is-leaving {
+  opacity: 0;
+  transform: translateY(-3%);
+}
+
+.showcase-reveal .reveal-step {
+  animation: reveal-rise 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.showcase-reveal .reveal-portrait {
+  animation: reveal-portrait 1200ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.showcase-reveal .reveal-title {
+  animation: reveal-title 1400ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.showcase-reveal .reveal-rule {
+  animation: reveal-rule 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.showcase-reveal .reveal-backdrop {
+  animation: reveal-backdrop 6s ease-out both;
+}

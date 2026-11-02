@@ -103,7 +103,7 @@ export function ClientReviewForm({
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
             <button type="button" onClick={() => setItems((current) => [...current, { id: crypto.randomUUID(), subjectType: "person", subjectLabel: "", request: "" }])} className="inline-flex items-center justify-center gap-2 rounded-full border border-black/15 px-4 py-2 text-sm font-semibold"><Plus className="h-4 w-4" /> Add correction</button>
-            <button type="submit" disabled={!submitAction || itemsJson === "[]"} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#293a31] px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"><Send className="h-4 w-4" /> Submit consolidated round</button>
+            <button type="submit" disabled={!submitAction || itemsJson === "[]"} className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary,#293a31)] px-5 py-3 text-sm font-semibold text-[var(--brand-on-primary,#fff)] disabled:opacity-50"><Send className="h-4 w-4" /> Submit consolidated round</button>
           </div>
         </form>
       ) : null}

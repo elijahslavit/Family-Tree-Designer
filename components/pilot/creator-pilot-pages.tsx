@@ -67,6 +67,7 @@ import {
   type PilotWorkspace,
 } from "@/lib/pilot/types";
 import { ColorModeToggle } from "@/components/foundation/color-mode-toggle";
+import { brandStyle } from "@/lib/utils/brand-palette";
 import { cn } from "@/lib/utils/cn";
 
 const statusRoute: Record<PilotWorkflowStatus, string> = {
@@ -550,7 +551,7 @@ export function PilotCuratePage({ project, focalPersonName }: { project: PilotPr
             <div className="space-y-3 text-sm text-[#665e53]"><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Focal person</span><strong className="text-[#302a23]">{focalPersonName ?? (project.focalPersonId ? "Selected" : "Not selected")}</strong></div><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Initial depth</span><strong className="text-[#302a23]">Nearest generations</strong></div><div className="flex items-center justify-between rounded-lg bg-[#f7f4ee] p-3"><span>Expansion</span><strong className="text-[#302a23]">On demand</strong></div></div>
           </PilotSection>
           <PilotSection eyebrow="Brand lock" title={project.branding.practiceName} description="One branded theme is included in the founding pilot.">
-            <div className="flex items-center gap-4"><span className="grid h-12 w-12 place-items-center rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: project.branding.primaryColor }}>{project.branding.mark}</span><div><p className="font-semibold">{project.branding.themeId}</p><p className="mt-1 text-xs text-[#746b5e]">{project.branding.byline}</p></div></div>
+            <BrandPreview branding={project.branding} familyName={project.welcome.familyName} tagline={project.welcome.headline} />
           </PilotSection>
           <PilotSection eyebrow="Media readiness" title={`${passedMedia.length} safe assets`} description="Every visible image requires meaningful alt text or an explicit decorative designation.">
             <div className="space-y-2">{passedMedia.slice(0, 4).map((media) => <div key={media.id} className="flex items-center justify-between gap-3 rounded-lg border border-black/[0.06] px-3 py-2 text-xs"><span className="truncate">{media.caption || media.fileName}</span>{media.altText || media.decorative ? <Badge tone="success">Accessible</Badge> : <Badge tone="danger">Alt required</Badge>}</div>)}</div>
@@ -755,4 +756,58 @@ export function PilotHandoffPage({ project }: { project: PilotProject }) {
 
 function TimelineCard({ index, title, detail }: { index: string; title: string; detail: string }) {
   return <li className="rounded-xl border border-black/[0.07] bg-[#faf8f3] p-4"><span className="text-xs font-semibold text-[#637b68]">{index}</span><p className="mt-2 font-semibold">{title}</p><p className="mt-1 text-xs leading-5 text-[#746b5e]">{detail}</p></li>;
+}
+
+function BrandPreview({
+  branding,
+  familyName,
+  tagline,
+}: {
+  branding: PilotProject["branding"];
+  familyName: string;
+  tagline: string;
+}) {
+  return (
+    <div className="space-y-4" style={brandStyle(branding)}>
+      <div
+        aria-label={`Preview of the client welcome in ${branding.practiceName} colours`}
+        role="img"
+        className="overflow-hidden rounded-xl bg-[var(--brand-deep)] px-5 py-6 text-center text-[var(--brand-on-deep)] shadow-inner"
+      >
+        <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[var(--brand-accent-on-deep)]">
+          Prepared by {branding.practiceName}
+        </p>
+        <p className="mt-3 font-serif text-2xl font-semibold leading-tight">{familyName}</p>
+        <span className="mx-auto mt-3 block h-px w-10 bg-[var(--brand-accent-on-deep)]" />
+        <p className="mt-3 font-serif text-sm italic opacity-90">{tagline}</p>
+        <span className="mt-4 inline-flex rounded-full bg-[var(--brand-on-deep)] px-3.5 py-1.5 text-[11px] font-semibold text-[var(--brand-deep)]">
+          Explore your family
+        </span>
+      </div>
+      <div className="flex items-center gap-3">
+        <span className="inline-flex rounded-lg bg-[var(--brand-primary)] px-3 py-2 text-xs font-semibold text-[var(--brand-on-primary)]">
+          Discover an ancestor
+        </span>
+        <span className="text-xs font-semibold text-[var(--brand-primary-ink)]">Link colour</span>
+        <span className="text-xs font-semibold text-[var(--brand-accent-ink)]">Accent</span>
+      </div>
+      <dl className="grid grid-cols-2 gap-2 text-xs">
+        {[
+          ["Primary", branding.primaryColor],
+          ["Accent", branding.accentColor],
+        ].map(([label, value]) => (
+          <div key={label} className="flex items-center gap-2 rounded-lg border border-black/[0.06] px-2.5 py-2">
+            <span className="h-5 w-5 shrink-0 rounded-full border border-black/10" style={{ backgroundColor: value }} />
+            <div className="min-w-0">
+              <dt className="text-[10px] uppercase tracking-[0.12em] text-[#82796d]">{label}</dt>
+              <dd className="font-mono text-[11px] text-[#302a23]">{value}</dd>
+            </div>
+          </div>
+        ))}
+      </dl>
+      <p className="text-xs leading-5 text-[#746b5e]">
+        Text shades are adjusted automatically so every label stays readable.
+      </p>
+    </div>
+  );
 }

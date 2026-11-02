@@ -52,6 +52,7 @@ export default async function OwnerHandoffPage({
         title={project.title}
         description="Your secure handoff session is active, but the approved delivery has not been published for transfer."
         practiceName={project.branding.practiceName}
+        brand={project.branding}
       >
         <ClientAccessNotice state="not_ready" />
       </ClientAccessShell>
@@ -70,6 +71,7 @@ export default async function OwnerHandoffPage({
         title={project.title}
         description="The invitation proves possession of the handoff link. A separate verified identity is required before owner powers transfer."
         practiceName={project.branding.practiceName}
+        brand={project.branding}
       >
         <ClientAccessNotice
           state={identity.reason}
@@ -86,6 +88,7 @@ export default async function OwnerHandoffPage({
         title={project.title}
         description="Both the invitation and verified identity must name the same designated archive owner."
         practiceName={project.branding.practiceName}
+        brand={project.branding}
       >
         <ClientAccessNotice state="identity_mismatch" />
       </ClientAccessShell>
@@ -99,6 +102,7 @@ export default async function OwnerHandoffPage({
         title={`${project.title} is now family-controlled.`}
         description="The verified owner accepted stewardship. Invitation, export, support, and deletion controls are available in the owner archive."
         practiceName={project.branding.practiceName}
+        brand={project.branding}
       >
         <section className="rounded-[22px] border border-emerald-200 bg-emerald-50 p-6 text-emerald-950 shadow-sm sm:p-8">
           <CheckCircle2 className="h-8 w-8" />
@@ -128,6 +132,7 @@ export default async function OwnerHandoffPage({
       title={project.title}
       description="Review the authority transfer below. Acceptance is recorded against the verified owner identity and begins the 30-day professional support period."
       practiceName={project.branding.practiceName}
+      brand={project.branding}
       backHref={`/s/${project.slug}`}
       backLabel="View the approved delivery"
     >

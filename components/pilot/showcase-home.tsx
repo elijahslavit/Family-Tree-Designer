@@ -2,8 +2,10 @@ import { ArrowRight, BookOpenText, FileText, GitBranch, Lock, Users } from "luci
 import Image from "next/image";
 import Link from "next/link";
 
+import { ShowcaseReveal } from "@/components/pilot/showcase-reveal";
 import { AncestorCard } from "@/components/showcase/ancestor-card";
 import { TiltCard } from "@/components/showcase/tilt-card";
+import { revealKeyFor, revealPreloadScript, revealPreloadStyle } from "@/lib/showcase/reveal";
 
 export type ShowcasePersonCard = {
   id: string;
@@ -46,8 +48,20 @@ export function ShowcaseHome({
   sourcePreviewPath: string;
   curatorName?: string;
 }) {
+  const revealKey = revealKeyFor(basePath);
+
   return (
     <div>
+      <style>{revealPreloadStyle(revealKey)}</style>
+      <script dangerouslySetInnerHTML={{ __html: revealPreloadScript(revealKey) }} />
+      <ShowcaseReveal
+        revealKey={revealKey}
+        familyName={familyName}
+        eyebrow={eyebrow}
+        tagline={tagline}
+        curatorName={curatorName}
+        portrait={{ src: focalPerson.imagePath, name: focalPerson.name, years: focalPerson.years }}
+      />
       <section className="relative overflow-hidden bg-[#efe6d4] text-[#26231e]">
         <Image
           src="/showcase/hub-archive-bg.webp"
@@ -86,17 +100,17 @@ export function ShowcaseHome({
             <div className="flex flex-col gap-3 sm:max-w-md">
               <Link
                 href={`${basePath}/people/${focalPerson.id}`}
-                className="group flex items-center justify-between gap-4 rounded-lg bg-[#6b3e36] px-5 py-3.5 text-[#f3ead8] shadow-md transition-colors hover:bg-[#5a332c]"
+                className="group flex items-center justify-between gap-4 rounded-lg bg-[var(--brand-primary)] px-5 py-3.5 text-[var(--brand-on-primary)] shadow-md transition-colors hover:bg-[var(--brand-primary-hover)]"
               >
                 <span>
                   <span className="block text-sm font-semibold">Discover an ancestor</span>
-                  <span className="block text-xs text-[#f3ead8]/75">Open a person from your family history</span>
+                  <span className="block text-xs opacity-80">Open a person from your family history</span>
                 </span>
                 <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5" />
               </Link>
               <Link
                 href={`${basePath}/tree?person=${focalPerson.id}`}
-                className="group flex items-center justify-between gap-4 rounded-lg border border-[#8a6a43]/50 bg-[#f6efe0]/70 px-5 py-3.5 text-[#4f4335] backdrop-blur-sm transition-colors hover:bg-[#f6efe0]"
+                className="group flex items-center justify-between gap-4 rounded-lg border border-[color-mix(in_oklab,var(--brand-accent-ink)_50%,transparent)] bg-[#f6efe0]/70 px-5 py-3.5 text-[#4f4335] backdrop-blur-sm transition-colors hover:bg-[#f6efe0]"
               >
                 <span>
                   <span className="block text-sm font-semibold">Browse a family branch</span>
@@ -113,8 +127,8 @@ export function ShowcaseHome({
               <ChapterChip href={`${basePath}/sources/src01`} icon={<FileText className="h-3.5 w-3.5" />} label="Records" />
             </nav>
 
-            <div className="flex items-start gap-3 rounded-lg border border-[#8a6a43]/55 bg-[#e5d3ab]/80 px-4 py-3 shadow-sm backdrop-blur-sm">
-              <Lock className="mt-0.5 h-4 w-4 shrink-0 text-[#7b6c54]" />
+            <div className="flex items-start gap-3 rounded-lg border border-[color-mix(in_oklab,var(--brand-accent-ink)_45%,transparent)] bg-[color-mix(in_oklab,var(--brand-accent-soft)_85%,transparent)] px-4 py-3 shadow-sm backdrop-blur-sm">
+              <Lock className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-accent-ink)]" />
               <p className="text-xs leading-5 text-[#5c5142]">
                 <span className="font-semibold">
                   Prepared for {familyName}
@@ -137,7 +151,7 @@ export function ShowcaseHome({
               <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#776a58]">Featured ancestors</p>
               <h2 className="mt-2 font-serif text-4xl font-semibold tracking-tight sm:text-5xl">People behind the names</h2>
             </div>
-            <Link href={`${basePath}/people`} className="inline-flex items-center gap-2 text-sm font-semibold text-[#425947]">
+            <Link href={`${basePath}/people`} className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-primary-ink)]">
               Meet the family <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -179,16 +193,16 @@ export function ShowcaseHome({
         </div>
       </section>
 
-      <section className="bg-[#2b332d] text-white">
+      <section className="bg-[var(--brand-deep)] text-[var(--brand-on-deep)]">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8 lg:py-24">
           <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl bg-[#ded5c5] shadow-2xl">
             <Image src={sourcePreviewPath} alt="Synthetic preview of a cited family record" fill sizes="384px" className="object-cover" />
           </div>
           <div className="max-w-2xl space-y-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#dac69e]">Research you can trace</p>
-            <h2 className="font-serif text-4xl font-semibold tracking-tight text-[#f6efe0] sm:text-5xl">Every story keeps its connection to the record.</h2>
-            <p className="leading-7 text-white/75">Dates, memories, and narrative details stay linked to source references, so relatives can enjoy the story and still understand where it came from.</p>
-            <Link href={`${basePath}/sources/src01`} className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-3 text-sm font-semibold hover:bg-white/10">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent-on-deep)]">Research you can trace</p>
+            <h2 className="font-serif text-4xl font-semibold tracking-tight text-[var(--brand-on-deep)] sm:text-5xl">Every story keeps its connection to the record.</h2>
+            <p className="leading-7 opacity-80">Dates, memories, and narrative details stay linked to source references, so relatives can enjoy the story and still understand where it came from.</p>
+            <Link href={`${basePath}/sources/src01`} className="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--brand-on-deep)_30%,transparent)] px-5 py-3 text-sm font-semibold transition-colors hover:bg-[color-mix(in_oklab,var(--brand-on-deep)_10%,transparent)]">
               <FileText className="h-4 w-4" /> View a source
             </Link>
           </div>
@@ -202,7 +216,7 @@ function ChapterChip({ href, icon, label }: { href: string; icon: React.ReactNod
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1.5 rounded-full border border-[#8a6a43]/45 bg-[#f6efe0]/70 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] text-[#5c5142] backdrop-blur-sm transition-colors hover:border-[#6b3e36] hover:text-[#6b3e36]"
+      className="inline-flex items-center gap-1.5 rounded-full border border-[color-mix(in_oklab,var(--brand-accent-ink)_45%,transparent)] bg-[#f6efe0]/70 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] text-[#5c5142] backdrop-blur-sm transition-colors hover:border-[var(--brand-primary-ink)] hover:text-[var(--brand-primary-ink)]"
     >
       {icon}
       {label}

@@ -72,7 +72,7 @@ export function OwnerAccessManager({
         <button
           type="button"
           onClick={() => setIsAdding((current) => !current)}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#293a31] px-4 py-2.5 text-sm font-semibold text-white"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[var(--brand-primary,#293a31)] px-4 py-2.5 text-sm font-semibold text-[var(--brand-on-primary,#fff)]"
         >
           <Plus className="h-4 w-4" /> Invite a relative
         </button>
@@ -114,7 +114,7 @@ export function OwnerAccessManager({
             <button
               type="submit"
               disabled={pending}
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#293a31] px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[var(--brand-primary,#293a31)] px-5 py-3 text-sm font-semibold text-[var(--brand-on-primary,#fff)] disabled:opacity-50"
             >
               <KeyRound className="h-4 w-4" /> {pending ? "Issuing…" : "Create private link"}
             </button>
@@ -275,7 +275,7 @@ export function OwnerExportControl({
             {currentExport.status === "ready" && currentExport.downloadHref ? (
               <a
                 href={currentExport.downloadHref}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#293a31] px-4 py-2.5 text-xs font-semibold text-white"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary,#293a31)] px-4 py-2.5 text-xs font-semibold text-[var(--brand-on-primary,#fff)]"
               >
                 <Download className="h-3.5 w-3.5" /> Download archive
               </a>
@@ -474,7 +474,7 @@ export function HandoffAcceptance({
           </p>
         </div>
         <form action={acceptAction}>
-          <button type="submit" className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#293a31] px-5 py-3 text-sm font-semibold text-white">
+          <button type="submit" className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--brand-primary,#293a31)] px-5 py-3 text-sm font-semibold text-[var(--brand-on-primary,#fff)]">
             <UserRoundCheck className="h-4 w-4" /> Accept archive ownership
           </button>
         </form>

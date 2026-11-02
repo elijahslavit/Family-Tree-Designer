@@ -54,6 +54,7 @@ export default async function InvitationPage({
       recipientLabel={context.recipientLabel}
       projectTitle={context.projectTitle}
       practiceName={project.branding.practiceName}
+      brand={project.branding}
       purposeLabel={purposeLabel}
       expiresLabel={formatInviteDate(context.expiresAt)}
       acceptAction={acceptAction}

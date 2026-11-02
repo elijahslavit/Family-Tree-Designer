@@ -19,6 +19,7 @@ export type PilotShowcaseData = {
     genealogistName: string;
     genealogistLogoPath: string;
     accent: string;
+    highlight?: string;
   };
   heroPath: string;
   focalPerson: ShowcasePersonCard;
@@ -49,6 +50,7 @@ export function buildPilotShowcase(project: PilotProject, basePath: string): Pil
       genealogistLogoPath:
         project.branding.logoPath ?? "/demo/pilot/meridian-family-histories-logo.svg",
       accent: project.branding.primaryColor,
+      highlight: project.branding.accentColor,
     },
     heroPath: safeDisplayPath(project, hero) ?? genericMediaPlaceholder,
     focalPerson,

@@ -10,11 +10,42 @@ test("creator portfolio and professional preview are complete", async ({ page })
   await expect(page.getByText("The Hart Family Legacy").first()).toBeVisible();
 
   await page.goto("/projects/pilot-hart-001/preview");
+  await page.getByRole("button", { name: "Explore your family" }).click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "The Hart Family" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Discover an ancestor/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Browse a family branch/ })).toBeVisible();
   await expect(page.getByText(/Prepared for The Hart Family by Meridian Family Histories/)).toBeVisible();
   await expect(page.getByText("Synthetic demonstration media")).toBeVisible();
+});
+
+test("the client welcome reveal opens once per session and can be replayed", async ({ page }) => {
+  await page.goto("/projects/pilot-hart-001/preview");
+
+  const reveal = page.getByRole("dialog", { name: "The Hart Family" });
+  await expect(reveal).toBeVisible();
+  await expect(reveal.getByText("Prepared by Meridian Family Histories")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Explore your family" })).toBeFocused();
+
+  await page.keyboard.press("Escape");
+  await expect(reveal).toHaveCount(0);
+
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "The Hart Family" })).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Replay welcome" }).click();
+  await expect(page.getByRole("dialog", { name: "The Hart Family" })).toBeVisible();
+});
+
+test("private presentation uses the practice brand colours", async ({ page }) => {
+  await page.goto("/projects/pilot-hart-001/preview");
+  await page.getByRole("button", { name: "Explore your family" }).click();
+
+  await expect(page.getByRole("link", { name: /Discover an ancestor/ })).toHaveCSS(
+    "background-color",
+    "rgb(22, 58, 53)",
+  );
 });
 
 test("invitation errors disclose no family content", async ({ page }) => {
@@ -37,6 +68,8 @@ test("review invitation creates an authorized private showcase session", async (
   await expect(page.getByText("Final client review").first()).toBeVisible();
 
   await page.goto("/s/hart-family-legacy");
+  await expect(page.getByRole("dialog", { name: "The Hart Family" })).toBeVisible();
+  await page.getByRole("button", { name: "Explore your family" }).click();
   await expect(page.getByRole("heading", { name: "The Hart Family" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Discover an ancestor/ })).toBeVisible();
   await expect(page.getByText("Living minor")).toHaveCount(0);

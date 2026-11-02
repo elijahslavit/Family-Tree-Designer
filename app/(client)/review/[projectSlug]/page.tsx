@@ -55,6 +55,7 @@ export default async function ClientReviewPage({
         title={project.title}
         description="Your secure session is not bound to an available frozen review version."
         practiceName={project.branding.practiceName}
+        brand={project.branding}
       >
         <ClientAccessNotice state="wrong_role" />
       </ClientAccessShell>
@@ -79,6 +80,7 @@ export default async function ClientReviewPage({
       title={project.title}
       description="Review the exact frozen delivery below. Submit one consolidated correction request for the round; every item receives a recorded disposition."
       practiceName={project.branding.practiceName}
+      brand={project.branding}
       backHref={`/s/${project.slug}`}
       backLabel="Preview the family showcase"
     >
