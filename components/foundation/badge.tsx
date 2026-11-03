@@ -11,9 +11,9 @@ type BadgeProps = PropsWithChildren<
 const toneClasses = {
   default: "bg-[var(--bg-elevated)] text-[var(--text-secondary)]",
   accent: "bg-[var(--accent-muted)] text-[var(--accent-text)]",
-  success: "bg-[color-mix(in_oklab,var(--color-success)_20%,transparent)] text-[var(--color-success)]",
-  warning: "bg-[color-mix(in_oklab,var(--color-warning)_20%,transparent)] text-[var(--color-warning)]",
-  danger: "bg-[color-mix(in_oklab,var(--color-danger)_18%,transparent)] text-[var(--color-danger)]",
+  success: "bg-[color-mix(in_oklab,var(--color-success)_20%,transparent)] text-[color-mix(in_oklab,var(--color-success)_62%,var(--text-primary))]",
+  warning: "bg-[color-mix(in_oklab,var(--color-warning)_20%,transparent)] text-[color-mix(in_oklab,var(--color-warning)_58%,var(--text-primary))]",
+  danger: "bg-[color-mix(in_oklab,var(--color-danger)_18%,transparent)] text-[color-mix(in_oklab,var(--color-danger)_70%,var(--text-primary))]",
 };
 
 export function Badge({ children, className, tone = "default", ...props }: BadgeProps) {

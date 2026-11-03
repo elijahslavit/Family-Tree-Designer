@@ -9,7 +9,7 @@ import { Input } from "@/components/foundation/input";
 import { useToast } from "@/components/foundation/toast";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
-export function AuthForm({ nextPath = "/dashboard" }: { nextPath?: string }) {
+export function AuthForm({ nextPath = "/projects" }: { nextPath?: string }) {
   const router = useRouter();
   const { pushToast } = useToast();
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
@@ -104,12 +104,12 @@ export function AuthForm({ nextPath = "/dashboard" }: { nextPath?: string }) {
 
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold text-[var(--text-primary)]">
-          {mode === "sign-in" ? "Sign in to creator mode" : "Create your creator account"}
+          {mode === "sign-in" ? "Sign in to your studio" : "Create your studio account"}
         </h2>
         <p className="text-sm leading-6 text-[var(--text-secondary)]">
           {mode === "sign-in"
-            ? "Use your account to access the creator dashboard, editing tools, import flow, and sharing controls."
-            : "Create an account and the app will provision your creator profile on first session load."}
+            ? "Pick up your client projects where you left off."
+            : "Set up a professional studio for your client presentations."}
         </p>
       </div>
 
@@ -125,6 +125,7 @@ export function AuthForm({ nextPath = "/dashboard" }: { nextPath?: string }) {
             <span className="text-sm font-semibold text-[var(--text-primary)]">Display name</span>
             <Input
               aria-label="Display name"
+            autoComplete="name"
               value={displayName}
               onChange={(event) => setDisplayName(event.target.value)}
             />
@@ -135,6 +136,8 @@ export function AuthForm({ nextPath = "/dashboard" }: { nextPath?: string }) {
           <Input
             aria-label="Email"
             type="email"
+            autoComplete="email"
+            required
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
@@ -144,12 +147,14 @@ export function AuthForm({ nextPath = "/dashboard" }: { nextPath?: string }) {
           <Input
             aria-label="Password"
             type="password"
+            autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
+            required
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
         </label>
-        <div className="flex justify-end">
-          <Button type="submit" loading={isPending}>
+        <div>
+          <Button type="submit" loading={isPending} className="w-full justify-center">
             {mode === "sign-in" ? "Sign in" : "Create account"}
           </Button>
         </div>

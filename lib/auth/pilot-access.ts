@@ -1,18 +1,16 @@
 import "server-only";
 
-import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
+import { randomBytes, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+
+import { hashPilotCredential } from "@/lib/auth/credential-hash";
 
 export const PILOT_SESSION_COOKIE = "ftd_pilot_access";
 export const PILOT_INVITE_LIFETIME_MS = 7 * 24 * 60 * 60 * 1000;
 export const PILOT_SESSION_IDLE_LIFETIME_MS = 7 * 24 * 60 * 60 * 1000;
 export const PILOT_SESSION_ABSOLUTE_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000;
 
-export function hashPilotCredential(rawCredential: string) {
-  const pepper = process.env.INVITE_TOKEN_PEPPER;
-  const value = pepper ? `${pepper}:${rawCredential}` : rawCredential;
-  return createHash("sha256").update(value, "utf8").digest("hex");
-}
+export { hashPilotCredential };
 
 export function credentialHashMatches(rawCredential: string, expectedHash: string) {
   const actual = Buffer.from(hashPilotCredential(rawCredential), "hex");

@@ -35,15 +35,15 @@ function relationLabel(group: CanvasNodePayload["relationGroup"]) {
     case "focus":
       return "Focus";
     case "ancestor":
-      return "Ancestor branch";
+      return "Ancestor";
     case "sibling":
-      return "Sibling branch";
+      return "Sibling";
     case "spouse":
-      return "Partner branch";
+      return "Partner";
     case "descendant":
-      return "Descendant branch";
+      return "Descendant";
     default:
-      return "Related branch";
+      return "Relative";
   }
 }
 
@@ -88,11 +88,13 @@ function relationStyles(group: CanvasNodePayload["relationGroup"]) {
   }
 }
 
+const hiddenHandle = "!h-1.5 !w-1.5 !min-h-0 !min-w-0 !border-0 !bg-transparent !opacity-0 pointer-events-none";
+
 const PersonNode = memo(function PersonNode({ data, selected }: NodeProps) {
   const payload = data as CanvasNodePayload;
   const preview =
-    payload.summary && payload.summary.length > 150
-      ? `${payload.summary.slice(0, 150)}...`
+    payload.summary && payload.summary.length > 160
+      ? `${payload.summary.slice(0, 160).trimEnd()}…`
       : payload.summary;
   const tone = relationStyles(payload.relationGroup);
   const primaryLineage = payload.lineageNames?.[0] ?? null;
@@ -100,104 +102,104 @@ const PersonNode = memo(function PersonNode({ data, selected }: NodeProps) {
   return (
     <div
       className={cn(
-        "group/node relative w-[15rem] rounded-[1.5rem] border px-4 py-4 backdrop-blur-md transition-all duration-200",
+        "group/node relative flex h-[7.75rem] w-[15rem] cursor-pointer flex-col justify-between rounded-[1.25rem] border px-4 py-3.5 transition-[box-shadow,transform] duration-200 hover:-translate-y-0.5",
         payload.isHighlighted
           ? "shadow-[0_0_0_1px_color-mix(in_oklab,var(--accent-primary)_26%,transparent),0_18px_42px_color-mix(in_oklab,var(--accent-primary)_14%,transparent)]"
-          : "shadow-[var(--shadow-node)]",
+          : "shadow-[var(--shadow-node)] hover:shadow-[var(--shadow-md)]",
         selected && "ring-2 ring-[color-mix(in_oklab,var(--accent-primary)_60%,transparent)] ring-offset-2 ring-offset-transparent",
       )}
       style={{
-        background: payload.isHighlighted
-          ? "var(--canvas-node-highlight-bg)"
-          : "var(--canvas-node-bg)",
+        background: payload.isFocus
+          ? "color-mix(in oklab, var(--accent-primary) 9%, var(--canvas-node-bg))"
+          : payload.isHighlighted
+            ? "var(--canvas-node-highlight-bg)"
+            : "var(--canvas-node-bg)",
         borderColor: payload.isFocus ? "var(--accent-primary)" : "var(--canvas-node-border)",
         boxShadow: payload.isFocus
-          ? "0 0 0 1px color-mix(in oklab, var(--accent-primary) 45%, transparent), var(--shadow-node)"
+          ? "0 0 0 3px color-mix(in oklab, var(--accent-primary) 18%, transparent), var(--shadow-node)"
           : undefined,
       }}
     >
       {preview ? (
         <div
-          className="pointer-events-none absolute bottom-[calc(100%+0.8rem)] left-1/2 z-30 hidden w-64 -translate-x-1/2 rounded-[1.1rem] border border-[var(--border-default)] px-3.5 py-3 opacity-0 shadow-[var(--shadow-lg)] transition-all duration-150 group-hover/node:block group-hover/node:opacity-100 lg:block"
-          style={{ background: "var(--canvas-tooltip-bg)" }}
+          className="pointer-events-none absolute bottom-[calc(100%+0.6rem)] left-1/2 z-30 w-64 -translate-x-1/2 translate-y-1 rounded-[1rem] border border-[var(--border-default)] px-3.5 py-3 opacity-0 shadow-[var(--shadow-lg)] transition-[opacity,transform] duration-150 group-hover/node:translate-y-0 group-hover/node:opacity-100"
+          style={{ background: "var(--canvas-tooltip-bg, var(--canvas-node-bg))" }}
+          aria-hidden="true"
         >
-          <p className="text-[0.7rem] font-semibold text-[var(--text-primary)]">{payload.label}</p>
-          {payload.subtitle ? (
-            <p className="mt-1 text-[0.65rem] text-[var(--text-muted)]">{payload.subtitle}</p>
-          ) : null}
-          <p className="mt-2 text-[0.72rem] leading-5 text-[var(--text-secondary)]">
-            {preview}
-          </p>
+          <p className="text-[0.72rem] leading-5 text-[var(--text-secondary)]">{preview}</p>
         </div>
       ) : null}
 
-      <Handle
-        type="target"
-        position={Position.Left}
-        className="!h-2.5 !w-2.5 !border-0 !bg-[var(--accent-primary)]"
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-        className="!h-2.5 !w-2.5 !border-0 !bg-[var(--accent-primary)]"
-      />
+      <Handle id="top" type="target" position={Position.Top} className={hiddenHandle} />
+      <Handle id="top-source" type="source" position={Position.Top} className={hiddenHandle} />
+      <Handle id="bottom" type="source" position={Position.Bottom} className={hiddenHandle} />
+      <Handle id="left" type="target" position={Position.Left} className={hiddenHandle} />
+      <Handle id="right" type="source" position={Position.Right} className={hiddenHandle} />
 
       <div className="flex items-start gap-3">
         <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-sm font-semibold tracking-[0.12em] text-[var(--text-primary)]"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-[0.78rem] font-semibold tracking-[0.08em] text-[var(--text-primary)]"
           style={{
-            background: "var(--canvas-avatar-bg)",
-            borderColor: "color-mix(in oklab, var(--text-primary) 10%, transparent)",
+            background: payload.isFocus
+              ? "color-mix(in oklab, var(--accent-primary) 18%, var(--canvas-avatar-bg, var(--bg-elevated)))"
+              : "var(--canvas-avatar-bg, var(--bg-elevated))",
+            borderColor: "color-mix(in oklab, var(--text-primary) 12%, transparent)",
           }}
+          aria-hidden="true"
         >
           {initials(payload.label)}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className="inline-flex rounded-full px-2.5 py-1 text-[0.56rem] font-semibold uppercase tracking-[0.16em]"
-              style={{
-                background: tone.badgeBg,
-                color: tone.badgeText,
-                boxShadow: `inset 0 0 0 1px ${tone.border}`,
-              }}
-            >
-              {relationLabel(payload.relationGroup)}
-            </span>
-            {payload.isHighlighted ? <Badge tone="accent">Lineage</Badge> : null}
-            {payload.isLiving ? <Badge tone="warning">Living</Badge> : null}
-          </div>
-          <p className="mt-2 text-[1.02rem] font-semibold leading-5 text-[var(--text-primary)]">
+          <p className="line-clamp-2 font-[family-name:var(--font-heading)] text-[1rem] font-semibold leading-[1.2] text-[var(--text-primary)]">
             {payload.label}
           </p>
           {payload.subtitle ? (
-            <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">{payload.subtitle}</p>
+            <p className="mt-1 truncate text-[0.7rem] tabular-nums text-[var(--text-muted)]">{payload.subtitle}</p>
           ) : null}
         </div>
       </div>
 
-      {preview ? (
-        <p className="mt-3 text-[0.76rem] leading-[1.55] text-[var(--text-secondary)]">
-          {preview}
-        </p>
-      ) : null}
-
-      <div className="mt-3 flex items-center justify-between gap-3 border-t border-[var(--border-muted)] pt-3">
-        <div className="min-w-0">
-          <p className="truncate text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-muted)]">
-            {primaryLineage ?? "Family branch"}
-          </p>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex shrink-0 items-center gap-1.5">
+          <span
+            className="inline-flex shrink-0 rounded-full px-2 py-0.5 text-[0.56rem] font-semibold uppercase tracking-[0.14em]"
+            style={{
+              background: tone.badgeBg,
+              color: tone.badgeText,
+              boxShadow: `inset 0 0 0 1px ${tone.border}`,
+            }}
+          >
+            {relationLabel(payload.relationGroup)}
+          </span>
+          {payload.isLiving ? <Badge tone="warning">Living</Badge> : null}
+          {payload.isHighlighted ? <Badge tone="accent">Lineage</Badge> : null}
         </div>
-        <div
-          className="h-2.5 w-2.5 shrink-0 rounded-full"
-          style={{ background: tone.border }}
-          aria-hidden="true"
-        />
+        {primaryLineage && !payload.isLiving && !payload.isHighlighted ? (
+          <span className="min-w-0 truncate text-[0.58rem] uppercase tracking-[0.14em] text-[var(--text-muted)]" title={primaryLineage}>
+            {primaryLineage}
+          </span>
+        ) : null}
       </div>
+    </div>
+  );
+});
+
+export const GENERATION_LABEL_WIDTH = 176;
+
+const GenerationLabelNode = memo(function GenerationLabelNode({ data }: NodeProps) {
+  return (
+    <div
+      className="pointer-events-none flex h-[7.75rem] items-center justify-end text-right"
+      style={{ width: GENERATION_LABEL_WIDTH }}
+    >
+      <p className="text-[0.66rem] font-semibold uppercase leading-4 tracking-[0.16em] text-[var(--text-muted)]">
+        {String((data as { label?: string }).label ?? "")}
+      </p>
     </div>
   );
 });
 
 export const nodeTypes = {
   person: PersonNode,
+  generationLabel: GenerationLabelNode,
 };

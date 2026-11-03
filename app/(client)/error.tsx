@@ -16,7 +16,7 @@ export default function ClientAccessError({
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-red-50 text-red-800">
           <AlertTriangle className="h-6 w-6" />
         </span>
-        <p className="mt-6 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#81786a]">
+        <p className="mt-6 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#675e52]">
           Private access error
         </p>
         <h1 className="mt-2 font-serif text-4xl font-semibold">This private page could not load.</h1>

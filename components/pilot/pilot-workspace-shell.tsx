@@ -16,6 +16,7 @@ import type { ReactNode } from "react";
 
 import { Badge } from "@/components/foundation/badge";
 import { cn } from "@/lib/utils/cn";
+import { ColorModeToggle } from "@/components/foundation/color-mode-toggle";
 
 export type PilotWorkspaceProject = {
   id: string;
@@ -65,7 +66,10 @@ export function PilotWorkspaceShell({
             </p>
             <p className="truncate font-semibold">{project.name}</p>
           </div>
-          <Badge tone="accent">{project.statusLabel}</Badge>
+          <div className="flex shrink-0 items-center gap-2">
+            <Badge tone="accent">{project.statusLabel}</Badge>
+            <ColorModeToggle />
+          </div>
         </div>
         <nav aria-label="Project workflow" className="flex gap-1 overflow-x-auto px-3 pb-3">
           {navigation.map((item) => {
@@ -108,12 +112,10 @@ export function PilotWorkspaceShell({
 
           <div className="space-y-4 px-4 py-5">
             <div className="rounded-xl border border-black/10 bg-white p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="truncate font-semibold">{project.name}</p>
-                  <p className="mt-1 truncate text-xs text-[#746b5e]">{project.clientName}</p>
-                </div>
+              <div className="min-w-0 space-y-1">
                 {project.synthetic ? <Badge tone="warning">Synthetic</Badge> : null}
+                <p className="font-semibold leading-snug">{project.name}</p>
+                <p className="line-clamp-2 text-xs leading-5 text-[#746b5e]">{project.clientName}</p>
               </div>
               <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#e7e1d7]">
                 <div
@@ -157,15 +159,18 @@ export function PilotWorkspaceShell({
           <div className="mt-auto space-y-3 border-t border-black/10 p-4">
             <div className="flex items-start gap-3 rounded-lg bg-[#eef2ed] p-3 text-xs leading-5 text-[#4e6254]">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" />
-              <span>Private by default. Publication gates are enforced before client delivery.</span>
+              <span>Private by default. Nothing reaches your client until you publish.</span>
             </div>
-            <Link
-              href="/projects"
-              className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#665e53] hover:text-[#241f18]"
-            >
-              <FolderKanban className="h-4 w-4" />
-              All projects
-            </Link>
+            <div className="flex items-center justify-between gap-2">
+              <Link
+                href="/projects"
+                className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#665e53] hover:text-[#241f18]"
+              >
+                <FolderKanban className="h-4 w-4" />
+                All projects
+              </Link>
+              <ColorModeToggle />
+            </div>
           </div>
         </aside>
 

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import { ReplayRevealButton } from "@/components/pilot/showcase-reveal";
 import { ShowcaseShell } from "@/components/pilot/showcase-shell";
+import { revealKeyFor } from "@/lib/showcase/reveal";
 import { buildPilotShowcase } from "@/lib/showcase/pilot-showcase";
 import { getSyntheticPilotProject } from "@/lib/showcase/project";
 
@@ -25,10 +27,11 @@ export default async function PilotPreviewLayout({
 
   return (
     <div>
-      <div className="flex flex-col gap-2 border-b border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-950 sm:flex-row sm:items-center sm:justify-center">
+      <aside aria-label="Professional preview" className="flex flex-col gap-2 border-b border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-950 sm:flex-row sm:items-center sm:justify-center">
         <strong>Authorized professional preview</strong>
-        <span>This renders the same privacy-filtered presentation DTO used for invited clients. Synthetic data only.</span>
-      </div>
+        <span>Exactly what invited clients see, with the same privacy rules. Synthetic data only.</span>
+        <ReplayRevealButton revealKey={revealKeyFor(basePath)} homePath={basePath} />
+      </aside>
       <ShowcaseShell
         brand={showcase.brand}
         basePath={basePath}

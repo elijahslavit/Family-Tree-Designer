@@ -3,11 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { brandCssVariables, buildBrandPalette } from "@/lib/utils/brand-palette";
+
 export type ShowcaseBrand = {
   familyName: string;
   genealogistName: string;
   genealogistLogoPath: string;
+  /** Practice primary colour: buttons, links, and the dark feature band. */
   accent: string;
+  /** Practice accent colour: eyebrows, rules, and small highlights. */
+  highlight?: string;
 };
 
 export function ShowcaseShell({
@@ -30,8 +35,13 @@ export function ShowcaseShell({
 
   return (
     <div
+      data-light-only
       className="min-h-screen bg-[#f8f4ea] text-[#2f2a22]"
-      style={{ "--showcase-accent": brand.accent } as React.CSSProperties}
+      style={
+        brandCssVariables(
+          buildBrandPalette({ primary: brand.accent, accent: brand.highlight }),
+        ) as React.CSSProperties
+      }
     >
       <a
         href="#showcase-content"
@@ -42,14 +52,11 @@ export function ShowcaseShell({
       <header className="sticky top-0 z-30 border-b border-[#3c3325]/10 bg-[#fbf8f0]/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <Link href={basePath} className="flex min-w-0 items-center gap-3">
-            <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-[#3c3325]/15 bg-white">
-              <Image
-                src={brand.genealogistLogoPath}
-                alt=""
-                fill
-                sizes="40px"
-                className="object-cover"
-              />
+            <span
+              aria-hidden="true"
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-[#3c3325]/15 bg-[#fffdf8] font-serif text-lg font-semibold text-[var(--brand-primary-ink)] shadow-[inset_0_0_0_3px_var(--brand-accent-soft)]"
+            >
+              {familyMonogram(brand.familyName)}
             </span>
             <span className="min-w-0">
               <span className="block truncate font-serif text-lg font-semibold leading-tight">
@@ -79,7 +86,7 @@ export function ShowcaseShell({
 
           <div className="flex items-center gap-2">
             <span className="hidden items-center gap-2 rounded-full border border-[#3c3325]/10 bg-white px-3 py-2 text-xs text-[#665d50] lg:flex">
-              <ShieldCheck className="h-3.5 w-3.5 text-[#526b57]" />
+              <ShieldCheck className="h-3.5 w-3.5 text-[var(--brand-primary-ink)]" />
               {viewerLabel}
             </span>
             <details className="relative md:hidden">
@@ -98,14 +105,30 @@ export function ShowcaseShell({
         </div>
       </header>
 
-      <main id="showcase-content">{children}</main>
+      <main id="showcase-content" tabIndex={-1} className="focus:outline-none">{children}</main>
 
       <footer className="border-t border-[#3c3325]/10 bg-[#f1eadc]">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-xs leading-5 text-[#706657] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <p>This private family archive is shared only with invited recipients.</p>
-          <p>Presented by {brand.genealogistName} · Powered by Family Tree Designer</p>
+          <div className="flex items-center gap-3">
+            <span className="relative block h-8 w-28 shrink-0">
+              <Image
+                src={brand.genealogistLogoPath}
+                alt={brand.genealogistName}
+                fill
+                sizes="112px"
+                className="object-contain object-left"
+              />
+            </span>
+            <p>Presented by {brand.genealogistName} · Powered by Family Tree Designer</p>
+          </div>
         </div>
       </footer>
     </div>
   );
+}
+
+function familyMonogram(familyName: string) {
+  const words = familyName.replace(/^the\s+/i, "").replace(/\s+family$/i, "").trim().split(/\s+/);
+  return (words[0]?.[0] ?? familyName[0] ?? "F").toUpperCase();
 }

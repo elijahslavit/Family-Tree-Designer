@@ -6,15 +6,95 @@ test("creator portfolio and professional preview are complete", async ({ page })
   await page.goto("/projects");
 
   await expect(page.getByRole("heading", { name: "Client delivery studio" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Pilot projects" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Client projects" })).toBeVisible();
   await expect(page.getByText("The Hart Family Legacy").first()).toBeVisible();
 
   await page.goto("/projects/pilot-hart-001/preview");
+  await page.getByRole("button", { name: "Explore your family" }).click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "The Hart Family" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Discover an ancestor/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Browse a family branch/ })).toBeVisible();
   await expect(page.getByText(/Prepared for The Hart Family by Meridian Family Histories/)).toBeVisible();
   await expect(page.getByText("Synthetic demonstration media")).toBeVisible();
+});
+
+test("the client welcome reveal opens once per session and can be replayed", async ({ page }) => {
+  await page.goto("/projects/pilot-hart-001/preview");
+
+  const reveal = page.getByRole("dialog", { name: "The Hart Family" });
+  await expect(reveal).toBeVisible();
+  await expect(reveal.getByText("Prepared by Meridian Family Histories")).toBeVisible();
+  // The dialog itself takes focus so its title and tagline are announced.
+  await expect(reveal).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Skip" })).toBeFocused();
+
+  await page.keyboard.press("Escape");
+  await expect(reveal).toHaveCount(0);
+
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "The Hart Family" })).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Replay welcome" }).click();
+  await expect(page.getByRole("dialog", { name: "The Hart Family" })).toBeVisible();
+});
+
+test("private presentation uses the practice brand colours", async ({ page }) => {
+  await page.goto("/projects/pilot-hart-001/preview");
+  await page.getByRole("button", { name: "Explore your family" }).click();
+
+  await expect(page.getByRole("link", { name: /Discover an ancestor/ })).toHaveCSS(
+    "background-color",
+    "rgb(22, 58, 53)",
+  );
+});
+
+test("family tree supports search, a text outline, and branch highlighting", async ({ page }) => {
+  await page.goto("/projects/pilot-hart-001/preview/tree");
+
+  await expect(page.getByText("Parents' generation")).toBeVisible();
+
+  const search = page.getByRole("combobox", { name: "Find a person in the family tree" });
+  await search.fill("walter");
+  await expect(page.getByRole("option", { name: /Walter Hart/ })).toBeVisible();
+  await search.press("Enter");
+  await expect(page).toHaveURL(/person=p01/);
+  await expect(page.getByRole("heading", { name: "Walter Hart", level: 2 })).toBeVisible();
+
+  await page.getByRole("button", { name: "List" }).click();
+  await expect(page).toHaveURL(/view=list/);
+  const outline = page.getByRole("region", { name: "Walter's generation" });
+  await expect(outline.getByText("Walter Hart", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Centre here on Eleanor Hart West" }).click();
+  await expect(page).toHaveURL(/person=p03/);
+  await expect(page).toHaveURL(/view=list/);
+
+  await page.getByRole("button", { name: "Tree" }).click();
+  await page.getByRole("button", { name: "Direct Hart Line" }).click();
+  await expect(page).toHaveURL(/lineage=l01/);
+  await expect(page.getByText("Direct Hart Line").first()).toBeVisible();
+  await expect(page.getByText("Lineage", { exact: true }).first()).toBeVisible();
+});
+
+test("a GEDCOM is checked in the browser with a clear report", async ({ page }) => {
+  // Wait for hydration so the file input's change handler is attached.
+  await page.goto("/projects/pilot-hart-001/import", { waitUntil: "networkidle" });
+  await page.locator('input[type="file"][accept=".ged,.gedcom"]').setInputFiles("tests/e2e/fixtures/sample-family.ged");
+
+  const report = page.getByRole("region", { name: "Check results for sample-family.ged" });
+  await expect(report).toBeVisible();
+  await expect(report.getByText("nothing was uploaded")).toBeVisible();
+  await expect(report.getByText("Can be imported after review")).toBeVisible();
+  // Three people; only Alice lacks death evidence (Clara has a burial record).
+  await expect(report.getByRole("definition").first()).toHaveText("3");
+  await expect(report.getByRole("definition").nth(2)).toHaveText("1");
+
+  await report.getByText("Broken references", { exact: true }).click();
+  await expect(report.getByText("Family @F1@ references unresolved child @I9@.")).toBeVisible();
+  await report.getByText("Not imported", { exact: true }).click();
+  await expect(report.getByText("1 occupation (OCCU) person entry was not imported.")).toBeVisible();
 });
 
 test("invitation errors disclose no family content", async ({ page }) => {
@@ -37,6 +117,8 @@ test("review invitation creates an authorized private showcase session", async (
   await expect(page.getByText("Final client review").first()).toBeVisible();
 
   await page.goto("/s/hart-family-legacy");
+  await expect(page.getByRole("dialog", { name: "The Hart Family" })).toBeVisible();
+  await page.getByRole("button", { name: "Explore your family" }).click();
   await expect(page.getByRole("heading", { name: "The Hart Family" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Discover an ancestor/ })).toBeVisible();
   await expect(page.getByText("Living minor")).toHaveCount(0);

@@ -1,73 +1,110 @@
+import { ArrowRight, FileArchive, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { AuthForm } from "@/components/domain/auth-form";
-import { Card } from "@/components/foundation/card";
+import { ColorModeToggle } from "@/components/foundation/color-mode-toggle";
+import { isPlaceholderSupportEmail, productConfig } from "@/lib/config/product";
 import { hasConfiguredBackend, isDemoMode } from "@/lib/runtime";
 
 type SignInPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
+/** Only same-origin, path-absolute redirects are honoured after sign-in. */
+function safeNextPath(value: string | string[] | undefined) {
+  if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) {
+    return "/projects";
+  }
+
+  return value;
+}
+
 export default async function SignInPage({ searchParams }: SignInPageProps) {
   const params = await searchParams;
-  const nextPath = typeof params.next === "string" ? params.next : "/dashboard";
+  const nextPath = safeNextPath(params.next);
   const demoAccess = isDemoMode() || !hasConfiguredBackend();
+  // Derived from configuration, never from the URL, so a crafted link cannot
+  // show the notice above a working sign-in form.
+  const backendUnavailable = !isDemoMode() && !hasConfiguredBackend();
 
   return (
-    <main className="mx-auto grid max-w-5xl gap-6 p-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-      <Card className="space-y-4">
-        <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">Sign in</p>
-        <h1 className="text-4xl font-semibold text-[var(--text-primary)]">
-          Creator authentication
-        </h1>
-        <p className="text-sm leading-7 text-[var(--text-secondary)]">
-          Creator mode owns import, editing, themes, and sharing. Viewer mode stays public and
-          read-only, but creator mode is where the archive is actually curated.
-        </p>
-        <div className="grid gap-3 md:grid-cols-2">
-          <div className="rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-elevated)] p-4">
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">Demo mode</p>
-            <p className="mt-2 text-lg font-semibold text-[var(--text-primary)]">
-              {demoAccess ? "Available" : "Disabled"}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-              {demoAccess
-                ? "The seeded archive can still be explored and edited without a live auth session."
-                : "The app is using the configured backend runtime instead of the in-memory demo store."}
-            </p>
-          </div>
-          <div className="rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-elevated)] p-4">
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">Redirect target</p>
-            <p className="mt-2 text-lg font-semibold text-[var(--text-primary)]">{nextPath}</p>
-            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-              Successful sign-in returns to the requested creator route instead of dropping you at a generic home screen.
-            </p>
-          </div>
-        </div>
-        {demoAccess ? (
-          <Link href={nextPath} className="text-sm font-semibold text-[var(--accent-text)]">
-            Continue in demo mode
+    <main className="grid min-h-screen bg-[var(--site-bg)] text-[var(--site-text)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+      <section className="flex flex-col px-4 py-6 sm:px-8 lg:px-12">
+        <div className="flex items-center justify-between gap-3">
+          <Link href="/" className="flex w-fit items-center gap-3">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#293a31] text-white">
+              <FileArchive className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <span className="font-semibold">{productConfig.name}</span>
           </Link>
-        ) : (
-          <p className="text-sm text-[var(--text-secondary)]">
-            Supabase auth is configured. Use the form to sign in or create a creator account.
-          </p>
-        )}
-      </Card>
+          <ColorModeToggle />
+        </div>
 
-      {demoAccess ? (
-        <Card className="space-y-4">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">Runtime note</p>
-          <h2 className="text-2xl font-semibold text-[var(--text-primary)]">Live auth is optional in demo mode</h2>
-          <p className="text-sm leading-7 text-[var(--text-secondary)]">
-            This workspace still defaults to the seeded demo runtime for local QA. When you switch
-            `DEMO_MODE=false` and provide backend env vars, creator routes will require a real
-            session and persist through Postgres instead.
-          </p>
-        </Card>
-      ) : (
-        <AuthForm nextPath={nextPath} />
-      )}
+        <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 py-12">
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--site-text-muted)]">
+              Professional studio
+            </p>
+            <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+              Welcome back.
+            </h1>
+            <p className="leading-7 text-[var(--site-text-soft)]">
+              Sign in to prepare, review, and deliver your clients&apos; private family presentations.
+            </p>
+          </div>
+
+          {backendUnavailable ? (
+            <p className="rounded-xl border border-[var(--site-border-strong)] bg-[var(--site-surface-muted)] px-4 py-3 text-sm leading-6 text-[var(--site-text-soft)]">
+              Accounts aren&apos;t available in this environment yet. Please try again later.
+            </p>
+          ) : null}
+
+          {demoAccess ? (
+            <div className="space-y-4 rounded-2xl border border-[var(--site-border)] bg-[var(--site-surface)] p-6 shadow-[var(--site-shadow)]">
+              <div className="flex items-start gap-3">
+                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--site-accent)]" aria-hidden="true" />
+                <div className="space-y-1">
+                  <p className="font-semibold">Demo workspace</p>
+                  <p className="text-sm leading-6 text-[var(--site-text-soft)]">
+                    No account needed. Every family, story, and record in the demo is fictional.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={nextPath}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#293a31] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1f2d26]"
+              >
+                Open the demo studio <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+          ) : (
+            <AuthForm nextPath={nextPath} />
+          )}
+
+          {isPlaceholderSupportEmail() ? null : (
+            <p className="text-xs leading-5 text-[var(--site-text-muted)]">
+              Need help? Contact{" "}
+              <a className="underline underline-offset-2" href={`mailto:${productConfig.supportEmail}`}>
+                {productConfig.supportEmail}
+              </a>
+              .
+            </p>
+          )}
+        </div>
+      </section>
+
+      <aside className="relative hidden overflow-hidden lg:block" aria-hidden="true">
+        <Image
+          src="/landing/hero-atlas.webp"
+          alt=""
+          fill
+          priority
+          sizes="55vw"
+          className="object-cover object-[70%_center]"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,233,216,0.55)_0%,rgba(242,233,216,0)_35%)]" />
+      </aside>
     </main>
   );
 }

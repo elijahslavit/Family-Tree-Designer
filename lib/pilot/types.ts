@@ -201,6 +201,8 @@ export interface PilotStory {
   title: string;
   dek: string;
   bodyMd: string;
+  /** Human-readable time span the story covers, e.g. "Summer 1968". */
+  period?: string | null;
   coverMediaId?: string | null;
   personIds: string[];
   sourceIds: string[];

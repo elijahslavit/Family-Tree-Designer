@@ -88,7 +88,7 @@ describe("pilot showcase privacy boundary", () => {
       children: [],
     });
     expect(displayNameOnly!.card.imagePath).toBe(
-      "/demo/pilot/meridian-family-histories-logo.svg",
+      "/demo/pilot/portrait-placeholder.svg",
     );
 
     expect(getShowcasePerson(project, "p19")).toBeNull();

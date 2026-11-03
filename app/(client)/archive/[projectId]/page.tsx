@@ -74,6 +74,7 @@ export default async function ArchiveOwnerPage({
         title={project.title}
         description="Owner controls become available only after the verified recipient explicitly accepts handoff."
         practiceName={project.branding.practiceName}
+        brand={project.branding}
       >
         <ClientAccessNotice state="not_ready" />
       </ClientAccessShell>
@@ -156,6 +157,7 @@ export default async function ArchiveOwnerPage({
       title={project.title}
       description="Manage who can enter this private family archive, preserve a complete copy, and control professional support and deletion."
       practiceName={project.branding.practiceName}
+      brand={project.branding}
       backHref={`/s/${project.slug}`}
       backLabel="Open the family showcase"
     >
@@ -190,7 +192,7 @@ export default async function ArchiveOwnerPage({
         <div className="flex items-start gap-3">
           <CalendarDays className="mt-1 h-5 w-5 shrink-0 text-[#405447]" />
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#81786a]">Archive lifecycle</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#675e52]">Archive lifecycle</p>
             <h2 className="mt-1 font-serif text-2xl font-semibold">Dates remain visible before any service change</h2>
             <p className="mt-2 text-sm leading-6 text-[#6c6459]">
               If hosting is not renewed, editing and new invitations stop first. Existing private viewers receive a 30-day grace period before the presentation goes offline; the archive then remains recoverable for 12 months.
@@ -229,7 +231,7 @@ export default async function ArchiveOwnerPage({
         <div className="flex items-start gap-3">
           <History className="mt-1 h-5 w-5 shrink-0 text-[#405447]" />
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#81786a]">Accountability</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#675e52]">Accountability</p>
             <h2 className="mt-1 font-serif text-2xl font-semibold">Recent owner-visible events</h2>
           </div>
         </div>
@@ -242,7 +244,7 @@ export default async function ArchiveOwnerPage({
                 <FileCheck2 className="mt-0.5 h-4 w-4 shrink-0 text-[#536858]" />
                 <div>
                   <p className="text-sm font-semibold">{event.summary}</p>
-                  <p className="mt-1 text-xs text-[#756d61]">{formatOwnerDate(event.occurredAt)}</p>
+                  <p className="mt-1 text-xs text-[#635b50]">{formatOwnerDate(event.occurredAt)}</p>
                 </div>
               </div>
             ))}
@@ -273,9 +275,9 @@ function OwnerDatum({
   return (
     <div className="rounded-[20px] border border-black/10 bg-[#fbf9f4] p-5 shadow-sm">
       <span className="grid h-9 w-9 place-items-center rounded-full bg-[#e8ede8] text-[#405447]">{icon}</span>
-      <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#81786a]">{label}</p>
+      <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#675e52]">{label}</p>
       <p className="mt-1 font-serif text-xl font-semibold">{value}</p>
-      <p className="mt-2 text-xs leading-5 text-[#756d61]">{detail}</p>
+      <p className="mt-2 text-xs leading-5 text-[#635b50]">{detail}</p>
     </div>
   );
 }
@@ -283,7 +285,7 @@ function OwnerDatum({
 function OwnerDate({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#81786a]">{label}</dt>
+      <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#675e52]">{label}</dt>
       <dd className="mt-1 font-semibold">{value}</dd>
     </div>
   );

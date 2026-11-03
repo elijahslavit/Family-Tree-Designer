@@ -49,12 +49,12 @@ export function ClientReviewForm({
       <div className="grid gap-3 rounded-xl border border-black/10 bg-[#f4efe5] p-4 sm:grid-cols-3">
         <ReviewDatum label="Review round" value={`${round} of 2`} />
         <ReviewDatum label="Frozen version" value={versionLabel} />
-        <ReviewDatum label="Content fingerprint" value={fingerprint.slice(0, 12)} icon={<Fingerprint className="h-3.5 w-3.5" />} />
+        <ReviewDatum label="Version ID" value={fingerprint.slice(0, 12)} icon={<Fingerprint className="h-3.5 w-3.5" />} />
       </div>
 
       <div className="flex items-start gap-3 rounded-xl border border-[#bfcbbf] bg-[#edf2ed] p-4 text-sm leading-6 text-[#405447]">
         <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0" />
-        <p>This review is pinned to a frozen presentation version. Your comments cannot drift onto later edits, and every requested change receives an auditable disposition.</p>
+        <p>This review is locked to one version of the presentation, so your comments always refer to what you saw. Your genealogist will respond to every request.</p>
       </div>
 
       {existingItems.length ? (
@@ -103,7 +103,7 @@ export function ClientReviewForm({
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
             <button type="button" onClick={() => setItems((current) => [...current, { id: crypto.randomUUID(), subjectType: "person", subjectLabel: "", request: "" }])} className="inline-flex items-center justify-center gap-2 rounded-full border border-black/15 px-4 py-2 text-sm font-semibold"><Plus className="h-4 w-4" /> Add correction</button>
-            <button type="submit" disabled={!submitAction || itemsJson === "[]"} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#293a31] px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"><Send className="h-4 w-4" /> Submit consolidated round</button>
+            <button type="submit" disabled={!submitAction || itemsJson === "[]"} className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary,#293a31)] px-5 py-3 text-sm font-semibold text-[var(--brand-on-primary,#fff)] disabled:opacity-50"><Send className="h-4 w-4" /> Submit consolidated round</button>
           </div>
         </form>
       ) : null}
@@ -121,5 +121,5 @@ export function ClientReviewForm({
 }
 
 function ReviewDatum({ label, value, icon }: { label: string; value: string; icon?: React.ReactNode }) {
-  return <div><p className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#81786a]">{label}</p><p className="mt-1 flex items-center gap-2 text-sm font-semibold">{icon}{value}</p></div>;
+  return <div><p className="text-[10px] font-semibold uppercase tracking-[0.13em] text-[#675e52]">{label}</p><p className="mt-1 flex items-center gap-2 text-sm font-semibold">{icon}{value}</p></div>;
 }

@@ -18,5 +18,6 @@ export const metadata: Metadata = {
 export default function ClientAccessLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return children;
+  // Client-facing pages are composed as fixed light, printed-archive surfaces.
+  return <div data-light-only>{children}</div>;
 }

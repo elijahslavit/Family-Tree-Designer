@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-labelledby="title">
+  <title id="title">No preview available for this record</title>
+  <rect width="400" height="500" fill="#E8DFCF"/>
+  <g transform="translate(70 70)">
+    <rect width="260" height="340" rx="6" fill="#FBF7EE" stroke="#D6CAB4" stroke-width="2"/>
+    <path d="M36 62h188M36 96h150M36 130h170M36 164h120M36 198h160M36 232h140" stroke="#DCD1BE" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>

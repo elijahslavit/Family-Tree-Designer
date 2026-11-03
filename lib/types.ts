@@ -18,7 +18,8 @@ export type ReviewIssueType =
   | "duplicate"
   | "conflict"
   | "missing_data"
-  | "parse_error";
+  | "parse_error"
+  | "unsupported";
 export type ReviewIssueStatus = "open" | "resolved" | "dismissed";
 export type ClaimConfidence = "accepted" | "probable" | "uncertain" | "disputed";
 
@@ -243,6 +244,8 @@ export interface CanvasNodeData extends Record<string, unknown> {
   summary?: string | null;
   isLiving: boolean;
   kind: "person" | "family";
+  /** Rows relative to the focus person: -1 parents, 0 focus, 1 children. */
+  generation?: number;
   isFocus?: boolean;
   isHighlighted?: boolean;
   relationGroup?:

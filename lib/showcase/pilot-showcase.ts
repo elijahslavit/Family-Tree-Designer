@@ -1,13 +1,15 @@
 import type { Edge, Node } from "@xyflow/react";
 
 import type { ShowcasePersonCard, ShowcaseStoryCard } from "@/components/pilot/showcase-home";
+
+export type ShowcaseRelativeCard = ShowcasePersonCard & { relation: string };
 import { getDemoStore } from "@/lib/data/demo-store";
 import { getCanvasNeighborhoodFromBundle, getPersonViewFromBundle } from "@/lib/data/tree-selectors";
 import type { PilotMediaAsset, PilotProject, PilotStory } from "@/lib/pilot/types";
 import type { Person, PersonViewModel } from "@/lib/types";
 
-const genericMediaPlaceholder = "/demo/pilot/meridian-family-histories-logo.svg";
-const fallbackPortrait = genericMediaPlaceholder;
+const genericMediaPlaceholder = "/demo/pilot/record-placeholder.svg";
+const fallbackPortrait = "/demo/pilot/portrait-placeholder.svg";
 
 export type PilotShowcaseData = {
   project: PilotProject;
@@ -17,6 +19,7 @@ export type PilotShowcaseData = {
     genealogistName: string;
     genealogistLogoPath: string;
     accent: string;
+    highlight?: string;
   };
   heroPath: string;
   focalPerson: ShowcasePersonCard;
@@ -47,6 +50,7 @@ export function buildPilotShowcase(project: PilotProject, basePath: string): Pil
       genealogistLogoPath:
         project.branding.logoPath ?? "/demo/pilot/meridian-family-histories-logo.svg",
       accent: project.branding.primaryColor,
+      highlight: project.branding.accentColor,
     },
     heroPath: safeDisplayPath(project, hero) ?? genericMediaPlaceholder,
     focalPerson,
@@ -61,6 +65,37 @@ export function buildPilotShowcase(project: PilotProject, basePath: string): Pil
         project.media.find((asset) => asset.id === "media-reunion-circular"),
       ) ?? genericMediaPlaceholder,
   };
+}
+
+/**
+ * Close relatives in a stable reading order (parents, siblings, partners,
+ * children), each labelled with its relationship to the person being viewed.
+ * Only people already cleared for the showcase are returned.
+ */
+export function getShowcaseRelatives(
+  view: PersonViewModel,
+  showcasePeople: ShowcasePersonCard[],
+  limit = 8,
+): ShowcaseRelativeCard[] {
+  const groups: Array<[string, Person[]]> = [
+    ["Parent", view.relatives.parents],
+    ["Sibling", view.relatives.siblings],
+    ["Partner", view.relatives.spouses],
+    ["Child", view.relatives.children],
+  ];
+  const seen = new Set<string>();
+  const result: ShowcaseRelativeCard[] = [];
+
+  for (const [relation, relatives] of groups) {
+    for (const relative of relatives) {
+      if (seen.has(relative.id)) continue;
+      seen.add(relative.id);
+      const card = showcasePeople.find((candidate) => candidate.id === relative.id);
+      if (card) result.push({ ...card, relation });
+    }
+  }
+
+  return result.slice(0, limit);
 }
 
 export function getShowcasePerson(project: PilotProject, personId: string) {
@@ -103,10 +138,27 @@ export function getShowcaseStory(project: PilotProject, storyId: string) {
     )
     .map((person) => personCard(project, person));
 
+  const sources = story.sourceIds
+    .map((sourceId) => bundle.sources.find((source) => source.id === sourceId))
+    .filter((source): source is NonNullable<typeof source> => Boolean(source))
+    .map((source) => ({
+      id: source.id,
+      title: source.title,
+      detail: [source.author, source.notes].filter(Boolean).join(" · "),
+    }));
+
+  const featured = project.stories
+    .filter((candidate) => candidate.featured && canShowStory(project, candidate))
+    .sort((left, right) => left.order - right.order);
+  const position = featured.findIndex((candidate) => candidate.id === story.id);
+  const next = featured.length > 1 && position >= 0 ? featured[(position + 1) % featured.length] : null;
+
   return {
     story,
     card: storyCard(project, story),
     people,
+    sources,
+    nextStory: next && next.id !== story.id ? storyCard(project, next) : null,
   };
 }
 
@@ -157,11 +209,16 @@ export function getShowcaseSource(project: PilotProject, sourceId: string) {
   };
 }
 
+export type ShowcaseSearchPerson = { id: string; name: string; years: string };
+
 export async function getShowcaseCanvas(
   project: PilotProject,
   personId: string,
   depth: number,
+  lineageId: string | null = null,
 ): Promise<{
+  searchablePeople: ShowcaseSearchPerson[];
+  selectedLineage: ReturnType<typeof getAllowedLineages>[number] | null;
   nodes: Node[];
   edges: Edge[];
   focusPerson: PersonViewModel;
@@ -186,12 +243,18 @@ export async function getShowcaseCanvas(
     throw new Error("No privacy-cleared person is available for the family tree.");
   }
 
+  const availableLineages = getAllowedLineages(project);
+  const selectedLineage = lineageId
+    ? availableLineages.find((lineage) => lineage.id === lineageId) ?? null
+    : null;
+
   const result = await getCanvasNeighborhoodFromBundle({
     bundle,
     personId: safeFocusId,
     viewer: { mode: "creator", accountId: bundle.account.id },
     depth: Math.min(2, Math.max(1, depth)),
-    lineageId: null,
+    lineageId: selectedLineage?.id ?? null,
+    includePerson: (candidate) => allowedPersonIds.has(candidate.id),
   });
 
   if (!result) {
@@ -222,7 +285,15 @@ export async function getShowcaseCanvas(
     relatedCount: nodes.filter((node) => (node.data as { kind?: string }).kind === "person").length - 1,
     depth: result.depth,
     maxDepth: Math.min(2, result.maxDepth),
-    availableLineages: getAllowedLineages(project),
+    availableLineages,
+    selectedLineage,
+    searchablePeople: bundle.people
+      .filter((person) => allowedPersonIds.has(person.id))
+      .map((person) => {
+        const card = personCard(project, person);
+        return { id: card.id, name: card.name, years: card.years };
+      })
+      .sort((left, right) => left.name.localeCompare(right.name)),
   };
 }
 
@@ -362,9 +433,10 @@ function storyCard(project: PilotProject, story: PilotStory): ShowcaseStoryCard 
     id: story.id,
     title: story.title,
     dek: story.dek,
-    period: story.order === 1 ? "1912–1987" : story.order === 2 ? "Summer 1968" : "1938–2014",
+    period: story.period ?? "",
     imagePath: safeDisplayPath(project, cover) ?? fallbackPortrait,
-    readMinutes: 2,
+    // About 200 words a minute, never less than one minute.
+    readMinutes: Math.max(1, Math.round(story.bodyMd.trim().split(/\s+/).length / 200)),
   };
 }
 

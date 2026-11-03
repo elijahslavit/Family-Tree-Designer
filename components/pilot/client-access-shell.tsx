@@ -10,6 +10,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { productConfig } from "@/lib/config/product";
+import { brandStyle } from "@/lib/utils/brand-palette";
 
 export function ClientAccessShell({
   children,
@@ -20,6 +21,7 @@ export function ClientAccessShell({
   backHref,
   backLabel,
   synthetic = true,
+  brand,
 }: {
   children: ReactNode;
   eyebrow: string;
@@ -29,9 +31,11 @@ export function ClientAccessShell({
   backHref?: string;
   backLabel?: string;
   synthetic?: boolean;
+  /** Practice colours for an authorized project page; omit on access errors. */
+  brand?: { primaryColor: string; accentColor: string } | null;
 }) {
   return (
-    <main className="min-h-screen bg-[#e9e3d7] px-4 py-6 text-[#28241f] sm:px-6 sm:py-10">
+    <main data-light-only style={brandStyle(brand)} className="min-h-screen bg-[#e9e3d7] px-4 py-6 text-[#28241f] sm:px-6 sm:py-10">
       <div className="mx-auto max-w-6xl space-y-5">
         <header className="rounded-[28px] border border-black/10 bg-[#fbf9f4] px-5 py-5 shadow-sm sm:px-8">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
@@ -46,7 +50,7 @@ export function ClientAccessShell({
                 </Link>
               ) : null}
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#81786a]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#675e52]">
                   {eyebrow}
                 </p>
                 <h1 className="mt-2 max-w-3xl font-serif text-3xl font-semibold leading-tight sm:text-5xl">
@@ -58,7 +62,7 @@ export function ClientAccessShell({
               </div>
             </div>
             <div className="flex shrink-0 flex-wrap gap-2 sm:max-w-64 sm:justify-end">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#bfcbbf] bg-[#edf2ed] px-3 py-2 text-[11px] font-semibold text-[#405447]">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--brand-primary-ink,#405447)_30%,transparent)] bg-[var(--brand-accent-soft,#edf2ed)] px-3 py-2 text-[11px] font-semibold text-[var(--brand-primary-ink,#405447)]">
                 <LockKeyhole className="h-3.5 w-3.5" /> Invite-only
               </span>
               {synthetic ? (
@@ -68,10 +72,10 @@ export function ClientAccessShell({
               ) : null}
             </div>
           </div>
-          <div className="mt-5 flex flex-col gap-2 border-t border-black/10 pt-4 text-xs text-[#756d61] sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-5 flex flex-col gap-2 border-t border-black/10 pt-4 text-xs text-[#635b50] sm:flex-row sm:items-center sm:justify-between">
             <span>{practiceName ?? productConfig.name}</span>
             <span className="inline-flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5" /> Private, noindex, access checked on every action
+              <ShieldCheck className="h-3.5 w-3.5" /> Private and invitation-only
             </span>
           </div>
         </header>
@@ -128,7 +132,7 @@ const accessStateCopy: Record<
   identity_required: {
     title: "Verify your owner identity to continue.",
     detail:
-      "Passive family viewers remain accountless. Archive ownership requires an authenticated control-plane identity before access, export, or deletion powers transfer.",
+      "Family members can view without an account. To take ownership of the archive, sign in with the account your genealogist designated.",
     nextStep: "Sign in with the address designated for the archive owner, then return here.",
   },
   identity_mismatch: {
@@ -191,7 +195,7 @@ export function ClientAccessNotice({
 
 export function ClientPageSkeleton() {
   return (
-    <main className="min-h-screen animate-pulse bg-[#e9e3d7] px-4 py-8 sm:px-6">
+    <main data-light-only className="min-h-screen animate-pulse bg-[#e9e3d7] px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-6xl space-y-5">
         <div className="h-64 rounded-[28px] border border-black/5 bg-[#fbf9f4]" />
         <div className="grid gap-5 lg:grid-cols-3">

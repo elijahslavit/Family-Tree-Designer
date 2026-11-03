@@ -1,0 +1,32 @@
+0 HEAD
+1 SOUR FamilyTreeDesignerFixture
+1 GEDC
+2 VERS 5.5.1
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Thomas Edward /Ashford/
+1 SEX M
+1 BIRT
+2 DATE 4 MAR 1881
+2 PLAC Bath, Somerset, England
+1 DEAT
+2 DATE 9 NOV 1950
+1 OCCU Stonemason
+0 @I2@ INDI
+1 NAME Clara /Penrose/
+1 SEX F
+1 BURI
+2 PLAC Bath Abbey Cemetery
+1 NOTE Kept the household ledger
+2 CONT for forty years.
+0 @I3@ INDI
+1 NAME Alice /Ashford/
+1 SEX F
+1 BIRT
+2 DATE 1975
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 CHIL @I3@
+1 CHIL @I9@
+0 TRLR
